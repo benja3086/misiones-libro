@@ -1,45 +1,65 @@
-.contenedor-principal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+.contenedor-libros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Siempre 3 columnas */
+  gap: 16px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
 }
-
 
 .fila {
   display: flex;
-  flex-direction: column; 
-  align-items: center;    
-  gap: 20px;              
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
 }
-
-
 .buscador {
+  width: 100%;
+  max-width: 300px;
   padding: 10px;
   font-size: 16px;
-  width: 250px;
-  box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
+
 
 
 .contenedor-libros {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
-  justify-content: center;
+  width: 100%;
+  justify-items: center;
 }
 
+
 .tarjeta-libro {
-  border: 1px solid #ddd;
-  width: 250px;
-  padding: 15px;
+  width: 100%;
+  max-width: 220px;
+  padding: 10px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
+  transition: transform 0.2s ease;
+  box-sizing: border-box;
 }
+
+
+.tarjeta-libro img {
+  width: 180px;
+  height: 260px;
+  object-fit: cover; /* o contain si querés que se vea toda la imagen sin recorte */
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+
+
 
 .tarjeta-libro:hover {
   transform: scale(1.05);
@@ -87,4 +107,19 @@
   margin-top: 10px;
   color: #333;
   font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .contenedor-libros {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .tarjeta-libro {
+    max-width: 100px;
+    padding: 4px;
+  }
+  .tarjeta-libro img {
+    width: 80px;
+    height: 120px;
+  }
 }
