@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Index.css";
 import Home from "./Home";
+import imagen from "../public/fondo-blanco.png";
 
 const App = () => {
   const [busqueda, setBusqueda] = useState("");
@@ -107,7 +108,7 @@ const App = () => {
       item.id.toString().includes(busqueda)
   );
   <header className="home-header">
-    <img src="/fondo-blanco.png" alt="Logo Misiones" className="home-logo" />
+    <img src={imagen} alt="Logo Misiones" className="home-logo" />
     <h1 className="titulo">Librería Misiones</h1>
   </header>;
 
@@ -135,21 +136,15 @@ const App = () => {
           </div>
           <img
             className="logo"
-            src="public/fondo-blanco.png"
+            src={imagen}
             alt="Descripción de la imagen"
           />
           <img
             className="logo1"
-            src="public/fondo-blanco.png"
+            src={imagen}
             alt="Descripción de la imagen"
           />
         </div>
-
-        <img
-          className="logo"
-          src="/fondo-blanco.png"
-          alt="Descripción de la imagen"
-        />
       </div>
     </>
   );
