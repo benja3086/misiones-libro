@@ -129,12 +129,12 @@ const App = () => {
           <img
             className="logo"
             src={imagen}
-            alt="Descripción de la imagen"
+            alt="Logo de misiones"
           />
           <img
             className="logo1"
             src={imagen}
-            alt="Descripción de la imagen"
+            alt="Logo de misiones"
           />
         </div>
       </div>
