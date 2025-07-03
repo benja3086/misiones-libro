@@ -1,8 +1,7 @@
 import React from "react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {const [items] = ([
+const Libros = useState([
   {
     className: "tarjeta-libro",
     id: 1,
@@ -94,20 +93,22 @@ const ListaLibros = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <h1>Lista de Libros</h1>
-      <div>
-        {libros.map((libro) => (
-          <div className="contenedor-libros" key={id}>
-            <h3>{nombre}</h3>
-            <button onClick={() => navigate(`/libros/${id}`)}>
-
-            </button>
+    <div className="contenedor-libros">
+      {resultados.map((item) => (
+        <Link
+          to={`/libros/${item.id}`}
+          key={item.id}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <div className="tarjeta-libro">
+            <img src={item.imagen} alt={item.nombre} />
+            <h3>{item.nombre}</h3>
+            <p className="precio">${item.precio}</p>
           </div>
-        ))}
-      </div>
+        </Link>
+      ))}
     </div>
   );
 };
-};
-export default Home;
+
+export default ListaLibros;
