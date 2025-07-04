@@ -1,9 +1,9 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import React from "react"
+import "./LibroDetalle.css";
 
-const LibroUnicos = () => {
-  const [items] = [
-    {
+const libros = [
+  {
       className: "tarjeta-libro",
       id: 1,
       nombre: "Sirviendo Al Enviar Obreros",
@@ -79,35 +79,38 @@ const LibroUnicos = () => {
       nombre: "Mi Lugar En Su Mision",
       precio: 1200,
       imagen:
-        "https://imgs.search.brave.com/DMnrmq31Io8z4bT5eTmudjehd4wCvo4EWLJc1qpKXgY/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NDFDdUh2OWNkb0wu/anBn",
+      "https://imgs.search.brave.com/DMnrmq31Io8z4bT5eTmudjehd4wCvo4EWLJc1qpKXgY/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NDFDdUh2OWNkb0wu/anBn",
     },
     {
       className: "tarjeta-libro",
       id: 11,
-      nombre: "Descubre El Camino",
+      nombre: "Descubre-El-Camino",
       precio: 1200,
+      autor:"jesus",
+      descripcion:
+        "Un libro que te ayudará a descubrir el camino de la vida cristiana y cómo vivirlo plenamente.",
       imagen:
         "https://imgs.search.brave.com/_5sFOo1Kwb32vYYtdI_6u7_T_yxs2c0Suo6URuKXtW4/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NDFqU2Qzd0tlaEwu/anBn",
     },
   ];
 
-  const LibroDetalle = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
+const LibroDetalle = () => {
+  const { id } = useParams();
+  const libro = libros.find((l) => l.id === parseInt(id));
 
-    const libro = libros.find((l) => l.id === parseInt(id));
+  if (!libro) return <h2>Libro no encontrado</h2>;
 
-    if (!libro) {
-      return <p>Libro no encontrado</p>;
-    }
-
-    return (
-      <div>
+  return (
+    <div className="detalle-libro">
+      <img src={libro.imagen} alt={libro.nombre} />
+      <div className="detalle-libro-contenido">
         <h2>{libro.nombre}</h2>
-        <p>Precio: ${precio}</p>
-        <button onClick={() => navigate("/")}>Volver a la lista</button>
+        <p className="autor">Autor: {libro.autor ? libro.autor : "Desconocido"}</p>
+        <p className="precio">Precio: ${libro.precio}</p>
+        <p>{libro.descripcion}</p>
       </div>
-    );
-  };
+    </div>
+  );
 };
-export default LibroUnicos;
+
+export default LibroDetalle;

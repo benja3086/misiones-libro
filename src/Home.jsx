@@ -101,7 +101,7 @@ const ListaLibros = () => {
           <div className="contenedor-libros" key={id}>
             <h3>{nombre}</h3>
             <button onClick={() => navigate(`/libros/${id}`)}>
-
+              
             </button>
           </div>
         ))}
