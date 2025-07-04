@@ -102,7 +102,7 @@ const Libros = () => {
     <>
       <header className="home-header">
         <img  alt="" className="home-logo" />
-        <h1 className="titulo">Librería Misiones</h1>
+        <h1 className="titulo">Tienda Misiones</h1>
       </header>
       <div className="contenedor-principal">
         <div className="fila">
