@@ -34,27 +34,27 @@
   justify-items: center;
 }
 
-
 .tarjeta-libro {
   width: 100%;
   max-width: 220px;
+  height: 450px; /* ⬅️ Este valor asegura que todas las tarjetas midan lo mismo */
   padding: 10px;
   background: white;
   border-radius: 10px;
   box-shadow: 0 0 10px #ddd;
   display: flex;
   flex-direction: column;
+  justify-content: space-between; /* ⬅️ Para distribuir imagen y texto */
   align-items: center;
   text-align: center;
   transition: transform 0.2s ease;
   box-sizing: border-box;
 }
 
-
 .tarjeta-libro img {
   width: 180px;
-  height: 260px;
-  object-fit: cover; 
+  height: 300px;
+  object-fit: cover;
   margin-bottom: 10px;
   border-radius: 6px;
 }
@@ -145,5 +145,25 @@
   .tarjeta-libro img {
     width: 80px;
     height: 120px;
+  }
+}
+@media (max-width: 480px) {
+  .tarjeta-libro {
+    max-width: 150px;
+    height: 350px;
+  }
+
+  .tarjeta-libro img {
+    width: 130px;
+    height: 200px;
+  }
+
+  .tarjeta-libro h3 {
+    font-size: 14px;
+    min-height: 40px;
+  }
+
+  .tarjeta-libro p {
+    font-size: 14px;
   }
 }
