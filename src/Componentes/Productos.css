@@ -3,6 +3,7 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #fff;
   color: #333;
+  line-height: 1.5;
 }
 
 .menu {
@@ -10,11 +11,12 @@ body {
   justify-content: center;
   gap: 20px;
   background-color: #ffffff;
-  padding: 12px 0;
+  padding: 12px 10px;
   border-bottom: 2px solid #fffffffe;
   position: sticky;
   top: 0;
   z-index: 1000;
+  flex-wrap: wrap; /* para que el menú no se desborde en pantallas pequeñas */
 }
 
 .menu a {
@@ -24,6 +26,7 @@ body {
   padding: 6px 12px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
+  white-space: nowrap; /* evitar que los links se dividan en varias líneas */
 }
 
 .menu a:hover {
@@ -38,4 +41,23 @@ h3 {
   font-weight: 500;
   text-align: justify;
   padding: 0 20px;
+}
+
+/* Mejoras para pantallas pequeñas */
+@media (max-width: 600px) {
+  h3 {
+    font-size: 1rem;
+    margin: 20px 15px;
+    padding: 0 10px;
+  }
+
+  .menu {
+    justify-content: space-around; /* distribuir mejor los enlaces */
+    padding: 10px 5px;
+  }
+
+  .menu a {
+    padding: 6px 8px;
+    font-size: 0.9rem;
+  }
 }
