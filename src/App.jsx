@@ -6,11 +6,13 @@ import LibroDetalle from "./Componentes/LibroDetalle";
 import Marquesina from "./Componentes/Marquesina";
 import Productos from "./Componentes/Productos";
 import Contacto from "./Componentes/Contacto";
+import Home from "./Componentes/Home";
 
 const App = () => {
   return (
     <div>
       <Marquesina />
+      <Home/>
       <Routes>
         <Route path="/" element={<Productos />} />
         <Route path="/Libros" element={<Libros />} />

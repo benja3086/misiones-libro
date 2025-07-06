@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import imagen from "../assets/fondo-blanco.png";
 const Libros = () => {
   const [busqueda, setBusqueda] = useState("");
-
+  
   const [items] = useState([
+  
     {
+      
       className: "tarjeta-libro",
       id: 1,
       nombre: "Sirviendo Al Enviar Obreros",
@@ -119,7 +121,9 @@ const Libros = () => {
               <Link to={`/libros/${item.id}`} key={item.id} style={{ textDecoration: "none", color: "inherit" }}>
                 <div className="tarjeta-libro">
                   <img src={item.imagen} alt={item.nombre} />
-                  <h3>{item.nombre}</h3>
+                 <h3 className="titulo-libro">
+  {item.nombre.replace(/\s+/g, ' ').trim()}
+</h3>
                   <p className="precio">${item.precio}</p>
                 </div>
               </Link>
@@ -130,11 +134,7 @@ const Libros = () => {
             src={imagen}
             alt="Logo de misiones"
           />
-          <img
-            className="logo1"
-            src={imagen}
-            alt="Logo de misiones"
-          />
+          
         </div>
       </div>
     </>

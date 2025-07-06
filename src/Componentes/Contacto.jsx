@@ -2,6 +2,7 @@ import "./Contacto.css";
 
 const Contacto = () => {
   return (
+    
     <div className="contacto-container">
 <h3>
   Podés escribirnos a:{" "}

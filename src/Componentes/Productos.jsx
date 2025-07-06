@@ -1,26 +1,34 @@
 import { Link } from "react-router-dom";
 import "./Productos.css";
-import Contacto from "./Contacto";
+import imagen1 from "../assets/fondo-blanco.png";
+
 const Productos = () => {
   return (
-    <div>
-      <nav className="menu">
-        <Link to="/">Inicio</Link>
-        <Link to="/productos">Productos</Link>
-        <Link to="/Contacto">Contacto</Link>
-        <Link to="/Libros">libros</Link>
-      </nav>
-      <h3>Somos el Ministerio de Misiones de Iglesia de Cristo Pje Padilla. 
+    <div className="productos-container">
+      <img className="logo3" src={imagen1} alt="Logo de misiones" />
 
-Trabajamos para ver una iglesia comprometida en obedecer el
-llamado de Jesus de hacer discipulos hasta lo último de la tierra.
-Además, nos enfocamos en el cuidado integral de nuestros misioneros
-en el campo y acompañamos a los candidatos en su proceso de preparación.
-
-Las finanzas son un área clave para desarrollar el plan de Dios y sostener a nuestros misioneros. Es por eso que hemos diseñado nuestra tienda. Con la compra de cualquier producto estas apoyando directamente a los misioneros y candidatos de nuestra iglesia local. 
-
-<h2><p>¡Gracias por ser parte!</p></h2></h3>
+      <div className="productos-texto">
+        <p>
+          Somos el <strong>Ministerio de Misiones</strong> de Iglesia de Cristo Pje Padilla.
+        </p>
+        <p>
+          Trabajamos para ver una iglesia comprometida en obedecer el llamado de Jesús
+          de hacer discípulos hasta lo último de la tierra.
+        </p>
+        <p>
+          Además, nos enfocamos en el cuidado integral de nuestros misioneros en el campo
+          y acompañamos a los candidatos en su proceso de preparación.
+        </p>
+        <p>
+          Las finanzas son un área clave para desarrollar el plan de Dios y sostener
+          a nuestros misioneros. Por eso, creamos esta tienda: <strong>cada compra apoya
+          directamente a los misioneros y candidatos de nuestra iglesia local.</strong>
+        </p>
+        <h2>¡Gracias por ser parte!</h2>
+      </div>
     </div>
   );
 };
+
 export default Productos;
+

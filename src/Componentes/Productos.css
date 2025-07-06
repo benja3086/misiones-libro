@@ -16,7 +16,8 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  flex-wrap: wrap; /* para que el menú no se desborde en pantallas pequeñas */
+  flex-wrap: wrap;
+  margin-bottom: 0;
 }
 
 .menu a {
@@ -26,7 +27,7 @@ body {
   padding: 6px 12px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
-  white-space: nowrap; /* evitar que los links se dividan en varias líneas */
+  white-space: nowrap;
 }
 
 .menu a:hover {
@@ -35,7 +36,7 @@ body {
 
 h3 {
   max-width: 800px;
-  margin: 40px auto;
+  margin: 20px auto;
   font-size: 1.1rem;
   line-height: 1.7;
   font-weight: 500;
@@ -43,21 +44,62 @@ h3 {
   padding: 0 20px;
 }
 
-/* Mejoras para pantallas pequeñas */
-@media (max-width: 600px) {
-  h3 {
-    font-size: 1rem;
-    margin: 20px 15px;
-    padding: 0 10px;
-  }
+/* Contenedor de la sección de productos */
+.productos-container {
+  margin: 0 auto;
+  padding: 20px 20px 40px;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 
+/* Imagen del logo */
+.logo3 {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  margin: 10px auto 20px;
+  display: block;
+}
+
+/* Texto de productos */
+.productos-texto p {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+.productos-texto h2 {
+  margin-top: 20px;
+  font-size: 1.3rem;
+  color: #222;
+}
+
+@media (max-width: 600px) {
   .menu {
-    justify-content: space-around; /* distribuir mejor los enlaces */
+    justify-content: space-around;
     padding: 10px 5px;
   }
 
   .menu a {
     padding: 6px 8px;
     font-size: 0.9rem;
+  }
+
+  .logo3 {
+    max-width: 90%;
+    margin: 10px auto 20px;
+  }
+
+  .productos-texto p {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .productos-texto h2 {
+    font-size: 1.1rem;
   }
 }
