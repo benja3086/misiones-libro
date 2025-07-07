@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import imagen from "../assets/fondo-blanco.png";
+
 const Libros = () => {
   const [busqueda, setBusqueda] = useState("");
   

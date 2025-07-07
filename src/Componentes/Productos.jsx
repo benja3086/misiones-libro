@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "./Productos.css";
-import imagen1 from "../assets/fondo-blanco.png";
+import imagen from "../assets/fondo-blanco.png";
+import imagen1 from "../assets/Logo-verde.png";
 
 const Productos = () => {
   return (

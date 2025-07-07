@@ -9,7 +9,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .detalle-libro img {
@@ -17,10 +17,12 @@
   width: 100%;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .detalle-libro-contenido {
   flex: 1;
+  min-width: 250px;
 }
 
 .detalle-libro h2 {
@@ -33,8 +35,9 @@
   font-size: 1.4rem;
   font-weight: bold;
   color: #27ae60;
-  margin: 10px 0;
-}
+  margin: 20px 0;
+  text-align: left; }
+
 
 .detalle-libro p {
   font-size: 1.1rem;
@@ -49,4 +52,34 @@
   margin-bottom: 8px;
 }
 
+/* 👇 Versión móvil */
+@media (max-width: 768px) {
+  .detalle-libro {
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+  }
 
+  .detalle-libro img {
+    max-width: 90%;
+  }
+
+  .detalle-libro h2 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .detalle-libro .precio {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .detalle-libro p,
+  .autor {
+    text-align: center;
+  }
+
+  .detalle-libro-contenido {
+    width: 100%;
+  }
+}

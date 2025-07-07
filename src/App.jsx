@@ -7,12 +7,14 @@ import Marquesina from "./Componentes/Marquesina";
 import Productos from "./Componentes/Productos";
 import Contacto from "./Componentes/Contacto";
 import Home from "./Componentes/Home";
+import BotonIg from "./Componentes/BotonIg";
 
 const App = () => {
   return (
     <div>
       <Marquesina />
       <Home/>
+      <BotonIg/>
       <Routes>
         <Route path="/" element={<Productos />} />
         <Route path="/Libros" element={<Libros />} />
