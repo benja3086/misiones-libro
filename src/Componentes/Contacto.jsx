@@ -5,11 +5,11 @@ const Contacto = () => {
     
     <div className="contacto-container">
 <p>
-  Podés escribirnos a:{" "}
+  <strong>Podés escribirnos a:{" "}</strong>
   <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJZZQQBNcVQJkqhxHqXDPFQBLclVrxgBXZDmHmMXnHnZRtHnbzZPqGdbfTZPGHrXFnNdPTL">misionesidc@gmail.com</a>
 </p>
 <p>
-  También podés contactarnos por Instagram:{" "}
+  <strong>También podés contactarnos por Instagram:{" "}</strong>
   <a
     href="https://www.instagram.com/misionesidc/"
     target="_blank"

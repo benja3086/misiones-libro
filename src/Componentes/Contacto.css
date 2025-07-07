@@ -27,6 +27,7 @@
 .contacto-container strong {
   font-weight: bold;
   color: #000;
+  font-size: 1.2rem; /* Puedes aumentar este valor según lo que necesites */
 }
 
 .contacto-container a {
