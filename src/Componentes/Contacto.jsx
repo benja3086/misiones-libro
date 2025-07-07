@@ -4,11 +4,11 @@ const Contacto = () => {
   return (
     
     <div className="contacto-container">
-<h3>
+<p>
   Podés escribirnos a:{" "}
   <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJZZQQBNcVQJkqhxHqXDPFQBLclVrxgBXZDmHmMXnHnZRtHnbzZPqGdbfTZPGHrXFnNdPTL">misionesidc@gmail.com</a>
-</h3>
-<h3>
+</p>
+<p>
   También podés contactarnos por Instagram:{" "}
   <a
     href="https://www.instagram.com/misionesidc/"
@@ -17,7 +17,7 @@ const Contacto = () => {
   >
     @misionesidc
   </a>
-</h3>
+</p>
 
 <br />
 <br />
