@@ -2,31 +2,15 @@ import "./Contacto.css";
 
 const Contacto = () => {
   return (
-    
     <div className="contacto-container">
-<p>
-  <strong>Podés escribirnos a:{" "}</strong>
-  <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJZZQQBNcVQJkqhxHqXDPFQBLclVrxgBXZDmHmMXnHnZRtHnbzZPqGdbfTZPGHrXFnNdPTL">misionesidc@gmail.com</a>
-</p>
-<p>
-  <strong>También podés contactarnos por Instagram:{" "}</strong>
-  <a
-    href="https://www.instagram.com/misionesidc/"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    @misionesidc
-  </a>
-</p>
-
-<br />
-<br />
-Los horarios de nuestras reuniones son: <br />
-<strong>Sábado</strong> de 20:00 a 21:30 <br />
-<strong>Domingo</strong> de 10:00 a 11:30 <br />
-<br />
-Dirección: <br />
-<strong>Pasaje Padilla 390</strong>
+      <h2>¿Dónde encontrarnos?</h2>
+      <p>Puedes adquirir nuestros productos en nuestro stand en Misiones.</p>
+      <p>¡Acércate durante el horario de nuestras reuniones!</p>
+      <ul>
+        <li><strong>Sábado:</strong> 20:00 hs</li>
+        <li><strong>Domingo:</strong> 10:00 hs</li>
+      </ul>
+      <p><strong>Ubicación:</strong> Iglesia de Cristo, Pasaje Padilla 76.</p>
     </div>
   );
 };
