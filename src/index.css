@@ -41,25 +41,17 @@
   margin-bottom: 12px;
 }
 
-/* Título del libro */
 .titulo-libro {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #222;
-  margin: 10px 0 5px;
-  line-height: 1.4;
+  font-size: 1.10rem; /* más chico aún */
+  line-height: 1.1;
   text-align: center;
   word-break: break-word;
   hyphens: auto;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
-/* Precio */
+
+
+
 .precio {
   color: #b12704;
   font-weight: bold;
@@ -68,7 +60,6 @@
   text-align: center;
 }
 
-/* Buscador */
 .buscador {
   width: 100%;
   max-width: 320px;
@@ -81,14 +72,12 @@
   display: block;
 }
 
-/* Header de la home */
 .home-header {
   text-align: center;
   padding: 30px 20px 10px;
   background-color: #ffffff;
 }
 
-/* Logo */
 .logo {
   width: 180px;
   height: auto;
@@ -98,7 +87,6 @@
   margin-right: auto;
 }
 
-/* Media queries: tablets */
 @media (max-width: 900px) {
   .contenedor-libros {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
