@@ -44,7 +44,6 @@ h3 {
   padding: 0 20px;
 }
 
-/* Contenedor de la sección de productos */
 .productos-container {
   margin: 0 auto;
   padding: 20px 20px 40px;
@@ -55,8 +54,8 @@ h3 {
   text-align: center;
 }
 
-/* Imagen del logo */
 .logo3 {
+  border-radius: 30px;
   width: 100%;
   max-width: 500px;
   height: auto;
@@ -64,7 +63,6 @@ h3 {
   display: block;
 }
 
-/* Texto de productos */
 .productos-texto p {
   margin-bottom: 15px;
   font-size: 1.1rem;

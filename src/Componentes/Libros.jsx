@@ -177,45 +177,61 @@ const Libros = () => {
       item.id.toString().includes(busqueda)
   );
 
-  return (
-    <>
-      <header className="home-header">
-        <img alt="" className="home-logo" />
-        <h1 className="titulo">Tienda Misiones</h1>
-      </header>
-      <div className="contenedor-principal">
-        <div className="fila">
-          <input
-            type="text"
-            placeholder="Busca el libro por nombre ..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            className="buscador"
-          />
+return (
+  <>
+    <header className="home-header">
+      <img alt="" className="home-logo" />
+      <h1 className="titulo">Tienda Misiones</h1>
+    </header>
 
-          <div className="contenedor-libros">
-            {resultados.map((item) => (
-              <Link
-                to={`/libros/${item.id}`}
-                key={item.id}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <div className="tarjeta-libro">
-                  <img src={item.imagen} alt={item.nombre} />
-                  <h3 className="titulo-libro">
-                    {item.nombre.replace(/\s+/g, " ").trim()}
-                  </h3>
-                  <p className="precio">
-                    ${item.precio.toLocaleString("es-AR")}
-                  </p>
-                </div>
-              </Link>
-            ))}
+    <div className="buscador-contenedor">
+  <input
+    type="text"
+    placeholder="Busca el libro por nombre ..."
+    value={busqueda}
+    onChange={(e) => setBusqueda(e.target.value)}
+    className="buscador"
+  />
+  <button className="boton-lupa" type="submit">
+    <svg
+      className="icono-lupa"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"
+        stroke="currentColor"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </button>
+</div>
+
+
+    <div className="contenedor-libros">
+      {resultados.map((item) => (
+        <Link
+          to={`/libros/${item.id}`}
+          key={item.id}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <div className="tarjeta-libro">
+            <img src={item.imagen} alt={item.nombre} />
+            <h3 className="titulo-libro">
+              {item.nombre.replace(/\s+/g, " ").trim()}
+            </h3>
+            <p className="precio">
+              ${item.precio.toLocaleString("es-AR")}
+            </p>
           </div>
-          <img className="logo" src={imagen} alt="Logo de misiones" />
-        </div>
-      </div>
-    </>
-  );
+        </Link>
+      ))}
+    </div>
+    <img className="logo" src={imagen} alt="Logo de misiones" />
+  </>
+);
 };
 export default Libros;

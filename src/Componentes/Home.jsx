@@ -9,7 +9,7 @@ const Home = () => {
         <Link to="/">Inicio</Link>
         <Link to="/productos">Productos</Link>
         <Link to="/Contacto">Contacto</Link>
-        <Link to="/Libros">libros</Link>
+        <Link to="/Libros">Libros</Link>
       </nav>
     </div>
   );
