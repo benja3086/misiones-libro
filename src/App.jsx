@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import "./Index.css";
+import "./index.css";
 import Libros from "./Componentes/Libros";
 import LibroDetalle from "./Componentes/LibroDetalle";
 import Marquesina from "./Componentes/Marquesina";
