@@ -22,5 +22,3 @@ Este proyecto es una aplicación web creada con **React + Vite** para mostrar y 
 ## 👨‍💻 Contribuyentes
 
 - Benjamin Quinteros Tacconi (@benja3086)
-- Bruno Distaulo
-- Andrés Cuello
