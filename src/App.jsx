@@ -13,14 +13,13 @@ const App = () => {
   return (
     <div>
       <Marquesina />
-      <Home/>
-      <BotonIg/>
+      <Home />
+      <BotonIg />
       <Routes>
         <Route path="/" element={<Productos />} />
         <Route path="/Libros" element={<Libros />} />
         <Route path="/Contacto" element={<Contacto />} />
         <Route path="/libros/:id" element={<LibroDetalle />} />
-        
       </Routes>
     </div>
   );
