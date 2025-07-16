@@ -25,8 +25,8 @@ body {
 
 .carousel-simple img {
   width: 100%;
-  height: 300px;           /* o el alto que prefieras */
-  object-fit: cover;       /* o "contain", según lo que busques */
+  height: 300px;           
+  object-fit: cover;       
   display: block;
   border-radius: 16px;
 }

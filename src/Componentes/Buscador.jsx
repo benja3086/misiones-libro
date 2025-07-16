@@ -2,6 +2,7 @@
 return (
    <>
       <Home />
+      
       <div className="contenedor-principal">
         <div className="fila">
           <input

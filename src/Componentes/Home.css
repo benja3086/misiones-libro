@@ -1,0 +1,87 @@
+.navbar {
+  background-color: white;
+  padding: 20px 40px;
+  border-bottom: 1px solid #ffffff;  
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+  z-index: 100;
+}
+
+
+.menu {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  position: relative;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+}
+
+.menu a:hover {
+  color: #555;
+}
+
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 30px 60px;
+  display: flex;
+  gap: 80px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid #ffffff;
+  z-index: 99;
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.columna h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.columna ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.columna li {
+  margin-bottom: 10px;
+}
+
+.columna a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.columna a:hover {
+  color: #ffffff;
+}
+
+.contenido {
+  padding: 40px;
+  text-align: center;
+  z-index: 1;
+  position: relative;
+}
