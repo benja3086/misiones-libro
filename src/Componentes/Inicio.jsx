@@ -14,7 +14,7 @@ import imagen2 from "../assets/MisionGlobal.png";
 const slides = [
  
   { src: imagen2, className: "banner-img" },
-
+  
 ];
 
 const Inicio = () => {

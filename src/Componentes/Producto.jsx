@@ -130,7 +130,7 @@ const Producto = () => {
       id: 14,
       nombre: "Sal de tu zona de comodidad",
       precio: 10000,
-      imagen: "",
+      imagen: "https://m.media-amazon.com/images/I/61kP4D1OLAL._SY522_.jpg",
       categoria: "libros",
     },
     {
