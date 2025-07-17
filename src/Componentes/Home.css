@@ -1,7 +1,6 @@
 .navbar {
   background-color: white;
   padding: 20px 40px;
-  border-bottom: 1px solid #ffffff;  
   font-family: 'Segoe UI', sans-serif;
   position: relative;
   z-index: 100;
@@ -42,7 +41,6 @@
   padding: 30px 60px;
   display: flex;
   gap: 80px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-top: 1px solid #ffffff;
   z-index: 99;
 }

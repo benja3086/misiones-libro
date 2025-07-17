@@ -12,15 +12,9 @@ import imagen1 from "../assets/Logo-verde.png";
 import imagen2 from "../assets/MisionGlobal.png";
 
 const slides = [
-  {
-    src: "https://imgs.search.brave.com/NYtXQ3ewKy0F_jLPXMjgXthpRgO0cnqT3rEY1UbhoxE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMud2lraWEubm9j/b29raWUubmV0L25h/cm5pYS9pbWFnZXMv/Mi8yYi9MYXNfQ3Il/QzMlQjNuaWNhc19k/ZV9OYXJuaWFfRWxf/TGUlQzMlQjNuLF9s/YV9CcnVqYV95X2Vs/X0FybWFyaW9fKFRy/YWlsZXJfZXNwYSVD/MyVCMW9sKS9yZXZp/c2lvbi9sYXRlc3Qv/c2NhbGUtdG8td2lk/dGgtZG93bi8yNTA_/Y2I9MjAxODAzMDgx/ODM1MTgmcGF0aC1w/cmVmaXg9ZXM",
-    className: "banner-img",
-  },
+ 
   { src: imagen2, className: "banner-img" },
-  {
-    src: "",
-    className: "banner-img",
-  },
+
 ];
 
 const Inicio = () => {

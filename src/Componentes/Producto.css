@@ -1,9 +1,7 @@
-/* Estilos base del menú */
 .navbar {
   background-color: #fff;
   padding: 10px 0;
   border-bottom: 1px solid #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   z-index: 1000;
   position: relative;
 }
@@ -78,6 +76,7 @@
 .mega-menu a:hover {
   color: #00796b;
 }
+
 
 @media screen and (max-width: 768px) {
   .menu {

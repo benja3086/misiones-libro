@@ -2,8 +2,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./index.css";
-
-import Libros from "./Componentes/Libros";
 import LibroDetalle from "./Componentes/LibroDetalle";
 import Marquesina from "./Componentes/Marquesina";
 import Inicio from "./Componentes/Inicio";

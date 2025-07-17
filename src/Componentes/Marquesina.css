@@ -1,9 +1,14 @@
+body {
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
 .marquesina {
   width: 100%;
   overflow: hidden;
   background-color: #fff;
-  border-top: 1px solid #ffffff;
-  border-bottom: 1px solid #ffffff;
+  
   height: 40px;
   display: flex;
   align-items: center;
