@@ -89,3 +89,18 @@
   z-index: 1;
   position: relative;
 }
+
+@media screen and (max-width: 768px) {
+  .menu {
+    gap: 30px;
+  }
+
+  .menu a {
+    font-size: 26px;
+    background: linear-gradient(100deg, #039a83d9 0%, #099bae 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+}
