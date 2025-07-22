@@ -76,6 +76,15 @@
 .mega-menu a:hover {
   color: #00796b;
 }
+.sin-stock {
+  margin-top: 8px;
+  text-align: center;
+  color: #ff0a0a;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+
 
 
 @media screen and (max-width: 768px) {

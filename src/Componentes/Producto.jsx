@@ -23,7 +23,7 @@ const Producto = () => {
       id: 2,
       nombre: "Porque En Favor De La Vida",
       precio: 10000,
-      depscription: "",
+      descripcion: `Ningún tema divide tanto ni es tan controversial como el aborto. Con un estilo conciso, sin agresividad, Randy Alcorn ofrece respuestas sensibles y ciertas a las cuestiones principales del debate sobre el aborto.`,
       imagen:
         "https://static.clclibros.com/_CLCPanama/images/products/large/4819.jpg",
       categoria: "libros",
@@ -241,7 +241,7 @@ const Producto = () => {
       className: "tarjeta-libro",
       id: 26,
       nombre: "CUADERNO TAPA DURA MEDIANO",
-      precio: 12000,
+      precio: 10500,
       imagen:
         "https://acdn-us.mitiendanube.com/stores/001/171/588/products/mediano-amor-0afa3017db8fb9119817071384973658-1024-1024.webp",
       autor: "Santa Fe Ediciones",
@@ -251,7 +251,7 @@ const Producto = () => {
       className: "tarjeta-libro",
       id: 27,
       nombre: "CUADERNO CHICO A5 100 HOJAS",
-      precio: 12000,
+      precio: 9000,
       imagen:
         "https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuaderno-a5-lineas-negras1-883eb8f3a8438ecd6c16024456072285-1024-1024.webp",
       autor: "Santa Fe Ediciones",
@@ -259,18 +259,9 @@ const Producto = () => {
     },
     {
       className: "tarjeta-libro",
-      id: 28,
-      nombre: "CUADERNO CHICO A5 75 HOJAS",
-      precio: 12000,
-      imagen: "https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuaderno-a5-lettering-301-02-3ecd53b4acf7ed5f5f17014730450733-640-0.webp",
-      autor: "",
-      categoria: "cuadernos",
-    },
-    {
-      className: "tarjeta-libro",
       id: 29,
       nombre: "CUADERNO CUADRADO",
-      precio: 12000,
+      precio: 8000,
       imagen:
         "https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuadrado-flores-21-3956e4f14dd3e2a0e816196997049911-1024-1024.webp",
       autor: "Santa Fe Ediciones",
@@ -280,7 +271,7 @@ const Producto = () => {
       className: "tarjeta-libro",
       id: 30,
       nombre: "CUADERNO TAPA FLEXIBLE A4",
-      precio: 12000,
+      precio: 8000,
       imagen:
         "https://acdn-us.mitiendanube.com/stores/001/171/588/products/chico-tropical-todo-ayuda1-b109f4da4c878c481516018445439460-1024-1024.webp",
       autor: "Santa Fe Ediciones",
@@ -295,13 +286,14 @@ const Producto = () => {
         "https://acdn-us.mitiendanube.com/stores/001/171/588/products/mediano-flores-rosas-y-celeste1-e3297fc6fa198ce08116759461834674-1024-1024.webp",
       autor: "Santa Fe Ediciones",
       categoria: "cuadernos",
+      stock: 0, // Sin stock
     },
     
     {
       className: "tarjeta-libro",
       id: 33,
       nombre: "CUADERNO ANILLADO ARRIBA TAPA FLEXIBLE",
-      precio: 12000,
+      precio: 5000,
       imagen:
         "https://acdn-us.mitiendanube.com/stores/001/171/588/products/img_50921-b95205d4c1b9894a3916841556157303-1024-1024.webp",
       autor: "Santa Fe Ediciones",
@@ -329,7 +321,7 @@ const Producto = () => {
       className: "tarjeta-libro",
       id: 36,
       nombre: "CUADERNO POCKET TAPA DURA",
-      precio: 12000,
+      precio: 7000,
       imagen:
         "https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuaderno-pocket-flores-02-95a9a4447a386819d317264330280210-1024-1024.webp",
       autor: "Santa Fe Ediciones",
@@ -367,7 +359,7 @@ const Producto = () => {
       className: "tarjeta-libro",
       id: 40,
       nombre: "LA VIDA ETERNA",
-      precio: 12000,
+      precio: 1000,
       imagen:
         "https://m.media-amazon.com/images/I/6168Jfzl9tL._UF1000,1000_QL80_.jpg",
       autor: "Santa Fe Ediciones",
@@ -406,7 +398,7 @@ const Producto = () => {
       className: "tarjeta-libro",
       id: 44,
       nombre: "Libro Para Niños - Para colorear * DAVID",
-      precio: 12000,
+      precio: 5500,
       imagen: "https://acdn-us.mitiendanube.com/stores/001/171/588/products/aventuras-de-david-blanco-y-negro_pagina_01-a65fe9a0adb7e4b7c917227982623215-1024-1024.webp",
       autor: "Santa Fe Ediciones",
       categoria: "cuadernos",
@@ -514,7 +506,7 @@ const Producto = () => {
       className: "tarjeta-libro",
       id: 55,
       nombre: "Socorro, Quiero vivir",
-      precio: 12000,
+      precio: 6000,
       imagen: "SocorroQuiero.jpg",
       autor: "Pablo Mazzuh",
       categoria: "libros",
@@ -579,6 +571,10 @@ const Producto = () => {
                 ))}
               <h3 className="titulo-libro">{item.nombre.trim()}</h3>
               <p className="precio">${item.precio.toLocaleString("es-AR")}</p>
+                 {/* 👇 Cartel de sin stock */}
+        {item.stock === 0 && (
+          <p className="sin-stock">Sin stock</p>
+        )}
             </div>
           </Link>
         ))}

@@ -28,15 +28,16 @@ Jo Shetler, Traductores de la biblia Wycliffe.`,
 		imagen: "https://m.media-amazon.com/images/I/61COzzMahfS._SY522_.jpg",
 		categoria: "libros",
 	},
-	{
-		className: "tarjeta-libro",
-		id: 2,
-		nombre: "Porque En Favor De La Vida",
-		precio: 10000,
-		imagen:
+	  {
+		  className: "tarjeta-libro",
+		  id: 2,
+		  nombre: "Porque En Favor De La Vida",
+		  precio: 10000,
+		  descripcion: `Ningún tema divide tanto ni es tan controversial como el aborto. Con un estilo conciso, sin agresividad, Randy Alcorn ofrece respuestas sensibles y ciertas a las cuestiones principales del debate sobre el aborto.`,
+		  imagen:
 			"https://static.clclibros.com/_CLCPanama/images/products/large/4819.jpg",
-		categoria: "libros",
-	},
+		  categoria: "libros",
+		},
 	{
 		className: "tarjeta-libro",
 		id: 3,
