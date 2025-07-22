@@ -185,7 +185,7 @@ const Producto = () => {
       id: 20,
       nombre: "Estudio Biblico Expositivo de Marcos",
       precio: 40000,
-      imagen: "./public/EstudioBiblico.jpg",
+      imagen: "/EstudioBiblico.jpg",
       categoria: "libros",
     },
     {
