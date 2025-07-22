@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./LibroDetalle.css";
 import { Description } from "@headlessui/react";
 
@@ -673,6 +673,15 @@ const LibroDetalle = () => {
 	const libro = libros.find((l) => l.id === parseInt(id));
 	const [imagenGrande, setImagenGrande] = useState(null);
 	const [zoom, setZoom] = useState(1);
+	const modalRef = useRef(null);
+
+	// Cuando se abre el modal, scrollea arriba
+	useEffect(() => {
+		if (imagenGrande && modalRef.current) {
+			modalRef.current.scrollTop = 0;
+			modalRef.current.scrollLeft = 0;
+		}
+	}, [imagenGrande]);
 
 	if (!libro) return <h2>Libro no encontrado</h2>;
 
@@ -721,6 +730,7 @@ const LibroDetalle = () => {
 			{imagenGrande && (
 				<div
 					className="modal-imagen"
+					ref={modalRef}
 					style={{
 						cursor: zoom > 1 ? "grab" : "zoom-in",
 					}}

@@ -99,10 +99,14 @@
   z-index: 9999;
   overflow: auto;
   cursor: grab;
+  padding: 0; 
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; 
 }
+
 .modal-imagen img {
-  max-width: none;
-  max-height: none;
+  max-width: 95vw;
+  max-height: 80vh;
   width: auto;
   height: auto;
   display: block;
@@ -110,5 +114,17 @@
   border-radius: 10px;
   box-shadow: 0 0 20px #000;
   background: #fff;
-  /* El transform lo maneja React */
+}
+
+@media (max-width: 600px) {
+  .modal-imagen {
+    align-items: flex-start !important;
+    padding: 0;
+  }
+  .modal-imagen img {
+    max-width: 98vw;
+    max-height: 85vh; 
+    border-radius: 6px;
+    margin: 10px auto;
+  }
 }
