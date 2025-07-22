@@ -30,7 +30,7 @@ const Home = () => {
             onMouseEnter={() => setMostrarMenu(true)}
             onMouseLeave={() => setMostrarMenu(false)}
           >
-            <Link to="/Productos">Productos</Link>
+            <Link to="/Producto">Productos</Link>
             {mostrarMenu && (
               <div className="mega-menu">
                 {categorias.map((cat) => (
