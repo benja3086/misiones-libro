@@ -23,6 +23,7 @@ const Producto = () => {
       id: 2,
       nombre: "Porque En Favor De La Vida",
       precio: 10000,
+      depscription: "",
       imagen:
         "https://static.clclibros.com/_CLCPanama/images/products/large/4819.jpg",
       categoria: "libros",
@@ -32,6 +33,7 @@ const Producto = () => {
       id: 3,
       nombre: "Traspaso Generacional",
       precio: 15000,
+      depscription: "hola",
       imagen:
         "https://emmausbogota.com/wp-content/uploads/2022/09/EL-TRASPASO-portada.png",
       categoria: "libros",
@@ -156,7 +158,7 @@ const Producto = () => {
       id: 17,
       nombre: "A fin de conocerle",
       precio: 30000,
-      imagen: "",
+     imagen: "AFinDeConocerle.jpg",
       categoria: "libros",
     },
     {
@@ -181,9 +183,9 @@ const Producto = () => {
     {
       className: "tarjeta-libro",
       id: 20,
-      nombre: "Estudio Biblico Expositivo de Marcos. Carlos Morris",
+      nombre: "Estudio Biblico Expositivo de Marcos",
       precio: 40000,
-      imagen: "",
+      imagen: "./public/EstudioBiblico.jpg",
       categoria: "libros",
     },
     {
@@ -260,8 +262,8 @@ const Producto = () => {
       id: 28,
       nombre: "CUADERNO CHICO A5 75 HOJAS",
       precio: 12000,
-      imagen: "",
-      autor: "Santa Fe Ediciones",
+      imagen: "https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuaderno-a5-lettering-301-02-3ecd53b4acf7ed5f5f17014730450733-640-0.webp",
+      autor: "",
       categoria: "cuadernos",
     },
     {
@@ -294,15 +296,7 @@ const Producto = () => {
       autor: "Santa Fe Ediciones",
       categoria: "cuadernos",
     },
-    {
-      className: "tarjeta-libro",
-      id: 32,
-      nombre: "DIARIO HOJA COLOR",
-      precio: 12000,
-      imagen: "",
-      autor: "Santa Fe Ediciones",
-      categoria: "cuadernos",
-    },
+    
     {
       className: "tarjeta-libro",
       id: 33,
@@ -354,9 +348,9 @@ const Producto = () => {
       className: "tarjeta-libro",
       id: 38,
       nombre: "POSA VASOS",
-      precio: 12000,
-      imagen: "",
-      autor: "Santa Fe Ediciones",
+      precio: 700,
+      imagen: "PortaVaso.jpg",
+      autor: "",
       categoria: "accesorios",
     },
     {
@@ -515,6 +509,15 @@ const Producto = () => {
       imagen: "https://dcdn-us.mitiendanube.com/stores/005/344/522/products/cumple-tu-destino-a-e00a9f3dbe1a8ff21217292059095413-1024-1024.webp",
       autor: "Santa Fe Ediciones",
       categoria: "remeras",
+    },
+      {
+      className: "tarjeta-libro",
+      id: 55,
+      nombre: "Socorro, Quiero vivir",
+      precio: 12000,
+      imagen: "SocorroQuiero.jpg",
+      autor: "Pablo Mazzuh",
+      categoria: "libros",
     },
   ]);
 

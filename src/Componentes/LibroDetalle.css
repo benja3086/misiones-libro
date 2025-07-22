@@ -38,7 +38,9 @@
   margin: 20px 0;
   text-align: left; }
 
-
+.detalle-libro-contenido p {
+  white-space: pre-line;
+}
 .detalle-libro p {
   font-size: 1.1rem;
   color: #444;
@@ -82,4 +84,31 @@
   .detalle-libro-contenido {
     width: 100%;
   }
+}
+
+.modal-imagen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: auto;
+  cursor: grab;
+}
+.modal-imagen img {
+  max-width: none;
+  max-height: none;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #000;
+  background: #fff;
+  /* El transform lo maneja React */
 }
