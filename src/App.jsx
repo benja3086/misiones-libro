@@ -1,6 +1,8 @@
 // src/App.jsx
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import ReactGA from "react-ga4";
+
 import "./index.css";
 import LibroDetalle from "./Componentes/LibroDetalle";
 import Marquesina from "./Componentes/Marquesina";
@@ -10,7 +12,16 @@ import Home from "./Componentes/Home";
 import BotonIg from "./Componentes/BotonIg";
 import Producto from "./Componentes/Producto";
 
+ReactGA.initialize("G-PE39GW4037"); // ✅ Inicializar GA4 una sola vez
+
 const App = () => {
+  const location = useLocation();
+
+  // Enviar un pageview cada vez que cambia la ruta
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: location.pathname });
+  }, [location]);
+
   return (
     <div>
       <Marquesina />
