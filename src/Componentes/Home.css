@@ -4,6 +4,8 @@
   font-family: 'Segoe UI', sans-serif;
   position: relative;
   z-index: 100;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 
@@ -14,6 +16,8 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 .menu li {
