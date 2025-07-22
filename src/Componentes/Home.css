@@ -1,3 +1,8 @@
+body,
+html {
+  background: #181818;
+}
+
 .navbar {
   background-color: #181818; /* O el color de fondo de tu sitio */
   padding: 20px 40px;
