@@ -286,7 +286,7 @@ const Producto = () => {
         "https://acdn-us.mitiendanube.com/stores/001/171/588/products/mediano-flores-rosas-y-celeste1-e3297fc6fa198ce08116759461834674-1024-1024.webp",
       autor: "Santa Fe Ediciones",
       categoria: "cuadernos",
-      stock: 0, // Sin stock
+      stock: 0, 
     },
     
     {
@@ -316,6 +316,7 @@ const Producto = () => {
       imagen: "",
       autor: "Santa Fe Ediciones",
       categoria: "cuadernos",
+      stock: 0, 
     },
     {
       className: "tarjeta-libro",
