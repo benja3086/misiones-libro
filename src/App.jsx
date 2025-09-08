@@ -12,12 +12,10 @@ import Home from "./Componentes/Home";
 import BotonIg from "./Componentes/BotonIg";
 import Producto from "./Componentes/Producto";
 
-ReactGA.initialize("G-PE39GW4037"); // ✅ Inicializar GA4 una sola vez
-
+ReactGA.initialize("G-PE39GW4037"); 
 const App = () => {
   const location = useLocation();
 
-  // Enviar un pageview cada vez que cambia la ruta
   useEffect(() => {
     ReactGA.send({ hitType: "pageview", page: location.pathname });
   }, [location]);

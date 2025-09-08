@@ -54,7 +54,6 @@
   margin-bottom: 8px;
 }
 
-/* 👇 Versión móvil */
 @media (max-width: 768px) {
   .detalle-libro {
     flex-direction: column;
