@@ -80,11 +80,11 @@ h3 {
 }
 
 .logo3 {
-  border-radius: 30px;
+  border-radius: 25px;
   width: 100%;
   max-width: 500px;
   height: auto;
-  margin: 10px auto 20px;
+  margin: -60px auto 20px;
   display: block;
 }
 
