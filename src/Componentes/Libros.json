@@ -1,0 +1,529 @@
+{
+  "producto": [
+	{
+		"className": "tarjeta-libro",
+		"id": 1,
+		"nombre": "Sirviendo Al Enviar Obreros",
+		"autor": "Neal Pirolo",
+		"descripcion": "¿Y CÓMO PREDICARÁN SI NO FUEREN ENVIADOS?\nQuizá usted se pregunte: ¿Cómo puedo involucrarme en la Gran Comisión de la evangelización mundial? La respuesta es:\n¡Usted puede servir al enviar obreros! Los que van y los que sirven al enviar obreros son como dos unidades en el mismo equipo de alcance transcultural. Ambos son igualmente importantes. Ambos están dinámicamente integrados.\n Ambos están avanzando hacia la misma meta del cumplimiento de la Gran Comisión. Y ambos tienen garantizado el éxito, porque los que están en la obra de Dios están en el equipo ganador.\nEste libro aparece en un momento más que justo! Precisamente cuando estamos presenciando la salida de más y más misioneros latinos al extranjero.\n SIRVIENDO AL ENVIAR OBREROS orienta a todos los que quedamos' para que sepamos atender con eficiencia las incontables necesidades de los que 'salen. Detalles y circunstancias, frecuentemente ignorados, son abordados con singular maestría por la pluma del Neal Pirolo. ¡Ningún servidor debería dejar de leerlo!\nPr. Federico Bertuzzi COMIBAN International, PMI\nEstoy convencido de que este es uno de los libros misioneros de más impacto de esta década. Al paso que el pueblo de Dios responda a su mensaje, la obra de alcanzar a los no alcanzados avanzará en gran manera. George Verwer, Operación Movilización Esta es la clase de ayuda que cada Iglesia necesita. Llevar a cabo los pasos para la acción de este libro tendrá un impacto profundo, tanto en los que son enviados, como en los que los envían. Jo Shetler, Traductores de la biblia Wycliffe.",
+		"precio": 12000,
+		"imagen": "https://m.media-amazon.com/images/I/61COzzMahfS._SY522_.jpg",
+		"categoria": "libros"
+	},
+	  {
+		  "className": "tarjeta-libro",
+		  "id": 2,
+		  "nombre": "Porque En Favor De La Vida",
+		  "precio": 10000,
+		  "descripcion": "Ningún tema divide tanto ni es tan controversial como el aborto. Con un estilo conciso, sin agresividad, Randy Alcorn ofrece respuestas sensibles y ciertas a las cuestiones principales del debate sobre el aborto.",
+		  "imagen":
+			"https://static.clclibros.com/_CLCPanama/images/products/large/4819.jpg",
+		  "categoria": "libros"
+		},
+	{
+		"className": "tarjeta-libro",
+		"id": 3,
+		"nombre": "Traspaso Generacional",
+		"precio": 15000,
+		"autor": "Carlos Morris",
+		"descripcion": "Lo que has oído de mí ante muchos testigos, esto encarga a hombres fieles que sean idóneos para enseñar también a otros\n (2a Tim. 2:2)\nEn la Palabra de Dios se compara la vida cristiana a una carrera en la que todos estamos involucrados individualmente. \nResulta significativo que el escritor a los Hebreos, después de enumerar los héroes de la fe en el capítulo once, comienza el capítulo doce como si estuviera señalando que ellos, a su vez, han pasado el testigo a las genera ciones sucesivas:\n exhorta a que, al tener en derredor tan grande nube de testigos, \n...corramos con paciencia la ca rrera que tenemos por delante, puestos los ojos en Jesús, el \nautor y consumador de la fe\n (Heb. 12:1, 2a).\nNo pretendo en las páginas de este libro presentar meras teorías persuasivas de factura humana, sino sugerencias prácticas, ya experimentadas en el fragor de la labor eclesial. En mi caso, este se ha realizado en varios contex tos distintos, ya que he tenido el privilegio de actuar como anciano en tres diferentes Asambleas (dos en Argentina una en España).\nEspero, por tanto, que estas reflexiones sean tomadas en cuenta no solo al representar el mero futuro de la inspi- ración y sabiduría humana, sino estar fundamentadas en la revelación divina de la Palabra de Dios y su aplicación través de la historia del pueblo de Dios y de la Iglesia. El orden establecido por Dios, y no las nociones humanas, debe ser nuestra guía.",
+		"imagen":
+			"https://emmausbogota.com/wp-content/uploads/2022/09/EL-TRASPASO-portada.png",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 4,
+		"nombre": "Explorer Vida",
+		"autor": "Maria Rodriguez",
+		"descripcion": "EXPLORERVIDA\nVIVE LA MISIÓN DE :\nEl devocional EXPLORER VIDA es un nuevo libro de la serie EXPLORER de MOVIDA. Más de 50 autores latinos, norteamerica- nos y europeos recorren toda la Biblia con una mirada misionera y nos dejan 366 lecturas cortas dinámicas e inspiradoras para tu momento diario de lectura bíblica y oración.\n Cuenta además con información actual sobre 366 pueblos y etnias menos alcanzadas por el evangelio.\nComo ministerio, creemos que este libro EXPLORER suma a la Misión de Dios. Con esta herramienta ayudamos a tornar en realidad el anhelo de muchos líderes cristianos, que desean ver una juventud empoderada con la sana doctrina y la guía del Espíritu Santo. Por medio de este libro, cada año miles de jóvenes son motivados a un acercamiento a la Palabra de Dios y desafiados a la Misión para la cual él nos ha llamado.",
+		"precio": 20000,
+		"imagen": "https://m.media-amazon.com/images/I/81LG0cl+4BL._SY522_.jpg",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 5,
+		"nombre": "Los Mensajes Mayores De Los Profetas Menores",
+		"precio": 6000,
+		"descripcion": "Ahora tendrán a su disposición un manual poco volu- minoso, con un estilo de exposición diáfano y directo, como si el esplendente sol de Nínive incidiese, por una serie de espejos colocados al ángulo debido, en las tinieblas de las casas excavadas en la roca de Petra la edomita, o si un láser de rayos paralelos y penetrantes se adentrara en las profundidades del abismo marino, tenebroso de antigüedad, misterio y oscurantismo, para mostrarnos el corazón patriótico que no rebelde a Dios- de Jonás suplicante. El estilo de la exposición es breve y claro, como la incisión de un cirujano experto y decidido, e igualmente eficaz\nEn fin, se trata de un estudio completo, ordenado y enjundioso, propicio para quienes no hemos dispuesto antes más que de los comentarios a veces farragosos y difíciles de entender que se han incluido en comentarios voluminosos sobre el Antiguo Testamento o toda la Bíblia, en lugar de un fácil manual exclusivamente sobre los profetas menores, expuestos con la máxima claridad. Quiera Dios que el fruto de esta labor sea abundante y provechosa, como nosotros esperamos y el autor merece.",
+		"imagen":
+			"https://cdn.agapea.com/Clie/Los-mensajes-mayores-de-los-profetas-menores-i1n601989.jpg",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 6,
+		"nombre": "El Quinto Evangelio",
+		"precio": 25000,
+		"imagen": "https://m.media-amazon.com/images/I/41IJT7KsndL._SY445_SX342_.jpg",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 7,
+		"nombre": "Que Hace Dios Cuando Oramos?",
+		"precio": 9000,
+		"imagen":
+			"https://imgs.search.brave.com/MViH-G8VbHxRvyTensVUKP6IeymZ41QqzyFNvNtlGOI/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9odHRw/Mi5tbHN0YXRpYy5j/b20vRF9OUV9OUF85/NjA5OTUtTUxNNTA1/OTc0NjM5NzJfMDcy/MDIyLU8tbGlicm8t/cXVlLWhhY2UtZGlv/cy1jdWFuZG8tb3Jh/bW9zLWRhdmlkLXdp/bGtlcnNvbi53ZWJw",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 8,
+		"nombre": "Cambios Profundos",
+		"autor": "Nicolas Emilio Tranchini",
+		"descripcion": "CAMBIOS PROFUNDOS\nI mirar la vida de Jonás uno descubre algo tan desconcertante como cierto: es posible obedecer sin cambiar. Es posible hablarle a otros del amor de Dios, sin sentir amor por otros. Es posible hacer obras espirituales, sin ser\n cambiar nuestros deseos más profundos.\n¿Qué es un cambio profundo? Que cambien nuestros anhelos, nuestros sueños, nuestras ambiciones, nuestras fantasías y nuestras pasiones. Es que cambie lo que disfruta nuestro corazón y, como resultado de este cambio, que cambie nuestra manera de vivir.\n¿Cómo cambiamos de esta forma? Ese es el desafío de este libro.\n«Dios ha mostrado su gracia al usar este libro en toda Latinoamérica y en numerosos países árabes... Te desafío a que lo leas para que \ncambie tu forma de cambiar\n.",
+		"precio": 18000,
+		"imagen":
+			"https://imgs.search.brave.com/l3sc8BzxzRrb3yxC6qLb9_iZKkk0r6vqagljZsMr1t0/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NDErZHh4MUpCOEwu/anBn",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 9,
+		"nombre": "Un Año De Cambios",
+		"autor": "Nicolas Emilio Tranchini",
+		"descripcion": "¿Un devocional?\nUN AÑO DE CAMBIOS\nSí... O no. ¡Tú eliges! Aunque el libro está dividido por días, este no es un devocional tradicional. La gran mayoría de libros devocionales suelen contener pensamientos inspiradores sobre la Palabra de Dios; pero dichos pensamientos se encuentran desconectados unos de otros. Normalmente, el tema que lees un día está aislado del tema que lees al día siguiente. Este libro es diferente. Al leerlo, descubrirás que cada día posee una verdad autocontenida, pero esta verdad se encuentra relacionada con lo que leerás al día siguiente. Está ordenado de forma progresiva para que diaria- mente vayas meditando acerca de cómo se produce el crecimiento espiritual. De esta forma, tienes la posibilidad de leer un día a la vez o varios al mismo tiempo.\n\nEn su forma de escribir,\n¡Tú eliges!",
+		"precio": 20000,
+		"imagen":
+			"https://imgs.search.brave.com/FQuBAV9xr8K16dMrwW5vJW3R5AEdjZwccSa5kronwQg/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bWl0aWVuZGFldmFu/Z2VsaWNhLmNvbS9w/b3J0YWRhcy85Nzg4/NDA5MzQzMTE5Lmpw/Zw",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 10,
+		"nombre": "Mi Lugar En Su Mision",
+		"autor": "Fede Sinopoli",
+		"descripcion": "Dios tiene un propósito para tu vida... ¿cuál es?\nTodo cristiano alguna vez se ha preguntado acerca de cuál es el rol que Dios designó para él. Queremos crecer, servir e involucrarnos en la tarea de llevar el Evangelio a toda la humanidad, pero no sabemos cómo. Nunca nos enseñaron a hacerlo. Como iglesia, aunque solemos hablar mucho de propósito, fallamos a la hora de ayudar a cada persona a encontrar el suyo, lo que termina causando frustración y desánimo. Hoy en día, la mayoría de los creyentes no sabe cuál es el rol que le toca desempeñar dentro del plan de Dios.\nEn Mi Lugar en su Misión, a partir del estudio de la historia de diferentes personajes bíblicos, Fede Sinopoli nos brinda un método práctico por medio del cual vas a poder comprender cuál es el llamado de Dios para tu vida, y así dedicar tu tiempo a llevar adelante la tarea que se te asignó dentro de la gran comisión.",
+		"precio": 20000,
+		"imagen":
+			"https://imgs.search.brave.com/DMnrmq31Io8z4bT5eTmudjehd4wCvo4EWLJc1qpKXgY/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NDFDdUh2OWNkb0wu/anBn",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 11,
+		"nombre": "Descubre El Camino",
+		"autor": "Fede Sinopoli",
+		"descripcion": "Las falsas enseñanzas que habían llegado a la ciudad de Éfeso estaban poniendo en riesgo el avance del Evangelio en la región. Por este motivo, Pablo deja a su joven discípulo, Timoteo, en ese lugar con el fin de ayudar a los creyentes a volver a la verdad. Consciente de que era una tarea difícil, el apóstol le deja a su compañero una serie de instrucciones para que supiera cómo desarrollar su servicio.\nDel mismo modo, nosotros tenemos por delante la difícil tarea de dar a conocer el Evangelio en todo el mundo. Por ello, en este libro, Fede Sinopoli nos ayudará a analizar las indicaciones que Pablo le dejó a Timoteo desde una perspectiva global, para que por medio de ellas descubramos el camino que debemos seguir para tener vidas centradas en Cristo y en la misión de Dios.",
+		"precio": 18000,
+		"imagen":
+			"https://dcdn-us.mitiendanube.com/stores/005/344/522/products/sin-titulo-2-721dcd60de5f66537c17333521248357-1024-1024.webp",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 12,
+		"nombre": "Devocional una pausa en tu vida",
+		"precio": 9000,
+		"descripcion": "¡NECESITO PARAR, NECESITO DESCANSO!\nMás de una vez repetiste esta frase, y lo único que has logrado es hundirte en más actividades, horarios ajustados y situaciones estresantes. Es que este mundo en el que vives está diseñado para el activismo. Esta sociedad, altamente competitiva, no te deja opción.\n¿QUÉ HACER?\nPárate a un lado, observa el paisaje a tu alrededor, alza la vista a conceptos eternos y comienza a apreciar los hermosos detalles que, por andar apurado, estás ignorando Recuerda: \nlo esencial es invisible a los ojos\n Al fin y al cabo, Dios también hizo una pausa en su eternidad para venir a buscarte Hoy es tu turno Haz una pausa y comienza una relación con el \nautor\n de la vida, de manera que te ayude a captar la perspectiva correcta para comenzar cada desafío cotidiano. Las mismas reflexiones diarias que vienes escuchando desde hace años por radio y televisión, bajo el mismo \nnombre\n hoy llegan a ti en formato escrito, como una guía espiritual diaria. No puedes comenzar el año sin hacer..",
+		"imagen":
+			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJLIeua1n-YVwA-GKtxKqlx2DOL_XQ4Y9FxTYlZYOBWLH0qVa5ftPQBJjKPWXHTokwvnM&usqp=CAU",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 13,
+		"nombre": "Mas gotas",
+		"autor": "Jorge Verwer",
+		"precio": 10000,
+		"descripcion": "La Iglesia de Jesucristo triunfó sobre muchos desafíos en los últimos dos mil años... este es un misterio que va más allá de la comprensión humana. En Más gotas, el Dr. Jorge Verwer revela que, en su misericordia, Dios utiliza diversos tipos de personas, misiones y agencias ministeriales para edificar, fortalecer y hacer crecer la iglesia, y que a veces esto puede ser un poco desordenado. Verwer no teme decir que Dios siempre utilizó tales situaciones desordenadas, como todavía lo hace, a fin de cumplir algunos de sus buenos propósitos. De seguro que el poderoso mensaje que viene directamente de su corazón animará a los lectores, así como los convencerá para que acepten la diversidad, y aprendan y se levanten de lo que parece ser el desorden total en la vida.\n«Este libro es un faro de sabiduría práctica; no es una película de suspense, ni un devocionario, sino una guía de conocimientos bíblicos aplicados de la experiencia que puede ayudar al lector a evitar que naufrague en los escollos de la vida». Greg Livingstone Fundador de Frontiers\n«La voz de Jorge Verwer mezclada con su historia personal se escucha con claridad en este libro con un llamado rotundo a seguir adelante con Dios en medio del misterio, el sufrimiento y el desorden de la vida cristiana. La historia de cómo Dios obra dentro de todo esto se dice de forma maravillosa. Algo que hay que leer». Rvdo. Dr. Joseph D'souza Obispo moderador de la iglesia Good Shepherd de la India\n«Al filmar, viajar y trabajar con Jorge he sido de veras bendecido por las \ngotas de agua viva\n que nos da todos los días». Malcolm Turner Director ejecutivo de la Christian Television Association (CTA)",
+		"imagen":
+			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaEeBxyyLRQ9FF8zLzvvryqTeO_-aatjl1HXHeIuzG8NL7gGJkfhnlK_JyrLxIjFKu5Lg&usqp=CAU",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 14,
+		"nombre": "Sal de tu zona de comodidad",
+		"precio": 10000,
+		"descripcion": "Jorge Verwer logró escribir un libro que es sencillo y contundente a la vez\nNo se anduvo con rodeos ante el grito de su corazón por un «despertar de la gracia» dirigido a las misiones, y quiere eliminar cualquier «<espiritualidad>> superficial que quizá esté al acecho en tu interior\nSu enfoque a las misiones es práctico, sincero y bíblico por completo. Después de cuarenta años de experiencia en las misiones, Jorge Verwer está aprendiendo todavía y se encuentra dispuesto al cambio... y no espera menos de ti Muestra cómo muchos cristianos creen que otras personas se ocuparán de esto y tienen una actitud vaga, indiferente y poco realista respecto a lo que son las misiones. Este libro te desafiará a salir de tu zona de comodidad y ajustar tu punto de vista de cómo se debe hacer la obra misionera.",
+		"imagen": "https://m.media-amazon.com/images/I/61kP4D1OLAL._SY522_.jpg",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 15,
+		"nombre": "Cumple tu destino",
+		"autor": "Fede Sinopoli",
+		"descripcion": "El ministerio de Pablo estaba llegando a su fin, pero él entendía que era parte de algo mucho más grande que su propio ser- vicio. Si bien él ya no estaría, la misión tenía que seguir adelante. Todavía había muchos pueblos que nunca habían escuchado. Por tal motivo es que escribe a su joven discípulo, Timoteo, con el fin de animarlo a perseverar frente a la adversidad y a dar su vida por la causa del Evangelio.\nHoy en día vemos cómo quienes nos precedieron van pasando y nosotros quedamos como responsables de continuar con la tarea que Jesús encomendó a su iglesia. Somos la generación más capacitada y con más recursos de la historia para cumplir con la gran comisión. Eso es un privilegio, pero también una responsabilidad. Por tal motivo, analizando este escrito de Pablo, buscaremos llenarnos de la pasión que tenía el apóstol. Conocemos el camino, por lo que solo nos queda cumplir con nuestro destino.",
+		"precio": 18000,
+		"imagen":
+			"https://dcdn-us.mitiendanube.com/stores/005/344/522/products/cumple-tu-destino-eae2738c5f04488f9e17467279262099-640-0.webp",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 16,
+		"nombre": "Testigos",
+		"autor": "Fede Sinopoli",
+		"descripcion": "TESTIGOS\nEVANGELISMO COMO ESTILO DE VIDA\nUno de los grandes desafíos que tiene por delante la iglesia, en este tiempo, es el de recuperar el sentido de la importancia del evangelismo. Los recursos y las libertades con las que solemos contar nos han llevado a enfocarnos más en organizar eventos que en compartir de Cristo con quienes nos rodean. Todo esto ha ocasionado que seamos una iglesia que no evangeliza. La mayor parte de los cristianos pasa año tras año sin hablarle a nadie de Jesús en contextos externos a las actividades eclesiales.\nCon todo esto en mente, Fede nos propone, con este libro, reflexionar acerca de la importancia del evangelismo relacional y sobre cómo hablar de Cristo en nuestra vida cotidiana. La gran comisión nunca apuntó a las multitudes, sino al discipulado. Si no entendemos la centralidad de las relacio- nes, fracasaremos en nuestros intentos de llevar el Evangelio a cada rincón de la tierra.",
+		"precio": 18000,
+		"imagen":
+			"https://dcdn-us.mitiendanube.com/stores/005/344/522/products/testigos-1101aabba39724438a17338615165871-1024-1024.webp",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 17,
+		"nombre": "A fin de conocerle",
+		"autor": "Carlos Morris",
+		"descripcion": "\nSi ellos me preguntaren: ¿Cuál es su \nnombre\n?, ¿qué les responderé? Y respondió Dios a Moisés: YO SOY EL QUE SOY.\n Éxodo 3:13b-14a\n\nY ésta es la vida eterna: que te conozcan a ti, el único Dios verdadero, y a Jesucristo, a quien has enviado.\n - S. Juan 17:3\n\nDon Carlos Morris nos dejó este libro extraordinario que nos permite abordar lo que Dios mismo quiere: darse a conocer. Si bien no nos alcanzara la eternidad para terminar de conocerle, este manual nos acerca tanto al Señor que nos permite contemplarle, entenderle, compren- derle y, por sobre todo, amarle más y más\n",
+		"precio": 30000,
+		"imagen": "AFinDeConocerle.jpg",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 18,
+		"nombre": "Deberes Mutuos",
+		"autor": "Carlos Morris",
+		"descripcion": "SAN JUAN 13:34\nUn mandamiento nuevo les doy: Que se amen unos a otros. Así como yo los he amado, ámense también ustedes unos a otros.\nEn el ámbito legal hay una máxima que dice \nmi derecho termina donde comienza el de los demás.\n Si bien esta frase funciona como reguladora en el ejercicio de los derechos individuales, puede usarse también para delimitar el alcance de nuestra individualidad, en función de la comunidad.\nToda interacción con otra persona siempre genera derechos y deberes, y en la comunidad cristiana, esos deberes están enmarcados por una serie de mandamientos y enseñanzas desarrollados a lo largo de las Escrituras, los cuales siguen un patrón recurrente con la frase \nunos a otros\n. En gramática, esta frase se denomina pronombre recíproco, e indica la manera en que debo actuar hacia el otro y, asimismo, cómo esta persona debe hacerlo para conmigo.\nEsta relación de derechos y obligaciones recíprocas, son conocidos como deberes mutuos. En este tratado, el author desarrolla estos deberes, que regulan la vida todo creyente en el Cuerpo de Cristo, siguiendo el orden en que aparecen en el Nuevo Testamento.",
+		"precio": 25000,
+		"imagen": "https://http2.mlstatic.com/D_872076-MLA51547308585_092022-C.jpg",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 19,
+		"nombre": "Mas alla de las sombras",
+		"autor": "Carlos Morris",
+		"precio": 25000,
+		"imagen":
+			"https://http2.mlstatic.com/D_NQ_NP_647088-MLA51326669364_082022-O.webp",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 20,
+		"nombre": "Estudio Biblico Expositivo de Marcos",
+		"autor": "Carlos Morris",
+		"precio": 40000,
+		"descripcion": "Maestro es aquel que deja huellas en la vida de sus alumnos aunque ya no se encuentre entre ellos pero sus enseñanzas sí lo están Estos pensamientos nos vienen a la mente cuando pensamos en el Señor Jesucristo pero también se refleja en la vida de tantos maestros que como Jesús ya no están entre sus discípulos pero sí con ellos\nCarlos no sólo fue un maestro indiscutido un hermano amoroso un amigo fiel un siervo apacible un hijo obediente En los últimos años de su vida su andar cansino producto de muchos años de vida no se condecían con sus mensajes poderosos en palabra, ágiles, dinámicos, estructurales en cuanto a su preparación, pero dejando en el lector el desafío de continuar indagando de cada tema propuesto\nLos libros de nuestro amado hermano Carlos Morris son el resultado de toda una vida de estudio, dedicación e interpretación acertada de las Sagradas Escrituras",
+		"imagen": "./public/EstudioBiblico.jpg",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 21,
+		"nombre": "Avivamiento Hasta lo ultimo De la Tierra",
+		"precio": 3500,
+		"descripcion": "AVIVAMIENTO HASTA LO ÚLTIMO DE LA TIERRA\nEstamos muy expectantes por lo que Dios va a hacer en los próximos cuarenta días en y a través de todos los hermanos, hermanas e iglesias de toda la Argentina. Creemos que Él quiere usarnos en este 2024 para traer un avivamiento como nunca hemos visto en nuestro amado país. Y para guiarnos e instruirnos en este camino, el Dr. Pablo Deiros ha hecho un trabajo maravilloso en escribir este poderoso libro que contiene no solo enseñanza, Palabra de Dios e instrucción sino tesoros que hablarán directamente a nuestro espíritu dejándonos pilares para nuestro caminar en Cristo.\nEstamos convencidos de que el Señor abrirá nuestras mentes y nos ayudará a entender el momento que vivimos y nos dará el poder y la autoridad para participar plenamente como sus siervos ayudándonos a aportar nuestro grano de arena a favor de la gran cosecha de personas que viene.",
+		"imagen":
+			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6G2evoHzziTSwXZeqDlekethgexee4WHou1GlOP8x8p3JP1nioXTSc91gejgNlpZv9Zc&usqp=CAU",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 22,
+		"nombre": "Conciencia Misionera",
+		"precio": 12000,
+		"descripcion": "Un libro inspirador, desafiante y práctico Considera los problemas misioneros en la actualidad y propone herramientas eficaces\nEn este libro se realiza un detallado análisis de los principales desafíos que se presentan en el camino de nuestra obediencia misionera Pero no se queda allí también muestra varios caminos para avanzar y superar esos obstáculos\nLas herramientas que presenta son conocidas por muchas personas pero no siempre practicadas Sin duda esto cambiará después de seguir las indicaciones que aparecen en los últimos capítulos\nLa visión misionera debe alimentarse continuamente pues no basta con adquirirla Las citas ejemplos e ilustraciones que contiene Conciencia Misionera II junto con su contenido generan servirán para encender y avivar la llama misionera en muchos corazones: tanto de quienes saldrán como de quienes los enviarán\nPara unos y otros, Conciencia Misionera II será la mejor inversión que pueden realizar en mucho tiempo",
+		"imagen": "https://files.logoscdn.com/v1/assets/1420401/optimized",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 23,
+		"nombre": "PLANIFICADOR CON IMAN",
+		"precio": 8000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/planner-imantado-4-flores1-d24297ff42e48c50c516121377837727-1024-1024.webp",
+		"autor": "Santa Fe Ediciones",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 24,
+		"nombre": "SEÑALADORES IMANTADOS",
+		"precio": 4000,
+		"imagen": [
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/1f85f795-617c-49df-901d-44e3d48d104b1-6d135d68737946ffab16781127077353-1024-1024.webp",
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/e0d78914-1483-4afc-9462-529751d70ef41-3c9bff4768384f7c9316781127077210-1024-1024.webp",
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/5442a795-ac32-4a41-aa3a-204c590e19451-a6dcdddaa4c8da261316781127077392-1024-1024.webp"
+		],
+		"autor": "Santa Fe Ediciones",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 25,
+		"nombre": "CUADERNO TAPA DURA A4",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuaderno-a4-letering-negro1-1b63a50fb459b8fe7916024405359528-1024-1024.webp",
+		"autor": "Santa Fe Ediciones",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 26,
+		"nombre": "CUADERNO TAPA DURA MEDIANO",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/mediano-amor-0afa3017db8fb9119817071384973658-1024-1024.webp",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 27,
+		"nombre": "CUADERNO CHICO A5 100 HOJAS",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuaderno-a5-lineas-negras1-883eb8f3a8438ecd6c16024456072285-1024-1024.webp",
+		"autor": "Santa Fe Ediciones",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 28,
+		"nombre": "CUADERNO CHICO A5 75 HOJAS",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuaderno-a5-lettering-301-02-3ecd53b4acf7ed5f5f17014730450733-640-0.webp",
+		"autor": "",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 29,
+		"nombre": "CUADERNO CUADRADO",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuadrado-flores-21-3956e4f14dd3e2a0e816196997049911-1024-1024.webp",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 30,
+		"nombre": "CUADERNO TAPA FLEXIBLE A4",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/chico-tropical-todo-ayuda1-b109f4da4c878c481516018445439460-1024-1024.webp",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 31,
+		"nombre": "CUADERNO TAPA FLEXIBLE MEDIANO",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/mediano-flores-rosas-y-celeste1-e3297fc6fa198ce08116759461834674-1024-1024.webp",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 33,
+		"nombre": "CUADERNO ANILLADO ARRIBA TAPA FLEXIBLE",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/img_50921-b95205d4c1b9894a3916841556157303-1024-1024.webp",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 34,
+		"nombre": "AVENTURAS BIBLICAS SOPA DE LETRAS",
+		"precio": 5000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/paginas-desdecatalogo-herederos-del-reino-dia-del-nino-20231-cf5c981510322f3b0d16916707632294-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 35,
+		"nombre": "CUADERNO CHICO TAPA FLEXIBLE",
+		"precio": 12000,
+		"imagen": "",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 36,
+		"nombre": "CUADERNO POCKET TAPA DURA",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/cuaderno-pocket-flores-02-95a9a4447a386819d317264330280210-1024-1024.webp",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 37,
+		"nombre": "BLOCK PARA HELADERA",
+		"precio": 3000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/21-fee90948ebdf980fd416430501194787-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 38,
+		"nombre": "POSA VASOS",
+		"precio": 700,
+		"imagen": "PortaVaso.jpg",
+		"autor": "",
+		"categoria": "accesorios"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 39,
+		"nombre": "LAPICERAS",
+		"precio": 1500,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/730f4416-7767-46fc-b769-005d68b05acc1-fcf0761dd669180a8616806272351142-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 40,
+		"nombre": "LA VIDA ETERNA",
+		"precio": 12000,
+		"imagen":
+			"https://m.media-amazon.com/images/I/6168Jfzl9tL._UF1000,1000_QL80_.jpg",
+		"categoria": "libros"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 41,
+		"nombre": "MINI AGENDA PLANIFICADOR",
+		"precio": 3000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/img_0841-38cf9246bdbffab58f17294582197630-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 42,
+		"nombre": "AGENDAS PEDIATRICAS",
+		"precio": 12000,
+		"imagen":
+			"https://http2.mlstatic.com/D_NQ_NP_831071-MLA82918836482_032025-O.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 43,
+		"nombre": "DIARIO DEVOCIONAL",
+		"precio": 10000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/5-8eb15bd493b17adec117264342665651-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 44,
+		"nombre": "Libro Para Niños - Para colorear * DAVID",
+		"precio": 12000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/aventuras-de-david-blanco-y-negro_pagina_01-a65fe9a0adb7e4b7c917227982623215-1024-1024.webp",
+		"categoria": "cuadernos"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 45,
+		"nombre": "AGENDA PLANNER",
+		"precio": 6000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/img_65421-b372159e5b18cd8db016945247482363-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 46,
+		"nombre": "CAJAS DE PROMESAS",
+		"precio": "sin stock",
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/promesas1-ef8623060c40b3bfd116248845633588-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 47,
+		"nombre": "DEVOCIONAL PARA PINTAR",
+		"precio": 6000,
+		"imagen": [
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/img_35601-c9c99d926e65394e1416031237722133-1024-1024.webp",
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/interior-11-54360f46d46f4bd6b216031237715109-480-0.webp",
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/31-684dd50d3d4064529116031316461701-1024-1024.webp"
+		],
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 48,
+		"nombre": "ANOTADOR HORIZONTAL 2 EN 1",
+		"precio": 9000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/anotador-montana1-5983f5f33319fac71216045977472210-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 49,
+		"nombre": "HISTORIAS BIBLICAS PARA COLOREAR",
+		"precio": 5000,
+		"imagen": [
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/aventuras-de-david-blanco-y-negro_pagina_01-a65fe9a0adb7e4b7c917227982623215-1024-1024.webp",
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/aventuras-de-jose-para-colorear_pagina_07-6b40312816feba5e0e17227982047965-1024-1024.webp"
+		],
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 50,
+		"nombre": "ABECEDARIO DE LA BIBLIA",
+		"precio": 5500,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/tapas-el-abecedarios-de-la-biblia-publis_pagina_1-2d2ea0ffa21e40858a17227987250938-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 51,
+		"nombre": "LIBROS DE NUMEROS Y DE ANIMALES",
+		"precio": 4000,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/tapa-libros-numeros-2020-copia1-908145713911b3f3ce16031201639910-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 52,
+		"nombre": "BLOCK ORGANIZACIONAL",
+		"precio": 3500,
+		"imagen":
+			"https://acdn-us.mitiendanube.com/stores/001/171/588/products/56f969c2-4e30-460a-9e1c-a15f9a657ae7-f372dae93ebab45d0816438999386314-1024-1024.webp",
+		"categoria": "utiles"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 53,
+		"nombre": "REMERAS",
+		"precio": 12000,
+		"imagen":
+			"https://dcdn-us.mitiendanube.com/stores/005/344/522/products/the-four-da03c2509ae2620c3517333369608440-1024-1024.webp",
+		"categoria": "remeras"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 54,
+		"nombre": "REMERAS",
+		"precio": 12000,
+		"imagen":
+			"https://dcdn-us.mitiendanube.com/stores/005/344/522/products/cumple-tu-destino-a-e00a9f3dbe1a8ff21217292059095413-1024-1024.webp",
+		"categoria": "remeras"
+	},
+	{
+		"className": "tarjeta-libro",
+		"id": 55,
+		"nombre": "Socorro, Quiero vivir",
+		"precio": 12000,
+		"descripcion": "¡Qué curioso es el hombre! iNacer no pide, vivir no sabe, morir no quiere!\nQuiero en estas páginas darte una palabra de esperanza, decirte que nos merecemos vivir mejor, que vivir mejor es posible pero es imprescindible tu aporte\nque solo será valioso en la medida que esté cargado de verdad y de amor.\nMi deseo con este granito de arena es que te ayude, esclarezca, invite al diálogo constructivo y traiga sabiduría a tu vida.\nEs lamentable que un tema tan importante y delicado como es el aborto, se trate sin respeto por tu persona, con discusiones confusas y agresiones desconsideradas, y esté rodeado de engaños y mentiras que no ayudan a un análisis serio para una decisión en paz.\nLa mentira siempre esclaviza, solo la verdad nos libera. Por eso, conocerla es vital.",
+		"imagen": "SocorroQuiero.jpg",
+		"autor": "Pablo Mazzuh",
+		"categoria": "libros"
+}
+  ]
+}
+

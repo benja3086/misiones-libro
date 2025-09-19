@@ -11,6 +11,7 @@ import Contacto from "./Componentes/Contacto";
 import Home from "./Componentes/Home";
 import BotonIg from "./Componentes/BotonIg";
 import Producto from "./Componentes/Producto";
+import BotonPago from "./Componentes/BotonPago";
 
 ReactGA.initialize("G-PE39GW4037"); 
 const App = () => {
@@ -32,6 +33,8 @@ const App = () => {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/libros/:id" element={<LibroDetalle />} />
       </Routes>
+      
+
     </div>
   );
 };
