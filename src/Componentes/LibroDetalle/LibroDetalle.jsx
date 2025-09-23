@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import "./LibroDetalle.css";
-import BotonPago from "./BotonPago";
-import data from "./Libros.json"; 
+//import BotonPago from "../BotonPago";
+import data from "../Libros.json";
 
 const LibroDetalle = () => {
   const { id } = useParams();
@@ -61,6 +61,12 @@ const LibroDetalle = () => {
         <p className="autor">Autor: {libro.autor || "Desconocido"}</p>
         <p className="precio">${libro.precio}</p>
         <p>{libro.descripcion}</p>
+       { /*<BotonPago
+          className="boton-pago-personalizado"
+          titulo={libro.nombre}
+          precio={libro.precio}
+          cantidad={1}
+        />*/}
       </div>
 
       {imagenGrande && (

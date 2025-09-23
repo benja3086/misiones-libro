@@ -47,6 +47,9 @@ const Home = () => {
           <li>
             <Link to="/contacto">Contacto</Link>
           </li>
+          <li>
+            <Link to="/Misioneros">Misioneros</Link>
+          </li>
         </ul>
       </div>
     </div>

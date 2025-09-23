@@ -15,6 +15,7 @@
 		  "id": 2,
 		  "nombre": "Porque En Favor De La Vida",
 		  "precio": 10000,
+		  "autor": "Randy Alcorn",
 		  "descripcion": "Ningún tema divide tanto ni es tan controversial como el aborto. Con un estilo conciso, sin agresividad, Randy Alcorn ofrece respuestas sensibles y ciertas a las cuestiones principales del debate sobre el aborto.",
 		  "imagen":
 			"https://static.clclibros.com/_CLCPanama/images/products/large/4819.jpg",
@@ -45,6 +46,7 @@
 		"className": "tarjeta-libro",
 		"id": 5,
 		"nombre": "Los Mensajes Mayores De Los Profetas Menores",
+		"autor": "Carlos Morris",
 		"precio": 6000,
 		"descripcion": "Ahora tendrán a su disposición un manual poco volu- minoso, con un estilo de exposición diáfano y directo, como si el esplendente sol de Nínive incidiese, por una serie de espejos colocados al ángulo debido, en las tinieblas de las casas excavadas en la roca de Petra la edomita, o si un láser de rayos paralelos y penetrantes se adentrara en las profundidades del abismo marino, tenebroso de antigüedad, misterio y oscurantismo, para mostrarnos el corazón patriótico que no rebelde a Dios- de Jonás suplicante. El estilo de la exposición es breve y claro, como la incisión de un cirujano experto y decidido, e igualmente eficaz\nEn fin, se trata de un estudio completo, ordenado y enjundioso, propicio para quienes no hemos dispuesto antes más que de los comentarios a veces farragosos y difíciles de entender que se han incluido en comentarios voluminosos sobre el Antiguo Testamento o toda la Bíblia, en lugar de un fácil manual exclusivamente sobre los profetas menores, expuestos con la máxima claridad. Quiera Dios que el fruto de esta labor sea abundante y provechosa, como nosotros esperamos y el autor merece.",
 		"imagen":
@@ -55,6 +57,7 @@
 		"className": "tarjeta-libro",
 		"id": 6,
 		"nombre": "El Quinto Evangelio",
+		"autor":"Philip Vandenberg",
 		"precio": 25000,
 		"imagen": "https://m.media-amazon.com/images/I/41IJT7KsndL._SY445_SX342_.jpg",
 		"categoria": "libros"
@@ -137,6 +140,7 @@
 		"className": "tarjeta-libro",
 		"id": 14,
 		"nombre": "Sal de tu zona de comodidad",
+		"autor": "Jorge Verwer",
 		"precio": 10000,
 		"descripcion": "Jorge Verwer logró escribir un libro que es sencillo y contundente a la vez\nNo se anduvo con rodeos ante el grito de su corazón por un «despertar de la gracia» dirigido a las misiones, y quiere eliminar cualquier «<espiritualidad>> superficial que quizá esté al acecho en tu interior\nSu enfoque a las misiones es práctico, sincero y bíblico por completo. Después de cuarenta años de experiencia en las misiones, Jorge Verwer está aprendiendo todavía y se encuentra dispuesto al cambio... y no espera menos de ti Muestra cómo muchos cristianos creen que otras personas se ocuparán de esto y tienen una actitud vaga, indiferente y poco realista respecto a lo que son las misiones. Este libro te desafiará a salir de tu zona de comodidad y ajustar tu punto de vista de cómo se debe hacer la obra misionera.",
 		"imagen": "https://m.media-amazon.com/images/I/61kP4D1OLAL._SY522_.jpg",

@@ -7,9 +7,9 @@ import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import "./Inicio.css";
 
-import imagen from "../assets/fondo-blanco.png";
-import imagen1 from "../assets/Logo-verde.png";
-import imagen2 from "../assets/MisionGlobal.png";
+import imagen from "../../assets/fondo-blanco.png";
+import imagen1 from "../../assets/Logo-verde.png";
+import imagen2 from "../../assets/MisionGlobal.png";
 
 const slides = [
  

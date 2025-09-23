@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const BotonPago = ({ titulo, precio, cantidad = 1 }) => {
+const BotonPago = ({ titulo, precio, cantidad = 1, className }) => {
   const [loading, setLoading] = useState(false);
 
   const pagar = async () => {
@@ -26,7 +26,7 @@ const BotonPago = ({ titulo, precio, cantidad = 1 }) => {
     <button
       onClick={pagar}
       disabled={loading}
-      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      className={className} 
     >
       {loading ? "Procesando..." : "Pagar con Mercado Pago"}
     </button>

@@ -114,6 +114,20 @@
   box-shadow: 0 0 20px #000;
   background: #fff;
 }
+.boton-pago-personalizado {
+  background: linear-gradient(90deg, #039a83d9 0%, #099bae 100%);
+  color: white;            
+  padding: 10px 20px;        
+  border: none;           
+  border-radius: 5px;       
+  cursor: pointer;           
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.boton-pago-personalizado:hover {
+  background-color: #45a049; 
+}
 
 @media (max-width: 600px) {
   .modal-imagen {

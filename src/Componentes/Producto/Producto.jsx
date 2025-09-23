@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import imagen from "../assets/fondo-blanco.png";
+import imagen from "../../assets/fondo-blanco.png";
 import "./Producto.css";
-import data from "./Libros.json"; 
+import data from "../Libros.json"; 
 
 const Items = () => {
   const [busqueda, setBusqueda] = useState("");
