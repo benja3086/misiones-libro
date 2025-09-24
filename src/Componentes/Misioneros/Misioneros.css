@@ -1,11 +1,21 @@
 .misionero-container {
-  max-width: 800px;
+  max-width: 1000px;              /* un poco más ancho para que entren texto + foto */
   margin: 50px auto;
   padding: 30px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  text-align: center;
+
+  display: flex;                  /* pone texto e imagen en fila */
+  align-items: center;            /* centra verticalmente */
+  gap: 30px;                      /* espacio entre texto e imagen */
+  flex-wrap: wrap;                /* en pantallas chicas se acomoda abajo */
+}
+
+.misionero-texto {
+  flex: 1;                        /* ocupa todo el espacio disponible */
+  min-width: 300px;               /* evita que se achique demasiado */
+  text-align: left;               /* texto alineado a la izquierda */
 }
 
 .misionero-titulo {
@@ -20,6 +30,16 @@
   color: #444;
   line-height: 1.6;
   white-space: pre-line; 
+}
+
+.misionero-imagen {
+  width: 100%;             /* ocupa el ancho disponible dentro de su contenedor */
+  max-width: 350px;        /* no pasa de este tamaño */
+  border-radius: 12px;     /* bordes redondeados */
+  object-fit: cover;       /* recorta sin deformar */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: block;          /* para poder centrar con margin */
+  margin: 0 auto;          /* centra horizontalmente */
 }
 
 .misionero-error {
