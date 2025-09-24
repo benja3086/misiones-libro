@@ -1,0 +1,31 @@
+.misionero-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.misionero-titulo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #00796b;
+  margin-bottom: 15px;
+}
+
+.misionero-descripcion {
+  font-size: 1.1rem;
+  color: #444;
+  line-height: 1.6;
+  white-space: pre-line; 
+}
+
+.misionero-error {
+  text-align: center;
+  margin-top: 100px;
+  font-size: 1.5rem;
+  color: #b71c1c;
+  font-weight: bold;
+}

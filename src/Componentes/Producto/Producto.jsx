@@ -29,7 +29,7 @@ const Items = () => {
       <div className="buscador-contenedor">
         <input
           type="text"
-          placeholder="Busca por nombre o ID..."
+          placeholder="Busca por nombre ..."
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           className="buscador"

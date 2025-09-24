@@ -12,8 +12,9 @@ import Home from "./Componentes/Home/Home";
 import BotonIg from "./Componentes/BotonIg/BotonIg";
 import Producto from "./Componentes/Producto/Producto";
 import BotonPago from "./Componentes/BotonPago";
+import Misioneros from "./Componentes/Misioneros/Misioneros";
 
-ReactGA.initialize("G-PE39GW4037"); 
+ReactGA.initialize("G-PE39GW4037");
 const App = () => {
   const location = useLocation();
 
@@ -32,9 +33,8 @@ const App = () => {
         <Route path="/producto/:categoria?" element={<Producto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/libros/:id" element={<LibroDetalle />} />
+        <Route path="/misioneros/:nombre" element={<Misioneros />} />
       </Routes>
-      
-
     </div>
   );
 };

@@ -7,7 +7,7 @@ return (
         <div className="fila">
           <input
             type="text"
-            placeholder="Busca el libro por nombre ..."
+            placeholder="Busca el libro por nombre..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             className="buscador"
