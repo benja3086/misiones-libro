@@ -9,7 +9,7 @@ const datosMisioneros = {
   },
   martitadeteri: {
     titulo: "Martita De Teri",
-    descripcion: "MISIONERA EN COLONIA CAROYA - CÓRDOBA Fué encomendada como misionera junto a su esposo Carlos (ya con el Señor) hace más de 50 años. Sirviendo en Tinogasta, Pilar, y luego, en Colonia Caroya, donde fundaron la iglesia hace más de 35 años. Actualmente, escribe para la revista Joyas Escogidas, colabora con el ministerio femenino y otras actividades eclesiásticas. \nOREMOS POR:\n SU SALUD, YA QUE ES DIABETICA Y SUFRE PROBLEMAS DE PRESIÓN. POR SU FAMILIA PROVISIÓN DE DIOS PARA CADA UNA DE SUS NECESIDADES. PARA QUE PUEDA SER UN REFLEJO DEL AMOR DE DIOS EN EL GRUPO LITERARIO EN EL QUE PARTICIPA",
+    descripcion: "MISIONERA EN COLONIA CAROYA - CÓRDOBA\n Fué encomendada como misionera junto a su esposo Carlos (ya con el Señor) hace más de 50 años. Sirviendo en Tinogasta, Pilar, y luego, en Colonia Caroya, donde fundaron la iglesia hace más de 35 años. Actualmente, escribe para la revista Joyas Escogidas, colabora con el ministerio femenino y otras actividades eclesiásticas. \nOREMOS POR:\n SU SALUD, YA QUE ES DIABETICA Y SUFRE PROBLEMAS DE PRESIÓN. POR SU FAMILIA PROVISIÓN DE DIOS PARA CADA UNA DE SUS NECESIDADES. PARA QUE PUEDA SER UN REFLEJO DEL AMOR DE DIOS EN EL GRUPO LITERARIO EN EL QUE PARTICIPA",
   },
    elviracorbalan: {
     titulo: "Elvira Corbalán",
