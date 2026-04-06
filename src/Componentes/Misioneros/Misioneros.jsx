@@ -1,9 +1,6 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import "./Misioneros.css";
-import imagen1 from "../../../public/imagenes/martita.jpg";
-import imagen2 from "../../../public/imagenes/familiarinaldi.jpg";
-import imagen3 from "../../../public/imagenes/elviracorbalan.jpg";
 
 const datosMisioneros = {
   familiarinaldi: {
@@ -28,6 +25,31 @@ const datosMisioneros = {
 
 const Misioneros = () => {
   const { nombre } = useParams();
+
+  // Sin nombre en la URL → mostrar lista
+  if (!nombre) {
+    return (
+      <>
+        <h1 style={{ textAlign: "center", color: "#00A88F" }}>Misioneros</h1>
+        <div className="contenedor-libros">
+          {Object.entries(datosMisioneros).map(([key, misionero]) => (
+            <Link
+              to={`/misioneros/${key}`}
+              key={key}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <div className="tarjeta-libro">
+                <img src={misionero.imagen} alt={misionero.titulo} />
+                <h3 className="titulo-libro">{misionero.titulo}</h3>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  // Con nombre → mostrar detalle
   const datos = datosMisioneros[nombre];
 
   if (!datos) {
@@ -44,7 +66,6 @@ const Misioneros = () => {
         <h1 className="misionero-titulo">{datos.titulo}</h1>
         <p className="misionero-descripcion">{datos.descripcion}</p>
       </div>
-
       {datos.imagen && (
         <img
           src={datos.imagen}

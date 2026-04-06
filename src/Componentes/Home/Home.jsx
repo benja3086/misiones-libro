@@ -15,6 +15,7 @@ const columnasCategorias = [
 
 const columnasMisioneros = [
   [
+    
     { nombre: "Familia Rinaldi", enlace: "/misioneros/familiarinaldi" },
     { nombre: "Martita De Teri", enlace: "/misioneros/martitadeteri" },
     { nombre: "Elvira Corbalan", enlace: "/misioneros/elviracorbalan" },

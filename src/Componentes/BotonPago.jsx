@@ -13,7 +13,7 @@ const BotonPago = ({ titulo, precio, cantidad = 1, className }) => {
         precio,
       });
 
-      window.location.href = response.data.init_point;
+      window.open(response.data.init_point);
     } catch (error) {
       console.error("Error al crear la preferencia:", error);
       alert("Hubo un error al iniciar el pago");
