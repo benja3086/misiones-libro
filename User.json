@@ -1,0 +1,17 @@
+[
+  {
+    "_id": "c78afc2b-ef42-4b71-87dd-f43a6315c1fe",
+    "username": "andres1",
+    "password": "$2b$10$11bg0GiSa5q16nBjXnO0KO2/vV/j1F522z5H0QhJKXWdgCdP0ehPe"
+  },
+  {
+    "_id": "0f3f2b4e-d635-4cf4-bfd7-270852ea24f6",
+    "username": "andres",
+    "password": "$2b$10$8slrDV9WrkjxfZC2P8hiLuEeNBaq38PRUJfpSksUWKrgohQRV/dD2"
+  },
+  {
+    "_id": "9f7f9a99-cc6e-49cd-bc73-728d5416634d",
+    "username": "benja",
+    "password": "123456"
+  }
+]
