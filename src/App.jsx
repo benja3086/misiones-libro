@@ -13,7 +13,8 @@ import BotonIg from "./Componentes/BotonIg/BotonIg";
 import Producto from "./Componentes/Producto/Producto";
 import BotonPago from "./Componentes/BotonPago";
 import Misioneros from "./Componentes/Misioneros/Misioneros";
-
+import Login from "./Componentes/Login/Login";
+import Admin from "./Componentes/Admin/Admin";
 ReactGA.initialize("G-PE39GW4037");
 const App = () => {
   const location = useLocation();
@@ -35,6 +36,8 @@ const App = () => {
         <Route path="/libros/:id" element={<LibroDetalle />} />
         <Route path="/misioneros" element={<Misioneros />} />
         <Route path="/misioneros/:nombre" element={<Misioneros />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </div>
   );
