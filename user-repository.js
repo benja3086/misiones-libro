@@ -9,11 +9,11 @@ const User = Schema("User", {
   _id: { type: String, required: true },
   username: { type: String, required: true },
   password: { type: String, required: true },
-  role: { type: String, required: true }, // "admin" o "user"
+  role: { type: String, required: true },
 });
 
 export class UserRepository {
-  static async create({ username, password }) {
+  static async create({ username, password, role = "user" }) {
     Validation.username(username);
     Validation.password(password);
     const user = User.findOne({ username });
@@ -26,31 +26,31 @@ export class UserRepository {
       _id: id,
       username,
       password: hashedPassword,
+      role,
     }).save();
 
     return id;
   }
 
-  static  async login({ username, password }) {
+  static async login({ username, password }) {
     Validation.username(username);
     Validation.password(password);
 
     const user = User.findOne({ username });
     if (!user) throw new Error("El nombre de usuario no existe.");
-    
-    const IsValid =  await bcrypt.compare(password, user.password);
+
+    const IsValid = await bcrypt.compare(password, user.password);
     if (!IsValid) throw new Error("Contraseña incorrecta.");
 
-    const {password: _, ...publicUser} = user;
+    const { password: _, ...publicUser } = user;
     return publicUser;
   }
 }
+
 class Validation {
   static username(username) {
     if (typeof username !== "string")
-      throw new Error(
-        "El nombre de usuario debe ser una cadena de caracteres.",
-      );
+      throw new Error("El nombre de usuario debe ser una cadena de caracteres.");
     if (username.length < 3)
       throw new Error("El nombre de usuario debe tener al menos 3 caracteres.");
   }
@@ -61,4 +61,3 @@ class Validation {
       throw new Error("La contraseña debe tener al menos 6 caracteres.");
   }
 }
-
