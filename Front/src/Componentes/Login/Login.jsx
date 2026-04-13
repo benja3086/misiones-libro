@@ -10,7 +10,8 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {        method: "POST",
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ username, password }),
@@ -56,7 +57,9 @@ const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {        method
 
         {error && <p className="login-error">{error}</p>}
 
-        <button className="login-btn" onClick={handleLogin}>Entrar</button>
+        <button className="login-btn" onClick={handleLogin}>
+          Entrar
+        </button>
       </div>
     </div>
   );
