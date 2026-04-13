@@ -13,7 +13,7 @@ import Producto from "./Componentes/Producto/Producto";
 import Misioneros from "./Componentes/Misioneros/Misioneros";
 import Login from "./Componentes/Login/Login";
 import Admin from "./Componentes/Admin/Admin";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./Context/AuthContext";
 
 ReactGA.initialize("G-PE39GW4037");
 
