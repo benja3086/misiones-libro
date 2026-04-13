@@ -34,7 +34,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 const authenticateToken = (req, res, next) => {
-  const token = req.cookies.access_token;
+  const token =
+    req.cookies.access_token ||
+    req.headers.authorization?.replace("Bearer ", "");
   if (!token) return res.status(401).send({ error: "No autorizado" });
   try {
     req.user = jwt.verify(token, SECRET_JWT_KEY);
@@ -61,14 +63,14 @@ app.post("/login", async (req, res) => {
         secure: true,
         maxAge: 1000 * 60 * 60,
       })
-      .send({ user });
+      .send({ user, token });
   } catch (error) {
     res.status(401).send({ error: error.message });
   }
 });
 
 app.post("/register", async (req, res) => {
-  const { username, password, role } = req.body;  // 👈 agregá role
+  const { username, password, role } = req.body;
   try {
     const id = await UserRepository.create({ username, password, role });
     res.send({ id });

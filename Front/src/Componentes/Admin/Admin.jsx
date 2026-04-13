@@ -4,6 +4,8 @@ import "./Admin.css";
 
 const API = import.meta.env.VITE_API_URL;
 
+const getToken = () => localStorage.getItem("token");
+
 const ordenarPorCodigo = (arr) =>
   [...arr].sort((a, b) => {
     const ca = (a.codigo || "").toLowerCase();
@@ -32,7 +34,10 @@ const Admin = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${API}/productos`, { credentials: "include" })
+    fetch(`${API}/productos`, {
+      credentials: "include",
+      headers: { Authorization: `Bearer ${getToken()}` },
+    })
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) setProductos(ordenarPorCodigo(data));
@@ -42,7 +47,10 @@ const Admin = () => {
 
   useEffect(() => {
     if (seccion === "historial" || seccion === "ganancias") {
-      fetch(`${API}/ventas`, { credentials: "include" })
+      fetch(`${API}/ventas`, {
+        credentials: "include",
+        headers: { Authorization: `Bearer ${getToken()}` },
+      })
         .then((res) => res.json())
         .then((data) => (Array.isArray(data) ? setVentas(data) : setVentas([])))
         .catch(() => setVentas([]));
@@ -92,7 +100,10 @@ const Admin = () => {
     try {
       const res = await fetch(`${API}/ventas`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
         credentials: "include",
         body: JSON.stringify({
           producto: {
@@ -148,7 +159,10 @@ const Admin = () => {
       };
       await fetch(`${API}/productos/${modalEditar}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
         credentials: "include",
         body: JSON.stringify(datosFinales),
       });

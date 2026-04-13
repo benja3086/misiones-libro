@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import "./Login.css";
 
-const API = import.meta.env.VITE_API_URL;
-
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,24 +12,10 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch(`${API}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error);
-        return;
-      }
-
-      const data = await res.json();
-      login(data.user);
+      await login(username, password); // ← solo esto, el contexto hace todo
       navigate("/admin");
-    } catch {
-      setError("Error al conectar con el servidor");
+    } catch (err) {
+      setError(err.message);
     }
   };
 
