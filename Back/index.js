@@ -136,17 +136,23 @@ app.post("/ventas", authenticateToken, async (req, res) => {
     { $inc: { stock: -1 } },
   );
 
-  const venta = {
-    producto: req.body.producto,
-    metodoPago: req.body.metodoPago,
-    nombreComprador: req.body.nombreComprador || null,
-    comentario: req.body.comentario || null,
-    usuario: req.user.username,
-    fecha: new Date(),
-  };
-  await ventasCollection.insertOne(venta);
-  res.send({ ok: true, venta });
+const venta = {
+  producto: {
+    id: producto.id,
+    nombre: producto.nombre,
+    precio: producto.precio,
+    autor: producto.autor || null,   // ← agregado desde la DB
+  },
+  metodoPago: req.body.metodoPago,
+  nombreComprador: req.body.nombreComprador || null,
+  comentario: req.body.comentario || null,
+  usuario: req.user.username,
+  fecha: new Date(),
+};
+await ventasCollection.insertOne(venta);
+res.send({ ok: true, venta });
 });
+
 
 app.get("/ventas", authenticateToken, async (req, res) => {
   const ventasCollection = db.collection("ventas");

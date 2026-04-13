@@ -32,6 +32,14 @@ const Admin = () => {
   const [modalEditar, setModalEditar] = useState(null);
   const [formEditar, setFormEditar] = useState({});
   const [error, setError] = useState("");
+  const [ventaExitosa, setVentaExitosa] = useState(false);
+
+  // ── Filtros ──
+  const [filtroDesde, setFiltroDesde] = useState("");
+  const [filtroHasta, setFiltroHasta] = useState("");
+  const [filtroVendedor, setFiltroVendedor] = useState("");
+  const [filtroMetodo, setFiltroMetodo] = useState("");
+  const [filtroAutor, setFiltroAutor] = useState("");
 
   useEffect(() => {
     fetch(`${API}/productos`, {
@@ -57,13 +65,33 @@ const Admin = () => {
     }
   }, [seccion]);
 
-  const filtrados = productos.filter(
-    (p) =>
-      p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      (p.codigo && p.codigo.toLowerCase().includes(busqueda.toLowerCase())),
-  );
+  // ── Vendedores únicos para el select ──
+  const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
 
-  const gananciasPorProducto = ventas.reduce((acc, v) => {
+  // ── Autores únicos para el select ──
+  const autoresUnicos = [...new Set(ventas.map((v) => v.producto?.autor).filter(Boolean))].sort();
+
+  // ── Ventas filtradas (usadas en historial y ganancias) ──
+  const ventasFiltradas = ventas.filter((v) => {
+    const fecha = new Date(v.fecha);
+    if (filtroDesde && fecha < new Date(filtroDesde)) return false;
+    if (filtroHasta && fecha > new Date(filtroHasta + "T23:59:59")) return false;
+    if (filtroVendedor && v.usuario !== filtroVendedor) return false;
+    if (filtroMetodo && v.metodoPago !== filtroMetodo) return false;
+    if (filtroAutor && v.producto?.autor !== filtroAutor) return false;
+    return true;
+  });
+
+  const limpiarFiltros = () => {
+    setFiltroDesde("");
+    setFiltroHasta("");
+    setFiltroVendedor("");
+    setFiltroMetodo("");
+    setFiltroAutor("");
+  };
+
+  // ── Ganancias calculadas sobre ventasFiltradas ──
+  const gananciasPorProducto = ventasFiltradas.reduce((acc, v) => {
     const nombre = v.producto.nombre;
     const precio = Number(v.producto.precio) || 0;
     if (!acc[nombre]) acc[nombre] = { nombre, cantidad: 0, total: 0 };
@@ -73,6 +101,12 @@ const Admin = () => {
   }, {});
   const gananciasArray = Object.values(gananciasPorProducto).sort((a, b) => b.total - a.total);
   const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
+
+  const filtrados = productos.filter(
+    (p) =>
+      p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+      (p.codigo && p.codigo.toLowerCase().includes(busqueda.toLowerCase())),
+  );
 
   const sinStock = (p) => !p.stock || Number(p.stock) <= 0;
 
@@ -131,7 +165,7 @@ const Admin = () => {
       );
 
       cerrarModalVenta();
-      alert("✅ Venta registrada correctamente");
+      setVentaExitosa(true);
     } catch {
       setError("Error al registrar la venta");
     }
@@ -194,6 +228,89 @@ const Admin = () => {
     </button>
   );
 
+  // ── Bloque de filtros reutilizable ──
+  const FiltrosVentas = () => (
+    <div style={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "0.75rem",
+      background: "var(--ap-filter-bg, #f8f8f8)",
+      border: "1px solid var(--ap-filter-border, #e8e8e8)",
+      borderRadius: "12px",
+      padding: "0.75rem 1rem",
+      marginBottom: "1.25rem",
+      alignItems: "flex-end",
+    }}>
+      <div className="field" style={{ margin: 0, minWidth: "140px" }}>
+        <label>Desde</label>
+        <input
+          type="date"
+          value={filtroDesde}
+          onChange={(e) => setFiltroDesde(e.target.value)}
+        />
+      </div>
+      <div className="field" style={{ margin: 0, minWidth: "140px" }}>
+        <label>Hasta</label>
+        <input
+          type="date"
+          value={filtroHasta}
+          onChange={(e) => setFiltroHasta(e.target.value)}
+        />
+      </div>
+      <div className="field" style={{ margin: 0, minWidth: "140px" }}>
+        <label>Vendedor</label>
+        <select
+          value={filtroVendedor}
+          onChange={(e) => setFiltroVendedor(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {vendedoresUnicos.map((v) => (
+            <option key={v} value={v}>{v}</option>
+          ))}
+        </select>
+      </div>
+      <div className="field" style={{ margin: 0, minWidth: "140px" }}>
+        <label>Método de pago</label>
+        <select
+          value={filtroMetodo}
+          onChange={(e) => setFiltroMetodo(e.target.value)}
+        >
+          <option value="">Todos</option>
+          <option value="efectivo">Efectivo</option>
+          <option value="transferencia">Transferencia</option>
+        </select>
+      </div>
+      <div className="field" style={{ margin: 0, minWidth: "140px" }}>
+        <label>Proveedor</label>
+        <select
+          value={filtroAutor}
+          onChange={(e) => setFiltroAutor(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {autoresUnicos.map((a) => (
+            <option key={a} value={a}>{a}</option>
+          ))}
+        </select>
+      </div>
+      <button
+        className="btn"
+        onClick={limpiarFiltros}
+        style={{ alignSelf: "flex-end" }}
+      >
+        ✕ Limpiar
+      </button>
+      <span style={{
+        alignSelf: "flex-end",
+        fontSize: "12px",
+        color: "#999",
+        paddingBottom: "4px",
+        marginLeft: "auto",
+      }}>
+        {ventasFiltradas.length} resultado{ventasFiltradas.length !== 1 ? "s" : ""}
+      </span>
+    </div>
+  );
+
   return (
     <div className="ap">
       {/* Tabs */}
@@ -207,7 +324,7 @@ const Admin = () => {
               📋 Historial
             </button>
             <button className={`btn ${seccion === "ganancias" ? "primary" : ""}`} onClick={() => setSeccion("ganancias")}>
-              💰 Ganancias
+              💰 Ventas
             </button>
           </>
         )}
@@ -299,9 +416,12 @@ const Admin = () => {
       {seccion === "historial" && isAdmin && (
         <>
           <div className="ap-heading" style={{ marginBottom: "1rem" }}>Historial de ventas</div>
+
+          <FiltrosVentas />
+
           <div className="card-list">
-            {ventas.length === 0 && <p className="empty">No hay ventas registradas</p>}
-            {ventas.map((v, i) => (
+            {ventasFiltradas.length === 0 && <p className="empty">No hay ventas registradas</p>}
+            {ventasFiltradas.map((v, i) => (
               <div className="prod-card" key={i}>
                 <div className="prod-card-top">
                   <div className="prod-card-nombre">{v.producto.nombre}</div>
@@ -311,6 +431,7 @@ const Admin = () => {
                   <span className="prod-card-precio">${Number(v.producto.precio).toLocaleString("es-AR")}</span>
                 </div>
                 <div style={{ fontSize: "0.8rem", color: "#666", marginTop: "0.4rem" }}>
+                  {v.producto?.autor && <span>📦 {v.producto.autor} · </span>}
                   {v.nombreComprador && <span>👤 {v.nombreComprador} · </span>}
                   <span>🧑‍💼 {v.usuario} · </span>
                   <span>🕐 {new Date(v.fecha).toLocaleString("es-AR")}</span>
@@ -319,16 +440,18 @@ const Admin = () => {
               </div>
             ))}
           </div>
+
           <div className="tbl-wrap">
             <table>
               <thead>
-                <tr><th>Producto</th><th>Precio</th><th>Método</th><th>Comprador</th><th>Vendedor</th><th>Comentario</th><th>Fecha</th></tr>
+                <tr><th>Producto</th><th>Proveedor</th><th>Precio</th><th>Método</th><th>Comprador</th><th>Vendedor</th><th>Comentario</th><th>Fecha</th></tr>
               </thead>
               <tbody>
-                {ventas.length === 0 && <tr><td colSpan="7" className="empty">No hay ventas</td></tr>}
-                {ventas.map((v, i) => (
+                {ventasFiltradas.length === 0 && <tr><td colSpan="8" className="empty">No hay ventas</td></tr>}
+                {ventasFiltradas.map((v, i) => (
                   <tr key={i}>
                     <td>{v.producto.nombre}</td>
+                    <td>{v.producto?.autor || "-"}</td>
                     <td>${Number(v.producto.precio).toLocaleString("es-AR")}</td>
                     <td><span className="cat">{v.metodoPago}</span></td>
                     <td>{v.nombreComprador || "-"}</td>
@@ -347,10 +470,14 @@ const Admin = () => {
       {seccion === "ganancias" && isAdmin && (
         <>
           <div className="ap-heading" style={{ marginBottom: "0.5rem" }}>Ganancias por producto</div>
+
+          <FiltrosVentas />
+
           <div style={{ marginBottom: "1.5rem", fontSize: "14px", color: "#666" }}>
             Total general:{" "}
             <strong style={{ color: "#111", fontSize: "18px" }}>${totalGeneral.toLocaleString("es-AR")}</strong>
           </div>
+
           <div className="card-list">
             {gananciasArray.length === 0 && <p className="empty">No hay ventas registradas</p>}
             {gananciasArray.map((g, i) => (
@@ -363,6 +490,7 @@ const Admin = () => {
               </div>
             ))}
           </div>
+
           <div className="tbl-wrap">
             <table>
               <thead>
@@ -380,7 +508,7 @@ const Admin = () => {
                 {gananciasArray.length > 0 && (
                   <tr style={{ background: "#f9f9f9" }}>
                     <td><strong>TOTAL</strong></td>
-                    <td><strong>{ventas.length}</strong></td>
+                    <td><strong>{ventasFiltradas.length}</strong></td>
                     <td><strong>${totalGeneral.toLocaleString("es-AR")}</strong></td>
                   </tr>
                 )}
@@ -516,6 +644,25 @@ const Admin = () => {
               <button className="btn" onClick={cerrarModalEditar}>Cancelar</button>
               <button className="btn primary" onClick={guardarEdicion}>Guardar</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODAL VENTA EXITOSA ── */}
+      {ventaExitosa && (
+        <div className="overlay">
+          <div className="modal" style={{ textAlign: "center" }}>
+            <div style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>✅</div>
+            <h3 style={{ marginBottom: "0.5rem" }}>¡Venta completada!</h3>
+            <p style={{ color: "#666", marginBottom: "1.5rem" }}>
+              La venta fue registrada correctamente.
+            </p>
+            <button
+              className="btn primary"
+              onClick={() => setVentaExitosa(false)}
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       )}
