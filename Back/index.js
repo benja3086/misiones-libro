@@ -57,7 +57,8 @@ app.post("/login", async (req, res) => {
     res
       .cookie("access_token", token, {
         httpOnly: true,
-        sameSite: "none", secure: true,
+        sameSite: "none",
+        secure: true,
         maxAge: 1000 * 60 * 60,
       })
       .send({ user });
@@ -67,7 +68,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password, role } = req.body;  // 👈 agregá role
   try {
     const id = await UserRepository.create({ username, password, role });
     res.send({ id });
@@ -78,6 +79,10 @@ app.post("/register", async (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie("access_token").send({ message: "Logout exitoso" });
+});
+
+app.get("/me", authenticateToken, (req, res) => {
+  res.send({ user: req.user });
 });
 
 app.get("/protected", authenticateToken, (req, res) => {
@@ -133,7 +138,7 @@ app.post("/ventas", authenticateToken, async (req, res) => {
     producto: req.body.producto,
     metodoPago: req.body.metodoPago,
     nombreComprador: req.body.nombreComprador || null,
-    comentario: req.body.comentario || null, // 👈 agregá esta línea
+    comentario: req.body.comentario || null,
     usuario: req.user.username,
     fecha: new Date(),
   };
@@ -163,7 +168,6 @@ app.delete("/usuarios/:id", authenticateToken, async (req, res) => {
   res.send({ ok: true });
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

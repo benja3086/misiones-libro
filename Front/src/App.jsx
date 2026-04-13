@@ -1,6 +1,5 @@
-// src/App.jsx
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import ReactGA from "react-ga4";
 
 import "./index.css";
@@ -11,11 +10,20 @@ import Contacto from "./Componentes/Contacto/Contacto";
 import Home from "./Componentes/Home/Home";
 import BotonIg from "./Componentes/BotonIg/BotonIg";
 import Producto from "./Componentes/Producto/Producto";
-import BotonPago from "./Componentes/BotonPago";
 import Misioneros from "./Componentes/Misioneros/Misioneros";
 import Login from "./Componentes/Login/Login";
 import Admin from "./Componentes/Admin/Admin";
+import { useAuth } from "./context/AuthContext";
+
 ReactGA.initialize("G-PE39GW4037");
+
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) return <p>Cargando...</p>;
+  if (!user) return <Navigate to="/login" />;
+  return children;
+};
+
 const App = () => {
   const location = useLocation();
 
@@ -37,7 +45,11 @@ const App = () => {
         <Route path="/misioneros" element={<Misioneros />} />
         <Route path="/misioneros/:nombre" element={<Misioneros />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        } />
       </Routes>
     </div>
   );

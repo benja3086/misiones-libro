@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "./Login.css";
+
+const API = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+      const res = await fetch(`${API}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -23,6 +27,8 @@ const Login = () => {
         return;
       }
 
+      const data = await res.json();
+      login(data.user);
       navigate("/admin");
     } catch {
       setError("Error al conectar con el servidor");
@@ -57,9 +63,7 @@ const Login = () => {
 
         {error && <p className="login-error">{error}</p>}
 
-        <button className="login-btn" onClick={handleLogin}>
-          Entrar
-        </button>
+        <button className="login-btn" onClick={handleLogin}>Entrar</button>
       </div>
     </div>
   );
