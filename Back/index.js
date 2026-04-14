@@ -2,21 +2,23 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { ObjectId } from "mongodb";
 import { PORT, SECRET_JWT_KEY } from "./config.js";
-import { UserRepository } from "./user-repository.js";
+import { UserRepository, initUserRepository } from "./user-repository.js";
 import { MongoClient } from "mongodb";
 
-const MONGO_URI =
-  "mongodb+srv://benjamin:benja3086@cluster0.su1vd9a.mongodb.net/?appName=Cluster0";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017";
 const DB_NAME = "misiones-libro";
 
 const client = new MongoClient(MONGO_URI);
 await client.connect();
 const db = client.db(DB_NAME);
 const productos = db.collection("libros");
+initUserRepository(db);
 
 console.log("✅ Conectado a MongoDB");
-
+await client.connect();
+console.log("✅ Conectado a:", client.s.url); // muestra a qué URI conectó
 const app = express();
 
 app.use(
@@ -136,23 +138,22 @@ app.post("/ventas", authenticateToken, async (req, res) => {
     { $inc: { stock: -1 } },
   );
 
-const venta = {
-  producto: {
-    id: producto.id,
-    nombre: producto.nombre,
-    precio: producto.precio,
-    autor: producto.autor || null,   // ← agregado desde la DB
-  },
-  metodoPago: req.body.metodoPago,
-  nombreComprador: req.body.nombreComprador || null,
-  comentario: req.body.comentario || null,
-  usuario: req.user.username,
-  fecha: new Date(),
-};
-await ventasCollection.insertOne(venta);
-res.send({ ok: true, venta });
+  const venta = {
+    producto: {
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      autor: producto.autor || null,
+    },
+    metodoPago: req.body.metodoPago,
+    nombreComprador: req.body.nombreComprador || null,
+    comentario: req.body.comentario || null,
+    usuario: req.user.username,
+    fecha: new Date(),
+  };
+  await ventasCollection.insertOne(venta);
+  res.send({ ok: true, venta });
 });
-
 
 app.get("/ventas", authenticateToken, async (req, res) => {
   const ventasCollection = db.collection("ventas");
@@ -160,19 +161,33 @@ app.get("/ventas", authenticateToken, async (req, res) => {
   res.send(lista);
 });
 
+app.delete("/ventas/:id", authenticateToken, async (req, res) => {
+  const ventasCollection = db.collection("ventas");
+  try {
+    const result = await ventasCollection.deleteOne({
+      _id: new ObjectId(req.params.id),
+    });
+    if (result.deletedCount === 0)
+      return res.status(404).send({ error: "Venta no encontrada" });
+    res.send({ ok: true });
+  } catch {
+    res.status(400).send({ error: "ID inválido" });
+  }
+});
+
 // Usuarios
 app.get("/usuarios", authenticateToken, async (req, res) => {
   if (req.user.role !== "admin")
     return res.status(403).send({ error: "No autorizado" });
-  const users = User.find();
-  const sinPassword = users.map(({ password, ...u }) => u);
-  res.send(sinPassword);
+  const users = await UserRepository.findAll();
+  res.send(users);
 });
 
 app.delete("/usuarios/:id", authenticateToken, async (req, res) => {
   if (req.user.role !== "admin")
     return res.status(403).send({ error: "No autorizado" });
-  User.delete({ _id: req.params.id });
+  const usersCollection = db.collection("usuarios");
+  await usersCollection.deleteOne({ _id: req.params.id });
   res.send({ ok: true });
 });
 

@@ -1,5 +1,17 @@
 [
   {
+    "_id": "7e0a9c4f-9276-4cfe-b006-e2b187b8856c",
+    "username": "prueba1",
+    "password": "$2b$10$wOBFF25zDOPmO5J.wG09sORINNhmORN39TGS/dydzC7sUXIVNjVzq",
+    "role": "vendedor"
+  },
+  {
+    "_id": "caa3120c-3cbe-49ec-ba5a-c5d663e64153",
+    "username": "prueba",
+    "password": "$2b$10$RjEz6MrUJR8KmWzQIUZNS.73dqWy.8h61pRCfkNaShjz6ZBVSVVeK",
+    "role": "vendedor"
+  },
+  {
     "_id": "fcb18aca-4033-4220-b382-6e0378b2daee",
     "username": "mica vendedora",
     "password": "$2b$10$EZv6cNjKWHB887VOnrGRc.1bndb2FBnD8Jou2mX8B5bti/rihEjpK",

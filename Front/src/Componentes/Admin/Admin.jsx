@@ -80,7 +80,7 @@ const Admin = () => {
       if (existe) {
         if (existe.cantidad >= Number(p.stock)) return prev;
         return prev.map((item) =>
-          item.id === p.id ? { ...item, cantidad: item.cantidad + 1 } : item
+          item.id === p.id ? { ...item, cantidad: item.cantidad + 1 } : item,
         );
       }
       return [...prev, { ...p, cantidad: 1 }];
@@ -92,13 +92,19 @@ const Admin = () => {
       const item = prev.find((i) => i.id === id);
       if (!item) return prev;
       if (item.cantidad <= 1) return prev.filter((i) => i.id !== id);
-      return prev.map((i) => i.id === id ? { ...i, cantidad: i.cantidad - 1 } : i);
+      return prev.map((i) =>
+        i.id === id ? { ...i, cantidad: i.cantidad - 1 } : i,
+      );
     });
   };
 
-  const eliminarDelCarrito = (id) => setCarrito((prev) => prev.filter((i) => i.id !== id));
+  const eliminarDelCarrito = (id) =>
+    setCarrito((prev) => prev.filter((i) => i.id !== id));
 
-  const totalCarrito = carrito.reduce((acc, i) => acc + Number(i.precio) * i.cantidad, 0);
+  const totalCarrito = carrito.reduce(
+    (acc, i) => acc + Number(i.precio) * i.cantidad,
+    0,
+  );
   const cantidadTotalCarrito = carrito.reduce((a, i) => a + i.cantidad, 0);
 
   const abrirModalCarrito = () => {
@@ -135,13 +141,18 @@ const Admin = () => {
             },
             credentials: "include",
             body: JSON.stringify({
-              producto: { id: item.id, nombre: item.nombre, precio: item.precio },
+              producto: {
+                id: item.id,
+                nombre: item.nombre,
+                precio: item.precio,
+              },
               metodoPago,
-              nombreComprador: metodoPago === "transferencia" ? nombreComprador : null,
+              nombreComprador:
+                metodoPago === "transferencia" ? nombreComprador : null,
               comentario: comentario.trim() || null,
             }),
-          }).then((r) => r.json())
-        )
+          }).then((r) => r.json()),
+        ),
       );
 
       const resultados = await Promise.all(llamadas);
@@ -158,8 +169,8 @@ const Admin = () => {
             const item = carrito.find((i) => i.id === p.id);
             if (!item) return p;
             return { ...p, stock: Number(p.stock) - item.cantidad };
-          })
-        )
+          }),
+        ),
       );
 
       setCarrito([]);
@@ -182,7 +193,7 @@ const Admin = () => {
         credentials: "include",
       });
       if (!res.ok) throw new Error();
-      setVentas((prev) => prev.filter((v) => v.id !== id));
+      setVentas((prev) => prev.filter((v) => v._id !== id)); // ← _id, no id
     } catch {
       setError("Error al eliminar la venta");
     }
@@ -204,15 +215,26 @@ const Admin = () => {
       return setError("Nombre y precio son obligatorios.");
     try {
       const { _id, ...datos } = formEditar;
-      const datosFinales = { ...datos, precio: Number(datos.precio), stock: Number(datos.stock) };
+      const datosFinales = {
+        ...datos,
+        precio: Number(datos.precio),
+        stock: Number(datos.stock),
+      };
       await fetch(`${API}/productos/${modalEditar}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
         credentials: "include",
         body: JSON.stringify(datosFinales),
       });
       setProductos((prev) =>
-        ordenarPorCodigo(prev.map((p) => p.id === modalEditar ? { ...p, ...datosFinales } : p))
+        ordenarPorCodigo(
+          prev.map((p) =>
+            p.id === modalEditar ? { ...p, ...datosFinales } : p,
+          ),
+        ),
       );
       cerrarModalEditar();
     } catch {
@@ -222,14 +244,17 @@ const Admin = () => {
 
   // ── Filtros ──
   const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
-  const autoresUnicos = [...new Set(ventas.map((v) => v.producto?.autor).filter(Boolean))].sort();
+  const autoresUnicos = [
+    ...new Set(ventas.map((v) => v.producto?.autor).filter(Boolean)),
+  ].sort();
 
   // Vendedores solo ven sus propias ventas
   const ventasFiltradas = ventas.filter((v) => {
     if (!isAdmin && v.usuario !== user?.username) return false;
     const fecha = new Date(v.fecha);
     if (filtroDesde && fecha < new Date(filtroDesde)) return false;
-    if (filtroHasta && fecha > new Date(filtroHasta + "T23:59:59")) return false;
+    if (filtroHasta && fecha > new Date(filtroHasta + "T23:59:59"))
+      return false;
     if (filtroVendedor && v.usuario !== filtroVendedor) return false;
     if (filtroMetodo && v.metodoPago !== filtroMetodo) return false;
     if (filtroAutor && v.producto?.autor !== filtroAutor) return false;
@@ -237,8 +262,11 @@ const Admin = () => {
   });
 
   const limpiarFiltros = () => {
-    setFiltroDesde(""); setFiltroHasta("");
-    setFiltroVendedor(""); setFiltroMetodo(""); setFiltroAutor("");
+    setFiltroDesde("");
+    setFiltroHasta("");
+    setFiltroVendedor("");
+    setFiltroMetodo("");
+    setFiltroAutor("");
   };
 
   const gananciasPorProducto = ventasFiltradas.reduce((acc, v) => {
@@ -249,17 +277,20 @@ const Admin = () => {
     acc[nombre].total += precio;
     return acc;
   }, {});
-  const gananciasArray = Object.values(gananciasPorProducto).sort((a, b) => b.total - a.total);
+  const gananciasArray = Object.values(gananciasPorProducto).sort(
+    (a, b) => b.total - a.total,
+  );
   const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
 
   const filtrados = productos.filter(
     (p) =>
       p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      (p.codigo && p.codigo.toLowerCase().includes(busqueda.toLowerCase()))
+      (p.codigo && p.codigo.toLowerCase().includes(busqueda.toLowerCase())),
   );
 
   const sinStock = (p) => !p.stock || Number(p.stock) <= 0;
-  const cantidadEnCarrito = (id) => carrito.find((i) => i.id === id)?.cantidad || 0;
+  const cantidadEnCarrito = (id) =>
+    carrito.find((i) => i.id === id)?.cantidad || 0;
 
   // ── Subcomponentes ──
   const StockBadge = ({ stock }) => {
@@ -277,11 +308,30 @@ const Admin = () => {
       <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
         {en > 0 && (
           <>
-            <button className="btn sm" onClick={() => quitarDelCarrito(p.id)} style={{ padding: "0 9px", fontWeight: "bold" }}>−</button>
-            <span style={{ minWidth: "18px", textAlign: "center", fontSize: "13px", fontWeight: "600" }}>{en}</span>
+            <button
+              className="btn sm"
+              onClick={() => quitarDelCarrito(p.id)}
+              style={{ padding: "0 9px", fontWeight: "bold" }}
+            >
+              −
+            </button>
+            <span
+              style={{
+                minWidth: "18px",
+                textAlign: "center",
+                fontSize: "13px",
+                fontWeight: "600",
+              }}
+            >
+              {en}
+            </span>
           </>
         )}
-        <button className="btn sm primary" onClick={() => agregarAlCarrito(p)} disabled={agotado}>
+        <button
+          className="btn sm primary"
+          onClick={() => agregarAlCarrito(p)}
+          disabled={agotado}
+        >
           {sinStock(p) ? "Sin stock" : en > 0 ? "+" : "Agregar"}
         </button>
       </div>
@@ -289,35 +339,61 @@ const Admin = () => {
   };
 
   const FiltrosVentas = () => (
-    <div style={{
-      background: "var(--ap-filter-bg, #f8f8f8)",
-      border: "1px solid var(--ap-filter-border, #e8e8e8)",
-      borderRadius: "12px",
-      padding: "0.75rem 1rem",
-      marginBottom: "1.25rem",
-    }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.6rem" }}>
+    <div
+      style={{
+        background: "var(--ap-filter-bg, #f8f8f8)",
+        border: "1px solid var(--ap-filter-border, #e8e8e8)",
+        borderRadius: "12px",
+        padding: "0.75rem 1rem",
+        marginBottom: "1.25rem",
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "0.6rem",
+        }}
+      >
         <div className="field" style={{ margin: 0 }}>
           <label>Desde</label>
-          <input type="date" value={filtroDesde} onChange={(e) => setFiltroDesde(e.target.value)} />
+          <input
+            type="date"
+            value={filtroDesde}
+            onChange={(e) => setFiltroDesde(e.target.value)}
+          />
         </div>
         <div className="field" style={{ margin: 0 }}>
           <label>Hasta</label>
-          <input type="date" value={filtroHasta} onChange={(e) => setFiltroHasta(e.target.value)} />
+          <input
+            type="date"
+            value={filtroHasta}
+            onChange={(e) => setFiltroHasta(e.target.value)}
+          />
         </div>
         {/* Filtro vendedor solo para admins */}
         {isAdmin && (
           <div className="field" style={{ margin: 0 }}>
             <label>Vendedor</label>
-            <select value={filtroVendedor} onChange={(e) => setFiltroVendedor(e.target.value)}>
+            <select
+              value={filtroVendedor}
+              onChange={(e) => setFiltroVendedor(e.target.value)}
+            >
               <option value="">Todos</option>
-              {vendedoresUnicos.map((v) => <option key={v} value={v}>{v}</option>)}
+              {vendedoresUnicos.map((v) => (
+                <option key={v} value={v}>
+                  {v}
+                </option>
+              ))}
             </select>
           </div>
         )}
         <div className="field" style={{ margin: 0 }}>
           <label>Método de pago</label>
-          <select value={filtroMetodo} onChange={(e) => setFiltroMetodo(e.target.value)}>
+          <select
+            value={filtroMetodo}
+            onChange={(e) => setFiltroMetodo(e.target.value)}
+          >
             <option value="">Todos</option>
             <option value="efectivo">Efectivo</option>
             <option value="transferencia">Transferencia</option>
@@ -325,16 +401,33 @@ const Admin = () => {
         </div>
         <div className="field" style={{ margin: 0, gridColumn: "1 / -1" }}>
           <label>Proveedor</label>
-          <select value={filtroAutor} onChange={(e) => setFiltroAutor(e.target.value)}>
+          <select
+            value={filtroAutor}
+            onChange={(e) => setFiltroAutor(e.target.value)}
+          >
             <option value="">Todos</option>
-            {autoresUnicos.map((a) => <option key={a} value={a}>{a}</option>)}
+            {autoresUnicos.map((a) => (
+              <option key={a} value={a}>
+                {a}
+              </option>
+            ))}
           </select>
         </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.6rem" }}>
-        <button className="btn" onClick={limpiarFiltros}>✕ Limpiar</button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: "0.6rem",
+        }}
+      >
+        <button className="btn" onClick={limpiarFiltros}>
+          ✕ Limpiar
+        </button>
         <span style={{ fontSize: "12px", color: "#999" }}>
-          {ventasFiltradas.length} resultado{ventasFiltradas.length !== 1 ? "s" : ""}
+          {ventasFiltradas.length} resultado
+          {ventasFiltradas.length !== 1 ? "s" : ""}
         </span>
       </div>
     </div>
@@ -342,21 +435,37 @@ const Admin = () => {
 
   return (
     <div className="ap">
-
       {/* ── TABS + BOTÓN CARRITO ── */}
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
-        <button className={`btn ${seccion === "productos" ? "primary" : ""}`} onClick={() => setSeccion("productos")}>
+      <div
+        style={{
+          display: "flex",
+          gap: "0.5rem",
+          marginBottom: "1.5rem",
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        <button
+          className={`btn ${seccion === "productos" ? "primary" : ""}`}
+          onClick={() => setSeccion("productos")}
+        >
           📦 Productos
         </button>
 
         {/* Historial visible para todos */}
-        <button className={`btn ${seccion === "historial" ? "primary" : ""}`} onClick={() => setSeccion("historial")}>
+        <button
+          className={`btn ${seccion === "historial" ? "primary" : ""}`}
+          onClick={() => setSeccion("historial")}
+        >
           📋 Historial
         </button>
 
         {/* Ganancias solo para admins */}
         {isAdmin && (
-          <button className={`btn ${seccion === "ganancias" ? "primary" : ""}`} onClick={() => setSeccion("ganancias")}>
+          <button
+            className={`btn ${seccion === "ganancias" ? "primary" : ""}`}
+            onClick={() => setSeccion("ganancias")}
+          >
             💰 Ventas
           </button>
         )}
@@ -365,14 +474,24 @@ const Admin = () => {
           <button
             className="btn primary"
             onClick={abrirModalCarrito}
-            style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "6px" }}
+            style={{
+              marginLeft: "auto",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
           >
             🛒
-            <span style={{
-              background: "#fff", color: "#000",
-              borderRadius: "99px", padding: "1px 7px",
-              fontSize: "12px", fontWeight: "700",
-            }}>
+            <span
+              style={{
+                background: "#fff",
+                color: "#000",
+                borderRadius: "99px",
+                padding: "1px 7px",
+                fontSize: "12px",
+                fontWeight: "700",
+              }}
+            >
               {cantidadTotalCarrito}
             </span>
             <span>${totalCarrito.toLocaleString("es-AR")}</span>
@@ -386,7 +505,9 @@ const Admin = () => {
           <div className="ap-top">
             <div>
               <div className="ap-heading">Productos</div>
-              <div className="ap-sub">{filtrados.length} producto{filtrados.length !== 1 ? "s" : ""}</div>
+              <div className="ap-sub">
+                {filtrados.length} producto{filtrados.length !== 1 ? "s" : ""}
+              </div>
             </div>
           </div>
           <div className="ap-search">
@@ -399,7 +520,9 @@ const Admin = () => {
 
           {/* Cards mobile */}
           <div className="card-list">
-            {filtrados.length === 0 && <p className="empty">No hay productos</p>}
+            {filtrados.length === 0 && (
+              <p className="empty">No hay productos</p>
+            )}
             {filtrados.map((p) => (
               <div className="prod-card" key={p.id}>
                 <div className="prod-card-top">
@@ -407,19 +530,40 @@ const Admin = () => {
                     <div className="prod-card-nombre">{p.nombre}</div>
                     <div className="prod-card-autor">{p.autor}</div>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      gap: "4px",
+                    }}
+                  >
                     <span className="cat">{p.categoria}</span>
                     {p.codigo && (
-                      <span className="cat" style={{ background: "#e0f0ff", color: "#0066cc" }}>#{p.codigo}</span>
+                      <span
+                        className="cat"
+                        style={{ background: "#e0f0ff", color: "#0066cc" }}
+                      >
+                        #{p.codigo}
+                      </span>
                     )}
                   </div>
                 </div>
                 <div className="prod-card-body">
-                  <span className="prod-card-precio">${Number(p.precio).toLocaleString("es-AR")}</span>
+                  <span className="prod-card-precio">
+                    ${Number(p.precio).toLocaleString("es-AR")}
+                  </span>
                   <StockBadge stock={p.stock} />
                 </div>
                 <div className="prod-card-actions">
-                  {isAdmin && <button className="btn sm" onClick={() => abrirModalEditar(p)}>✏️ Editar</button>}
+                  {isAdmin && (
+                    <button
+                      className="btn sm"
+                      onClick={() => abrirModalEditar(p)}
+                    >
+                      ✏️ Editar
+                    </button>
+                  )}
                   <BtnCarrito p={p} />
                 </div>
               </div>
@@ -431,26 +575,56 @@ const Admin = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Código</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Autor</th><th>Acción</th>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Precio</th>
+                  <th>Stock</th>
+                  <th>Autor</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
-                {filtrados.length === 0 && <tr><td colSpan="7" className="empty">No hay productos</td></tr>}
+                {filtrados.length === 0 && (
+                  <tr>
+                    <td colSpan="7" className="empty">
+                      No hay productos
+                    </td>
+                  </tr>
+                )}
                 {filtrados.map((p) => (
                   <tr key={p.id}>
                     <td>
-                      {p.codigo
-                        ? <span className="cat" style={{ background: "#e0f0ff", color: "#0066cc" }}>#{p.codigo}</span>
-                        : "-"}
+                      {p.codigo ? (
+                        <span
+                          className="cat"
+                          style={{ background: "#e0f0ff", color: "#0066cc" }}
+                        >
+                          #{p.codigo}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
                     </td>
                     <td>{p.nombre}</td>
-                    <td><span className="cat">{p.categoria}</span></td>
+                    <td>
+                      <span className="cat">{p.categoria}</span>
+                    </td>
                     <td>${Number(p.precio).toLocaleString("es-AR")}</td>
-                    <td><StockBadge stock={p.stock} /></td>
+                    <td>
+                      <StockBadge stock={p.stock} />
+                    </td>
                     <td>{p.autor}</td>
                     <td>
                       <div className="td-actions">
-                        {isAdmin && <button className="btn sm" onClick={() => abrirModalEditar(p)}>✏️ Editar</button>}
+                        {isAdmin && (
+                          <button
+                            className="btn sm"
+                            onClick={() => abrirModalEditar(p)}
+                          >
+                            ✏️ Editar
+                          </button>
+                        )}
                         <BtnCarrito p={p} />
                       </div>
                     </td>
@@ -470,29 +644,49 @@ const Admin = () => {
           </div>
           <FiltrosVentas />
           <div className="card-list">
-            {ventasFiltradas.length === 0 && <p className="empty">No hay ventas registradas</p>}
+            {ventasFiltradas.length === 0 && (
+              <p className="empty">No hay ventas registradas</p>
+            )}
             {ventasFiltradas.map((v, i) => (
               <div className="prod-card" key={i}>
                 <div className="prod-card-top">
                   <div className="prod-card-nombre">{v.producto.nombre}</div>
-                  <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "6px",
+                      alignItems: "center",
+                    }}
+                  >
                     <span className="cat">{v.metodoPago}</span>
                     <button
                       className="btn sm"
                       onClick={() => eliminarVenta(v.id)}
                       style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
-                    >🗑️</button>
+                    >
+                      🗑️
+                    </button>
                   </div>
                 </div>
                 <div className="prod-card-body">
-                  <span className="prod-card-precio">${Number(v.producto.precio).toLocaleString("es-AR")}</span>
+                  <span className="prod-card-precio">
+                    ${Number(v.producto.precio).toLocaleString("es-AR")}
+                  </span>
                 </div>
-                <div style={{ fontSize: "0.8rem", color: "#666", marginTop: "0.4rem" }}>
+                <div
+                  style={{
+                    fontSize: "0.8rem",
+                    color: "#666",
+                    marginTop: "0.4rem",
+                  }}
+                >
                   {v.producto?.autor && <span>📦 {v.producto.autor} · </span>}
                   {v.nombreComprador && <span>👤 {v.nombreComprador} · </span>}
                   <span>🧑‍💼 {v.usuario} · </span>
                   <span>🕐 {new Date(v.fecha).toLocaleString("es-AR")}</span>
-                  {v.comentario && <div style={{ marginTop: "4px" }}>💬 {v.comentario}</div>}
+                  {v.comentario && (
+                    <div style={{ marginTop: "4px" }}>💬 {v.comentario}</div>
+                  )}
                 </div>
               </div>
             ))}
@@ -501,18 +695,35 @@ const Admin = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Producto</th><th>Proveedor</th><th>Precio</th><th>Método</th>
-                  <th>Comprador</th><th>Vendedor</th><th>Comentario</th><th>Fecha</th><th></th>
+                  <th>Producto</th>
+                  <th>Proveedor</th>
+                  <th>Precio</th>
+                  <th>Método</th>
+                  <th>Comprador</th>
+                  <th>Vendedor</th>
+                  <th>Comentario</th>
+                  <th>Fecha</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                {ventasFiltradas.length === 0 && <tr><td colSpan="9" className="empty">No hay ventas</td></tr>}
+                {ventasFiltradas.length === 0 && (
+                  <tr>
+                    <td colSpan="9" className="empty">
+                      No hay ventas
+                    </td>
+                  </tr>
+                )}
                 {ventasFiltradas.map((v, i) => (
                   <tr key={i}>
                     <td>{v.producto.nombre}</td>
                     <td>{v.producto?.autor || "-"}</td>
-                    <td>${Number(v.producto.precio).toLocaleString("es-AR")}</td>
-                    <td><span className="cat">{v.metodoPago}</span></td>
+                    <td>
+                      ${Number(v.producto.precio).toLocaleString("es-AR")}
+                    </td>
+                    <td>
+                      <span className="cat">{v.metodoPago}</span>
+                    </td>
                     <td>{v.nombreComprador || "-"}</td>
                     <td>{v.usuario}</td>
                     <td>{v.comentario || "-"}</td>
@@ -520,9 +731,11 @@ const Admin = () => {
                     <td>
                       <button
                         className="btn sm"
-                        onClick={() => eliminarVenta(v.id)}
+                        onClick={() => eliminarVenta(v._id)} // ← acá
                         style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
-                      >🗑️</button>
+                      >
+                        🗑️
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -535,43 +748,73 @@ const Admin = () => {
       {/* ── GANANCIAS (solo admins) ── */}
       {seccion === "ganancias" && isAdmin && (
         <>
-          <div className="ap-heading" style={{ marginBottom: "0.5rem" }}>Ganancias por producto</div>
+          <div className="ap-heading" style={{ marginBottom: "0.5rem" }}>
+            Ganancias por producto
+          </div>
           <FiltrosVentas />
-          <div style={{ marginBottom: "1.5rem", fontSize: "14px", color: "#666" }}>
+          <div
+            style={{ marginBottom: "1.5rem", fontSize: "14px", color: "#666" }}
+          >
             Total general:{" "}
-            <strong style={{ color: "#111", fontSize: "18px" }}>${totalGeneral.toLocaleString("es-AR")}</strong>
+            <strong style={{ color: "#111", fontSize: "18px" }}>
+              ${totalGeneral.toLocaleString("es-AR")}
+            </strong>
           </div>
           <div className="card-list">
-            {gananciasArray.length === 0 && <p className="empty">No hay ventas registradas</p>}
+            {gananciasArray.length === 0 && (
+              <p className="empty">No hay ventas registradas</p>
+            )}
             {gananciasArray.map((g, i) => (
               <div className="prod-card" key={i}>
                 <div className="prod-card-top">
                   <div className="prod-card-nombre">{g.nombre}</div>
-                  <span className="cat">{g.cantidad} venta{g.cantidad !== 1 ? "s" : ""}</span>
+                  <span className="cat">
+                    {g.cantidad} venta{g.cantidad !== 1 ? "s" : ""}
+                  </span>
                 </div>
-                <div className="prod-card-precio">${g.total.toLocaleString("es-AR")}</div>
+                <div className="prod-card-precio">
+                  ${g.total.toLocaleString("es-AR")}
+                </div>
               </div>
             ))}
           </div>
           <div className="tbl-wrap">
             <table>
               <thead>
-                <tr><th>Producto</th><th>Ventas</th><th>Total recaudado</th></tr>
+                <tr>
+                  <th>Producto</th>
+                  <th>Ventas</th>
+                  <th>Total recaudado</th>
+                </tr>
               </thead>
               <tbody>
-                {gananciasArray.length === 0 && <tr><td colSpan="3" className="empty">No hay ventas</td></tr>}
+                {gananciasArray.length === 0 && (
+                  <tr>
+                    <td colSpan="3" className="empty">
+                      No hay ventas
+                    </td>
+                  </tr>
+                )}
                 {gananciasArray.map((g, i) => (
                   <tr key={i}>
                     <td>{g.nombre}</td>
                     <td>{g.cantidad}</td>
-                    <td><strong>${g.total.toLocaleString("es-AR")}</strong></td>
+                    <td>
+                      <strong>${g.total.toLocaleString("es-AR")}</strong>
+                    </td>
                   </tr>
                 ))}
                 {gananciasArray.length > 0 && (
                   <tr style={{ background: "#f9f9f9" }}>
-                    <td><strong>TOTAL</strong></td>
-                    <td><strong>{ventasFiltradas.length}</strong></td>
-                    <td><strong>${totalGeneral.toLocaleString("es-AR")}</strong></td>
+                    <td>
+                      <strong>TOTAL</strong>
+                    </td>
+                    <td>
+                      <strong>{ventasFiltradas.length}</strong>
+                    </td>
+                    <td>
+                      <strong>${totalGeneral.toLocaleString("es-AR")}</strong>
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -585,50 +828,128 @@ const Admin = () => {
         <div className="overlay">
           <div className="modal" style={{ maxWidth: "480px", width: "100%" }}>
             <h3 style={{ marginBottom: "1rem" }}>🛒 Confirmar venta</h3>
-            <div style={{ marginBottom: "1rem", borderRadius: "8px", overflow: "hidden", border: "1px solid #eee" }}>
+            <div
+              style={{
+                marginBottom: "1rem",
+                borderRadius: "8px",
+                overflow: "hidden",
+                border: "1px solid #eee",
+              }}
+            >
               {carrito.map((item) => (
-                <div key={item.id} style={{
-                  display: "flex", alignItems: "center", gap: "8px",
-                  padding: "8px 12px", borderBottom: "1px solid #f0f0f0", fontSize: "14px",
-                }}>
+                <div
+                  key={item.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "8px 12px",
+                    borderBottom: "1px solid #f0f0f0",
+                    fontSize: "14px",
+                  }}
+                >
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: "500" }}>{item.nombre}</div>
-                    <div style={{ fontSize: "12px", color: "#888" }}>${Number(item.precio).toLocaleString("es-AR")} c/u</div>
+                    <div style={{ fontSize: "12px", color: "#888" }}>
+                      ${Number(item.precio).toLocaleString("es-AR")} c/u
+                    </div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <button className="btn sm" onClick={() => quitarDelCarrito(item.id)} style={{ padding: "0 8px" }}>−</button>
-                    <span style={{ minWidth: "20px", textAlign: "center", fontWeight: "600" }}>{item.cantidad}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <button
+                      className="btn sm"
+                      onClick={() => quitarDelCarrito(item.id)}
+                      style={{ padding: "0 8px" }}
+                    >
+                      −
+                    </button>
+                    <span
+                      style={{
+                        minWidth: "20px",
+                        textAlign: "center",
+                        fontWeight: "600",
+                      }}
+                    >
+                      {item.cantidad}
+                    </span>
                     <button
                       className="btn sm"
                       onClick={() => agregarAlCarrito(item)}
-                      disabled={item.cantidad >= Number(productos.find((p) => p.id === item.id)?.stock || 0)}
+                      disabled={
+                        item.cantidad >=
+                        Number(
+                          productos.find((p) => p.id === item.id)?.stock || 0,
+                        )
+                      }
                       style={{ padding: "0 8px" }}
-                    >+</button>
+                    >
+                      +
+                    </button>
                   </div>
-                  <div style={{ minWidth: "80px", textAlign: "right", fontWeight: "600" }}>
-                    ${(Number(item.precio) * item.cantidad).toLocaleString("es-AR")}
+                  <div
+                    style={{
+                      minWidth: "80px",
+                      textAlign: "right",
+                      fontWeight: "600",
+                    }}
+                  >
+                    $
+                    {(Number(item.precio) * item.cantidad).toLocaleString(
+                      "es-AR",
+                    )}
                   </div>
                   <button
                     onClick={() => eliminarDelCarrito(item.id)}
-                    style={{ background: "none", border: "none", cursor: "pointer", color: "#bbb", fontSize: "16px", padding: "0 4px" }}
-                  >✕</button>
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "#bbb",
+                      fontSize: "16px",
+                      padding: "0 4px",
+                    }}
+                  >
+                    ✕
+                  </button>
                 </div>
               ))}
-              <div style={{
-                padding: "10px 12px", display: "flex", justifyContent: "space-between",
-                fontWeight: "700", fontSize: "15px", background: "#fafafa",
-              }}>
-                <span>Total ({cantidadTotalCarrito} producto{cantidadTotalCarrito !== 1 ? "s" : ""})</span>
+              <div
+                style={{
+                  padding: "10px 12px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontWeight: "700",
+                  fontSize: "15px",
+                  background: "#fafafa",
+                }}
+              >
+                <span>
+                  Total ({cantidadTotalCarrito} producto
+                  {cantidadTotalCarrito !== 1 ? "s" : ""})
+                </span>
                 <span>${totalCarrito.toLocaleString("es-AR")}</span>
               </div>
             </div>
             <div className="field">
               <label>Método de pago</label>
-              <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
-                <button className={`btn ${metodoPago === "efectivo" ? "primary" : ""}`} onClick={() => setMetodoPago("efectivo")}>
+              <div
+                style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}
+              >
+                <button
+                  className={`btn ${metodoPago === "efectivo" ? "primary" : ""}`}
+                  onClick={() => setMetodoPago("efectivo")}
+                >
                   💵 Efectivo
                 </button>
-                <button className={`btn ${metodoPago === "transferencia" ? "primary" : ""}`} onClick={() => setMetodoPago("transferencia")}>
+                <button
+                  className={`btn ${metodoPago === "transferencia" ? "primary" : ""}`}
+                  onClick={() => setMetodoPago("transferencia")}
+                >
                   🏦 Transferencia
                 </button>
               </div>
@@ -653,8 +974,18 @@ const Admin = () => {
             </div>
             {error && <p className="err">{error}</p>}
             <div className="modal-foot">
-              <button className="btn" onClick={cerrarModalCarrito} disabled={cargando}>Cancelar</button>
-              <button className="btn primary" onClick={confirmarVenta} disabled={cargando}>
+              <button
+                className="btn"
+                onClick={cerrarModalCarrito}
+                disabled={cargando}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn primary"
+                onClick={confirmarVenta}
+                disabled={cargando}
+              >
                 {cargando
                   ? "Registrando..."
                   : `Confirmar ${cantidadTotalCarrito} venta${cantidadTotalCarrito !== 1 ? "s" : ""}`}
@@ -673,7 +1004,9 @@ const Admin = () => {
               <label>Código</label>
               <input
                 value={formEditar.codigo || ""}
-                onChange={(e) => setFormEditar((f) => ({ ...f, codigo: e.target.value }))}
+                onChange={(e) =>
+                  setFormEditar((f) => ({ ...f, codigo: e.target.value }))
+                }
                 placeholder="Ej: A, B, AC..."
               />
             </div>
@@ -681,7 +1014,9 @@ const Admin = () => {
               <label>Nombre</label>
               <input
                 value={formEditar.nombre || ""}
-                onChange={(e) => setFormEditar((f) => ({ ...f, nombre: e.target.value }))}
+                onChange={(e) =>
+                  setFormEditar((f) => ({ ...f, nombre: e.target.value }))
+                }
               />
             </div>
             <div className="grid2">
@@ -690,7 +1025,9 @@ const Admin = () => {
                 <input
                   type="number"
                   value={formEditar.precio || ""}
-                  onChange={(e) => setFormEditar((f) => ({ ...f, precio: e.target.value }))}
+                  onChange={(e) =>
+                    setFormEditar((f) => ({ ...f, precio: e.target.value }))
+                  }
                 />
               </div>
               <div className="field">
@@ -698,7 +1035,9 @@ const Admin = () => {
                 <input
                   type="number"
                   value={formEditar.stock || ""}
-                  onChange={(e) => setFormEditar((f) => ({ ...f, stock: e.target.value }))}
+                  onChange={(e) =>
+                    setFormEditar((f) => ({ ...f, stock: e.target.value }))
+                  }
                 />
               </div>
             </div>
@@ -707,7 +1046,9 @@ const Admin = () => {
                 <label>Categoría</label>
                 <select
                   value={formEditar.categoria || "libros"}
-                  onChange={(e) => setFormEditar((f) => ({ ...f, categoria: e.target.value }))}
+                  onChange={(e) =>
+                    setFormEditar((f) => ({ ...f, categoria: e.target.value }))
+                  }
                 >
                   <option value="libros">Libros</option>
                   <option value="remeras">Remeras</option>
@@ -720,7 +1061,9 @@ const Admin = () => {
                 <label>Autor</label>
                 <input
                   value={formEditar.autor || ""}
-                  onChange={(e) => setFormEditar((f) => ({ ...f, autor: e.target.value }))}
+                  onChange={(e) =>
+                    setFormEditar((f) => ({ ...f, autor: e.target.value }))
+                  }
                 />
               </div>
             </div>
@@ -728,21 +1071,31 @@ const Admin = () => {
               <label>Descripción</label>
               <input
                 value={formEditar.descripcion || ""}
-                onChange={(e) => setFormEditar((f) => ({ ...f, descripcion: e.target.value }))}
+                onChange={(e) =>
+                  setFormEditar((f) => ({ ...f, descripcion: e.target.value }))
+                }
               />
             </div>
             <div className="field">
               <label>URL de imagen</label>
               <input
-                value={typeof formEditar.imagen === "string" ? formEditar.imagen : ""}
-                onChange={(e) => setFormEditar((f) => ({ ...f, imagen: e.target.value }))}
+                value={
+                  typeof formEditar.imagen === "string" ? formEditar.imagen : ""
+                }
+                onChange={(e) =>
+                  setFormEditar((f) => ({ ...f, imagen: e.target.value }))
+                }
                 placeholder="https://..."
               />
             </div>
             {error && <p className="err">{error}</p>}
             <div className="modal-foot">
-              <button className="btn" onClick={cerrarModalEditar}>Cancelar</button>
-              <button className="btn primary" onClick={guardarEdicion}>Guardar</button>
+              <button className="btn" onClick={cerrarModalEditar}>
+                Cancelar
+              </button>
+              <button className="btn primary" onClick={guardarEdicion}>
+                Guardar
+              </button>
             </div>
           </div>
         </div>
@@ -757,13 +1110,15 @@ const Admin = () => {
             <p style={{ color: "#666", marginBottom: "1.5rem" }}>
               La venta fue registrada correctamente.
             </p>
-            <button className="btn primary" onClick={() => setVentaExitosa(false)}>
+            <button
+              className="btn primary"
+              onClick={() => setVentaExitosa(false)}
+            >
               Cerrar
             </button>
           </div>
         </div>
       )}
-
     </div>
   );
 };

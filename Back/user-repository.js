@@ -1,33 +1,33 @@
-import DBlocal from "db-local";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
-
 import { SALT_ROUNDS } from "./config.js";
-const { Schema } = new DBlocal({ path: "./db" });
 
-const User = Schema("User", {
-  _id: { type: String, required: true },
-  username: { type: String, required: true },
-  password: { type: String, required: true },
-  role: { type: String, required: true },
-});
+// db se inyecta desde index.js
+let usersCollection;
+
+export const initUserRepository = (db) => {
+  usersCollection = db.collection("usuarios");
+};
 
 export class UserRepository {
-  static async create({ username, password, role = "user" }) {
+  static async create({ username, password, role = "vendedor" }) {
     Validation.username(username);
     Validation.password(password);
-    const user = User.findOne({ username });
-    if (user) throw new Error("El nombre de usuario ya existe.");
+
+    const existe = await usersCollection.findOne({ username });
+    if (existe) throw new Error("El nombre de usuario ya existe.");
 
     const id = crypto.randomUUID();
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-    User.create({
+    await usersCollection.insertOne({
       _id: id,
       username,
       password: hashedPassword,
       role,
-    }).save();
+      creadoEn: new Date(),
+      ultimoLogin: null,
+    });
 
     return id;
   }
@@ -36,14 +36,25 @@ export class UserRepository {
     Validation.username(username);
     Validation.password(password);
 
-    const user = User.findOne({ username });
+    const user = await usersCollection.findOne({ username });
     if (!user) throw new Error("El nombre de usuario no existe.");
 
-    const IsValid = await bcrypt.compare(password, user.password);
-    if (!IsValid) throw new Error("Contraseña incorrecta.");
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) throw new Error("Contraseña incorrecta.");
+
+    // Guardar último login
+    await usersCollection.updateOne(
+      { _id: user._id },
+      { $set: { ultimoLogin: new Date() } }
+    );
 
     const { password: _, ...publicUser } = user;
     return publicUser;
+  }
+
+  static async findAll() {
+    const users = await usersCollection.find().toArray();
+    return users.map(({ password, ...u }) => u);
   }
 }
 
