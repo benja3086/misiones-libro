@@ -25,14 +25,21 @@ const Admin = () => {
   const [ventas, setVentas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [seccion, setSeccion] = useState("productos");
-  const [modalVenta, setModalVenta] = useState(null);
+
+  // ── Carrito ──
+  const [carrito, setCarrito] = useState([]);
+  const [modalCarrito, setModalCarrito] = useState(false);
   const [metodoPago, setMetodoPago] = useState(null);
   const [nombreComprador, setNombreComprador] = useState("");
   const [comentario, setComentario] = useState("");
+
+  // ── Modal editar ──
   const [modalEditar, setModalEditar] = useState(null);
   const [formEditar, setFormEditar] = useState({});
+
   const [error, setError] = useState("");
   const [ventaExitosa, setVentaExitosa] = useState(false);
+  const [cargando, setCargando] = useState(false);
 
   // ── Filtros ──
   const [filtroDesde, setFiltroDesde] = useState("");
@@ -65,112 +72,123 @@ const Admin = () => {
     }
   }, [seccion]);
 
-  // ── Vendedores únicos para el select ──
-  const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
-
-  // ── Autores únicos para el select ──
-  const autoresUnicos = [...new Set(ventas.map((v) => v.producto?.autor).filter(Boolean))].sort();
-
-  // ── Ventas filtradas (usadas en historial y ganancias) ──
-  const ventasFiltradas = ventas.filter((v) => {
-    const fecha = new Date(v.fecha);
-    if (filtroDesde && fecha < new Date(filtroDesde)) return false;
-    if (filtroHasta && fecha > new Date(filtroHasta + "T23:59:59")) return false;
-    if (filtroVendedor && v.usuario !== filtroVendedor) return false;
-    if (filtroMetodo && v.metodoPago !== filtroMetodo) return false;
-    if (filtroAutor && v.producto?.autor !== filtroAutor) return false;
-    return true;
-  });
-
-  const limpiarFiltros = () => {
-    setFiltroDesde("");
-    setFiltroHasta("");
-    setFiltroVendedor("");
-    setFiltroMetodo("");
-    setFiltroAutor("");
+  // ── Carrito: funciones ──
+  const agregarAlCarrito = (p) => {
+    if (!p.stock || Number(p.stock) <= 0) return;
+    setCarrito((prev) => {
+      const existe = prev.find((item) => item.id === p.id);
+      if (existe) {
+        if (existe.cantidad >= Number(p.stock)) return prev;
+        return prev.map((item) =>
+          item.id === p.id ? { ...item, cantidad: item.cantidad + 1 } : item
+        );
+      }
+      return [...prev, { ...p, cantidad: 1 }];
+    });
   };
 
-  // ── Ganancias calculadas sobre ventasFiltradas ──
-  const gananciasPorProducto = ventasFiltradas.reduce((acc, v) => {
-    const nombre = v.producto.nombre;
-    const precio = Number(v.producto.precio) || 0;
-    if (!acc[nombre]) acc[nombre] = { nombre, cantidad: 0, total: 0 };
-    acc[nombre].cantidad += 1;
-    acc[nombre].total += precio;
-    return acc;
-  }, {});
-  const gananciasArray = Object.values(gananciasPorProducto).sort((a, b) => b.total - a.total);
-  const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
+  const quitarDelCarrito = (id) => {
+    setCarrito((prev) => {
+      const item = prev.find((i) => i.id === id);
+      if (!item) return prev;
+      if (item.cantidad <= 1) return prev.filter((i) => i.id !== id);
+      return prev.map((i) => i.id === id ? { ...i, cantidad: i.cantidad - 1 } : i);
+    });
+  };
 
-  const filtrados = productos.filter(
-    (p) =>
-      p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      (p.codigo && p.codigo.toLowerCase().includes(busqueda.toLowerCase())),
-  );
+  const eliminarDelCarrito = (id) => setCarrito((prev) => prev.filter((i) => i.id !== id));
 
-  const sinStock = (p) => !p.stock || Number(p.stock) <= 0;
+  const totalCarrito = carrito.reduce((acc, i) => acc + Number(i.precio) * i.cantidad, 0);
+  const cantidadTotalCarrito = carrito.reduce((a, i) => a + i.cantidad, 0);
 
-  const abrirModalVenta = (p) => {
-    if (sinStock(p)) return setError("Este producto no tiene stock disponible.");
-    setModalVenta(p);
+  const abrirModalCarrito = () => {
+    if (carrito.length === 0) return;
     setMetodoPago(null);
     setNombreComprador("");
     setComentario("");
     setError("");
+    setModalCarrito(true);
   };
-  const cerrarModalVenta = () => {
-    setModalVenta(null);
-    setMetodoPago(null);
-    setNombreComprador("");
-    setComentario("");
+
+  const cerrarModalCarrito = () => {
+    setModalCarrito(false);
     setError("");
   };
 
+  // ── Confirmar venta ──
   const confirmarVenta = async () => {
     if (!metodoPago) return setError("Seleccioná un método de pago.");
     if (metodoPago === "transferencia" && !nombreComprador.trim())
       return setError("Ingresá el nombre del comprador.");
 
-    try {
-      const res = await fetch(`${API}/ventas`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          producto: {
-            id: modalVenta.id,
-            nombre: modalVenta.nombre,
-            precio: modalVenta.precio,
-          },
-          metodoPago,
-          nombreComprador: metodoPago === "transferencia" ? nombreComprador : null,
-          comentario: comentario.trim() || null,
-        }),
-      });
+    setCargando(true);
+    setError("");
 
-      if (!res.ok) {
-        const data = await res.json();
-        return setError(data.error || "Error al registrar la venta");
+    try {
+      const llamadas = carrito.flatMap((item) =>
+        Array.from({ length: item.cantidad }, () =>
+          fetch(`${API}/ventas`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              producto: { id: item.id, nombre: item.nombre, precio: item.precio },
+              metodoPago,
+              nombreComprador: metodoPago === "transferencia" ? nombreComprador : null,
+              comentario: comentario.trim() || null,
+            }),
+          }).then((r) => r.json())
+        )
+      );
+
+      const resultados = await Promise.all(llamadas);
+      const hayError = resultados.find((r) => r.error);
+      if (hayError) {
+        setError(hayError.error || "Error al registrar alguna venta");
+        setCargando(false);
+        return;
       }
 
       setProductos((prev) =>
         ordenarPorCodigo(
-          prev.map((p) =>
-            p.id === modalVenta.id ? { ...p, stock: p.stock - 1 } : p,
-          ),
-        ),
+          prev.map((p) => {
+            const item = carrito.find((i) => i.id === p.id);
+            if (!item) return p;
+            return { ...p, stock: Number(p.stock) - item.cantidad };
+          })
+        )
       );
 
-      cerrarModalVenta();
+      setCarrito([]);
+      cerrarModalCarrito();
       setVentaExitosa(true);
     } catch {
-      setError("Error al registrar la venta");
+      setError("Error al registrar las ventas");
+    } finally {
+      setCargando(false);
     }
   };
 
+  // ── Eliminar venta ──
+  const eliminarVenta = async (id) => {
+    if (!window.confirm("¿Seguro que querés eliminar esta venta?")) return;
+    try {
+      const res = await fetch(`${API}/ventas/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${getToken()}` },
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error();
+      setVentas((prev) => prev.filter((v) => v.id !== id));
+    } catch {
+      setError("Error al eliminar la venta");
+    }
+  };
+
+  // ── Modal editar ──
   const abrirModalEditar = (p) => {
     setFormEditar({ ...p, codigo: p.codigo || "" });
     setModalEditar(p.id);
@@ -186,24 +204,15 @@ const Admin = () => {
       return setError("Nombre y precio son obligatorios.");
     try {
       const { _id, ...datos } = formEditar;
-      const datosFinales = {
-        ...datos,
-        precio: Number(datos.precio),
-        stock: Number(datos.stock),
-      };
+      const datosFinales = { ...datos, precio: Number(datos.precio), stock: Number(datos.stock) };
       await fetch(`${API}/productos/${modalEditar}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
         credentials: "include",
         body: JSON.stringify(datosFinales),
       });
       setProductos((prev) =>
-        ordenarPorCodigo(
-          prev.map((p) => p.id === modalEditar ? { ...p, ...datosFinales } : p),
-        ),
+        ordenarPorCodigo(prev.map((p) => p.id === modalEditar ? { ...p, ...datosFinales } : p))
       );
       cerrarModalEditar();
     } catch {
@@ -211,6 +220,48 @@ const Admin = () => {
     }
   };
 
+  // ── Filtros ──
+  const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
+  const autoresUnicos = [...new Set(ventas.map((v) => v.producto?.autor).filter(Boolean))].sort();
+
+  // Vendedores solo ven sus propias ventas
+  const ventasFiltradas = ventas.filter((v) => {
+    if (!isAdmin && v.usuario !== user?.username) return false;
+    const fecha = new Date(v.fecha);
+    if (filtroDesde && fecha < new Date(filtroDesde)) return false;
+    if (filtroHasta && fecha > new Date(filtroHasta + "T23:59:59")) return false;
+    if (filtroVendedor && v.usuario !== filtroVendedor) return false;
+    if (filtroMetodo && v.metodoPago !== filtroMetodo) return false;
+    if (filtroAutor && v.producto?.autor !== filtroAutor) return false;
+    return true;
+  });
+
+  const limpiarFiltros = () => {
+    setFiltroDesde(""); setFiltroHasta("");
+    setFiltroVendedor(""); setFiltroMetodo(""); setFiltroAutor("");
+  };
+
+  const gananciasPorProducto = ventasFiltradas.reduce((acc, v) => {
+    const nombre = v.producto.nombre;
+    const precio = Number(v.producto.precio) || 0;
+    if (!acc[nombre]) acc[nombre] = { nombre, cantidad: 0, total: 0 };
+    acc[nombre].cantidad += 1;
+    acc[nombre].total += precio;
+    return acc;
+  }, {});
+  const gananciasArray = Object.values(gananciasPorProducto).sort((a, b) => b.total - a.total);
+  const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
+
+  const filtrados = productos.filter(
+    (p) =>
+      p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+      (p.codigo && p.codigo.toLowerCase().includes(busqueda.toLowerCase()))
+  );
+
+  const sinStock = (p) => !p.stock || Number(p.stock) <= 0;
+  const cantidadEnCarrito = (id) => carrito.find((i) => i.id === id)?.cantidad || 0;
+
+  // ── Subcomponentes ──
   const StockBadge = ({ stock }) => {
     const s = Number(stock);
     if (isNaN(s) || s <= 0) return <span className="badge out">Sin stock</span>;
@@ -218,17 +269,25 @@ const Admin = () => {
     return <span className="badge ok">{s} unid.</span>;
   };
 
-  const BtnVendido = ({ p }) => (
-    <button
-      className="btn sm primary"
-      onClick={() => abrirModalVenta(p)}
-      disabled={sinStock(p)}
-    >
-      {sinStock(p) ? "Sin stock" : "Vendido"}
-    </button>
-  );
+  const BtnCarrito = ({ p }) => {
+    const en = cantidadEnCarrito(p.id);
+    const stockReal = Number(productos.find((x) => x.id === p.id)?.stock || 0);
+    const agotado = sinStock(p) || en >= stockReal;
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+        {en > 0 && (
+          <>
+            <button className="btn sm" onClick={() => quitarDelCarrito(p.id)} style={{ padding: "0 9px", fontWeight: "bold" }}>−</button>
+            <span style={{ minWidth: "18px", textAlign: "center", fontSize: "13px", fontWeight: "600" }}>{en}</span>
+          </>
+        )}
+        <button className="btn sm primary" onClick={() => agregarAlCarrito(p)} disabled={agotado}>
+          {sinStock(p) ? "Sin stock" : en > 0 ? "+" : "Agregar"}
+        </button>
+      </div>
+    );
+  };
 
-  // ── Bloque de filtros reutilizable ──
   const FiltrosVentas = () => (
     <div style={{
       background: "var(--ap-filter-bg, #f8f8f8)",
@@ -237,45 +296,28 @@ const Admin = () => {
       padding: "0.75rem 1rem",
       marginBottom: "1.25rem",
     }}>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)",
-        gap: "0.6rem",
-      }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.6rem" }}>
         <div className="field" style={{ margin: 0 }}>
           <label>Desde</label>
-          <input
-            type="date"
-            value={filtroDesde}
-            onChange={(e) => setFiltroDesde(e.target.value)}
-          />
+          <input type="date" value={filtroDesde} onChange={(e) => setFiltroDesde(e.target.value)} />
         </div>
         <div className="field" style={{ margin: 0 }}>
           <label>Hasta</label>
-          <input
-            type="date"
-            value={filtroHasta}
-            onChange={(e) => setFiltroHasta(e.target.value)}
-          />
+          <input type="date" value={filtroHasta} onChange={(e) => setFiltroHasta(e.target.value)} />
         </div>
-        <div className="field" style={{ margin: 0 }}>
-          <label>Vendedor</label>
-          <select
-            value={filtroVendedor}
-            onChange={(e) => setFiltroVendedor(e.target.value)}
-          >
-            <option value="">Todos</option>
-            {vendedoresUnicos.map((v) => (
-              <option key={v} value={v}>{v}</option>
-            ))}
-          </select>
-        </div>
+        {/* Filtro vendedor solo para admins */}
+        {isAdmin && (
+          <div className="field" style={{ margin: 0 }}>
+            <label>Vendedor</label>
+            <select value={filtroVendedor} onChange={(e) => setFiltroVendedor(e.target.value)}>
+              <option value="">Todos</option>
+              {vendedoresUnicos.map((v) => <option key={v} value={v}>{v}</option>)}
+            </select>
+          </div>
+        )}
         <div className="field" style={{ margin: 0 }}>
           <label>Método de pago</label>
-          <select
-            value={filtroMetodo}
-            onChange={(e) => setFiltroMetodo(e.target.value)}
-          >
+          <select value={filtroMetodo} onChange={(e) => setFiltroMetodo(e.target.value)}>
             <option value="">Todos</option>
             <option value="efectivo">Efectivo</option>
             <option value="transferencia">Transferencia</option>
@@ -283,14 +325,9 @@ const Admin = () => {
         </div>
         <div className="field" style={{ margin: 0, gridColumn: "1 / -1" }}>
           <label>Proveedor</label>
-          <select
-            value={filtroAutor}
-            onChange={(e) => setFiltroAutor(e.target.value)}
-          >
+          <select value={filtroAutor} onChange={(e) => setFiltroAutor(e.target.value)}>
             <option value="">Todos</option>
-            {autoresUnicos.map((a) => (
-              <option key={a} value={a}>{a}</option>
-            ))}
+            {autoresUnicos.map((a) => <option key={a} value={a}>{a}</option>)}
           </select>
         </div>
       </div>
@@ -305,20 +342,41 @@ const Admin = () => {
 
   return (
     <div className="ap">
-      {/* Tabs */}
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+
+      {/* ── TABS + BOTÓN CARRITO ── */}
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
         <button className={`btn ${seccion === "productos" ? "primary" : ""}`} onClick={() => setSeccion("productos")}>
           📦 Productos
         </button>
+
+        {/* Historial visible para todos */}
+        <button className={`btn ${seccion === "historial" ? "primary" : ""}`} onClick={() => setSeccion("historial")}>
+          📋 Historial
+        </button>
+
+        {/* Ganancias solo para admins */}
         {isAdmin && (
-          <>
-            <button className={`btn ${seccion === "historial" ? "primary" : ""}`} onClick={() => setSeccion("historial")}>
-              📋 Historial
-            </button>
-            <button className={`btn ${seccion === "ganancias" ? "primary" : ""}`} onClick={() => setSeccion("ganancias")}>
-              💰 Ventas
-            </button>
-          </>
+          <button className={`btn ${seccion === "ganancias" ? "primary" : ""}`} onClick={() => setSeccion("ganancias")}>
+            💰 Ventas
+          </button>
+        )}
+
+        {carrito.length > 0 && (
+          <button
+            className="btn primary"
+            onClick={abrirModalCarrito}
+            style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "6px" }}
+          >
+            🛒
+            <span style={{
+              background: "#fff", color: "#000",
+              borderRadius: "99px", padding: "1px 7px",
+              fontSize: "12px", fontWeight: "700",
+            }}>
+              {cantidadTotalCarrito}
+            </span>
+            <span>${totalCarrito.toLocaleString("es-AR")}</span>
+          </button>
         )}
       </div>
 
@@ -362,7 +420,7 @@ const Admin = () => {
                 </div>
                 <div className="prod-card-actions">
                   {isAdmin && <button className="btn sm" onClick={() => abrirModalEditar(p)}>✏️ Editar</button>}
-                  <BtnVendido p={p} />
+                  <BtnCarrito p={p} />
                 </div>
               </div>
             ))}
@@ -393,7 +451,7 @@ const Admin = () => {
                     <td>
                       <div className="td-actions">
                         {isAdmin && <button className="btn sm" onClick={() => abrirModalEditar(p)}>✏️ Editar</button>}
-                        <BtnVendido p={p} />
+                        <BtnCarrito p={p} />
                       </div>
                     </td>
                   </tr>
@@ -404,20 +462,27 @@ const Admin = () => {
         </>
       )}
 
-      {/* ── HISTORIAL ── */}
-      {seccion === "historial" && isAdmin && (
+      {/* ── HISTORIAL (todos los usuarios) ── */}
+      {seccion === "historial" && (
         <>
-          <div className="ap-heading" style={{ marginBottom: "1rem" }}>Historial de ventas</div>
-
+          <div className="ap-heading" style={{ marginBottom: "1rem" }}>
+            {isAdmin ? "Historial de ventas" : "Mis ventas"}
+          </div>
           <FiltrosVentas />
-
           <div className="card-list">
             {ventasFiltradas.length === 0 && <p className="empty">No hay ventas registradas</p>}
             {ventasFiltradas.map((v, i) => (
               <div className="prod-card" key={i}>
                 <div className="prod-card-top">
                   <div className="prod-card-nombre">{v.producto.nombre}</div>
-                  <span className="cat">{v.metodoPago}</span>
+                  <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                    <span className="cat">{v.metodoPago}</span>
+                    <button
+                      className="btn sm"
+                      onClick={() => eliminarVenta(v.id)}
+                      style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
+                    >🗑️</button>
+                  </div>
                 </div>
                 <div className="prod-card-body">
                   <span className="prod-card-precio">${Number(v.producto.precio).toLocaleString("es-AR")}</span>
@@ -432,14 +497,16 @@ const Admin = () => {
               </div>
             ))}
           </div>
-
           <div className="tbl-wrap">
             <table>
               <thead>
-                <tr><th>Producto</th><th>Proveedor</th><th>Precio</th><th>Método</th><th>Comprador</th><th>Vendedor</th><th>Comentario</th><th>Fecha</th></tr>
+                <tr>
+                  <th>Producto</th><th>Proveedor</th><th>Precio</th><th>Método</th>
+                  <th>Comprador</th><th>Vendedor</th><th>Comentario</th><th>Fecha</th><th></th>
+                </tr>
               </thead>
               <tbody>
-                {ventasFiltradas.length === 0 && <tr><td colSpan="8" className="empty">No hay ventas</td></tr>}
+                {ventasFiltradas.length === 0 && <tr><td colSpan="9" className="empty">No hay ventas</td></tr>}
                 {ventasFiltradas.map((v, i) => (
                   <tr key={i}>
                     <td>{v.producto.nombre}</td>
@@ -450,6 +517,13 @@ const Admin = () => {
                     <td>{v.usuario}</td>
                     <td>{v.comentario || "-"}</td>
                     <td>{new Date(v.fecha).toLocaleString("es-AR")}</td>
+                    <td>
+                      <button
+                        className="btn sm"
+                        onClick={() => eliminarVenta(v.id)}
+                        style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
+                      >🗑️</button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -458,18 +532,15 @@ const Admin = () => {
         </>
       )}
 
-      {/* ── GANANCIAS ── */}
+      {/* ── GANANCIAS (solo admins) ── */}
       {seccion === "ganancias" && isAdmin && (
         <>
           <div className="ap-heading" style={{ marginBottom: "0.5rem" }}>Ganancias por producto</div>
-
           <FiltrosVentas />
-
           <div style={{ marginBottom: "1.5rem", fontSize: "14px", color: "#666" }}>
             Total general:{" "}
             <strong style={{ color: "#111", fontSize: "18px" }}>${totalGeneral.toLocaleString("es-AR")}</strong>
           </div>
-
           <div className="card-list">
             {gananciasArray.length === 0 && <p className="empty">No hay ventas registradas</p>}
             {gananciasArray.map((g, i) => (
@@ -482,7 +553,6 @@ const Admin = () => {
               </div>
             ))}
           </div>
-
           <div className="tbl-wrap">
             <table>
               <thead>
@@ -510,14 +580,48 @@ const Admin = () => {
         </>
       )}
 
-      {/* ── MODAL VENTA ── */}
-      {modalVenta && (
+      {/* ── MODAL CARRITO ── */}
+      {modalCarrito && (
         <div className="overlay">
-          <div className="modal">
-            <h3>Registrar venta</h3>
-            <p style={{ marginBottom: "1rem" }}>
-              <strong>{modalVenta.nombre}</strong> — ${Number(modalVenta.precio).toLocaleString("es-AR")}
-            </p>
+          <div className="modal" style={{ maxWidth: "480px", width: "100%" }}>
+            <h3 style={{ marginBottom: "1rem" }}>🛒 Confirmar venta</h3>
+            <div style={{ marginBottom: "1rem", borderRadius: "8px", overflow: "hidden", border: "1px solid #eee" }}>
+              {carrito.map((item) => (
+                <div key={item.id} style={{
+                  display: "flex", alignItems: "center", gap: "8px",
+                  padding: "8px 12px", borderBottom: "1px solid #f0f0f0", fontSize: "14px",
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: "500" }}>{item.nombre}</div>
+                    <div style={{ fontSize: "12px", color: "#888" }}>${Number(item.precio).toLocaleString("es-AR")} c/u</div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <button className="btn sm" onClick={() => quitarDelCarrito(item.id)} style={{ padding: "0 8px" }}>−</button>
+                    <span style={{ minWidth: "20px", textAlign: "center", fontWeight: "600" }}>{item.cantidad}</span>
+                    <button
+                      className="btn sm"
+                      onClick={() => agregarAlCarrito(item)}
+                      disabled={item.cantidad >= Number(productos.find((p) => p.id === item.id)?.stock || 0)}
+                      style={{ padding: "0 8px" }}
+                    >+</button>
+                  </div>
+                  <div style={{ minWidth: "80px", textAlign: "right", fontWeight: "600" }}>
+                    ${(Number(item.precio) * item.cantidad).toLocaleString("es-AR")}
+                  </div>
+                  <button
+                    onClick={() => eliminarDelCarrito(item.id)}
+                    style={{ background: "none", border: "none", cursor: "pointer", color: "#bbb", fontSize: "16px", padding: "0 4px" }}
+                  >✕</button>
+                </div>
+              ))}
+              <div style={{
+                padding: "10px 12px", display: "flex", justifyContent: "space-between",
+                fontWeight: "700", fontSize: "15px", background: "#fafafa",
+              }}>
+                <span>Total ({cantidadTotalCarrito} producto{cantidadTotalCarrito !== 1 ? "s" : ""})</span>
+                <span>${totalCarrito.toLocaleString("es-AR")}</span>
+              </div>
+            </div>
             <div className="field">
               <label>Método de pago</label>
               <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
@@ -544,13 +648,17 @@ const Admin = () => {
               <textarea
                 value={comentario}
                 onChange={(e) => setComentario(e.target.value)}
-                placeholder="Ej: el cliente pidió factura, entrega a domicilio..."
+                placeholder="Ej: entrega a domicilio, factura..."
               />
             </div>
             {error && <p className="err">{error}</p>}
             <div className="modal-foot">
-              <button className="btn" onClick={cerrarModalVenta}>Cancelar</button>
-              <button className="btn primary" onClick={confirmarVenta}>Confirmar venta</button>
+              <button className="btn" onClick={cerrarModalCarrito} disabled={cargando}>Cancelar</button>
+              <button className="btn primary" onClick={confirmarVenta} disabled={cargando}>
+                {cargando
+                  ? "Registrando..."
+                  : `Confirmar ${cantidadTotalCarrito} venta${cantidadTotalCarrito !== 1 ? "s" : ""}`}
+              </button>
             </div>
           </div>
         </div>
@@ -649,15 +757,13 @@ const Admin = () => {
             <p style={{ color: "#666", marginBottom: "1.5rem" }}>
               La venta fue registrada correctamente.
             </p>
-            <button
-              className="btn primary"
-              onClick={() => setVentaExitosa(false)}
-            >
+            <button className="btn primary" onClick={() => setVentaExitosa(false)}>
               Cerrar
             </button>
           </div>
         </div>
       )}
+
     </div>
   );
 };
