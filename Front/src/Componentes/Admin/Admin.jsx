@@ -185,6 +185,7 @@ const Admin = () => {
 
   // ── Eliminar venta ──
   const eliminarVenta = async (id) => {
+    if (!id) return setError("No se pudo identificar la venta a eliminar.");
     if (!window.confirm("¿Seguro que querés eliminar esta venta?")) return;
     try {
       const res = await fetch(`${API}/ventas/${id}`, {
@@ -281,6 +282,7 @@ const Admin = () => {
     (a, b) => b.total - a.total,
   );
   const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
+  const getVentaId = (venta) => venta?._id || venta?.id || null;
 
   const filtrados = productos.filter(
     (p) =>
@@ -648,7 +650,7 @@ const Admin = () => {
               <p className="empty">No hay ventas registradas</p>
             )}
             {ventasFiltradas.map((v, i) => (
-              <div className="prod-card" key={i}>
+              <div className="prod-card" key={getVentaId(v) || i}>
                 <div className="prod-card-top">
                   <div className="prod-card-nombre">{v.producto.nombre}</div>
                   <div
@@ -661,7 +663,8 @@ const Admin = () => {
                     <span className="cat">{v.metodoPago}</span>
                     <button
                       className="btn sm"
-                      onClick={() => eliminarVenta(v.id)}
+                      onClick={() => eliminarVenta(getVentaId(v))}
+                      disabled={!getVentaId(v)}
                       style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
                     >
                       🗑️
@@ -715,7 +718,7 @@ const Admin = () => {
                   </tr>
                 )}
                 {ventasFiltradas.map((v, i) => (
-                  <tr key={i}>
+                  <tr key={getVentaId(v) || i}>
                     <td>{v.producto.nombre}</td>
                     <td>{v.producto?.autor || "-"}</td>
                     <td>
@@ -731,7 +734,8 @@ const Admin = () => {
                     <td>
                       <button
                         className="btn sm"
-                        onClick={() => eliminarVenta(v._id)} // ← acá
+                        onClick={() => eliminarVenta(getVentaId(v))}
+                        disabled={!getVentaId(v)}
                         style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
                       >
                         🗑️

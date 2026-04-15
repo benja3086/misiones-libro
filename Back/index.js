@@ -18,7 +18,6 @@ initUserRepository(db);
 
 console.log("✅ Conectado a MongoDB");
 await client.connect();
-console.log("✅ Conectado a:", client.s.url); // muestra a qué URI conectó
 const app = express();
 
 app.use(
