@@ -26,7 +26,7 @@ const ProtectedRoute = ({ children }) => {
 
 const App = () => {
   const location = useLocation();
-
+  const ocultarBotonIg = location.pathname.startsWith("/admin");
   useEffect(() => {
     ReactGA.send({ hitType: "pageview", page: location.pathname });
   }, [location]);
@@ -35,7 +35,7 @@ const App = () => {
     <div>
       <Marquesina />
       <Home />
-      <BotonIg />
+      {!ocultarBotonIg && <BotonIg />}
 
       <Routes>
         <Route path="/" element={<Inicio />} />
@@ -45,11 +45,14 @@ const App = () => {
         <Route path="/misioneros" element={<Misioneros />} />
         <Route path="/misioneros/:nombre" element={<Misioneros />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={
-          <ProtectedRoute>
-            <Admin />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );

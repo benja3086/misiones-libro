@@ -651,6 +651,7 @@ const Admin = () => {
             )}
             {ventasFiltradas.map((v, i) => (
               <div className="prod-card" key={getVentaId(v) || i}>
+                {" "}
                 <div className="prod-card-top">
                   <div className="prod-card-nombre">{v.producto.nombre}</div>
                   <div
@@ -854,6 +855,11 @@ const Admin = () => {
                 >
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: "500" }}>{item.nombre}</div>
+                    {item.codigo && (
+                      <div style={{ fontSize: "12px", color: "#0066cc" }}>
+                        Código: {item.codigo}
+                      </div>
+                    )}
                     <div style={{ fontSize: "12px", color: "#888" }}>
                       ${Number(item.precio).toLocaleString("es-AR")} c/u
                     </div>
