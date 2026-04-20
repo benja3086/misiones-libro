@@ -7,7 +7,7 @@ import { PORT, SECRET_JWT_KEY } from "./config.js";
 import { UserRepository, initUserRepository } from "./user-repository.js";
 import { MongoClient } from "mongodb";
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017";
+const MONGO_URI = process.env.MONGO_URI || process.env.MONGO_LOCAL;
 const DB_NAME = "misiones-libro";
 
 const client = new MongoClient(MONGO_URI);
