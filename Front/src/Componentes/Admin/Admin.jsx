@@ -33,7 +33,18 @@ const Admin = () => {
   const [nombreComprador, setNombreComprador] = useState("");
   const [comentario, setComentario] = useState("");
 
-  // ── Modal editar ──
+  // ── Modal editar / nuevo ──
+  const [modalNuevo, setModalNuevo] = useState(false);
+  const [formNuevo, setFormNuevo] = useState({
+    codigo: "",
+    nombre: "",
+    categoria: "libros",
+    precio: "",
+    stock: "",
+    autor: "",
+    descripcion: "",
+    imagen: "",
+  });
   const [modalEditar, setModalEditar] = useState(null);
   const [formEditar, setFormEditar] = useState({});
 
@@ -194,26 +205,80 @@ const Admin = () => {
         credentials: "include",
       });
       if (!res.ok) throw new Error();
-      setVentas((prev) => prev.filter((v) => v._id !== id)); // ← _id, no id
+      setVentas((prev) => prev.filter((v) => v._id !== id));
     } catch {
       setError("Error al eliminar la venta");
     }
   };
 
-  // ── Modal editar ──
+  // ── Nuevo producto ──
+  const abrirModalNuevo = () => {
+    setFormNuevo({
+      codigo: "",
+      nombre: "",
+      categoria: "libros",
+      precio: "",
+      stock: "",
+      autor: "",
+      descripcion: "",
+      imagen: "",
+    });
+    setError("");
+    setModalNuevo(true);
+  };
+
+  const cerrarModalNuevo = () => {
+    setModalNuevo(false);
+    setError("");
+  };
+
+  const guardarNuevoProducto = async () => {
+    if (!formNuevo.nombre || formNuevo.precio === "")
+      return setError("Nombre y precio son obligatorios.");
+
+    try {
+      const datos = {
+        ...formNuevo,
+        precio: Number(formNuevo.precio),
+        stock: Number(formNuevo.stock || 0),
+      };
+
+      const res = await fetch(`${API}/productos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        credentials: "include",
+        body: JSON.stringify(datos),
+      });
+
+      if (!res.ok) throw new Error();
+      const nuevo = await res.json();
+      setProductos((prev) => ordenarPorCodigo([...prev, nuevo]));
+      cerrarModalNuevo();
+    } catch {
+      setError("Error al crear el producto");
+    }
+  };
+
+  // ── Editar producto ──
   const abrirModalEditar = (p) => {
     setFormEditar({ ...p, codigo: p.codigo || "" });
     setModalEditar(p.id);
     setError("");
   };
+
   const cerrarModalEditar = () => {
     setModalEditar(null);
     setFormEditar({});
     setError("");
   };
+
   const guardarEdicion = async () => {
     if (!formEditar.nombre || formEditar.precio === "")
       return setError("Nombre y precio son obligatorios.");
+
     try {
       const { _id, ...datos } = formEditar;
       const datosFinales = {
@@ -221,6 +286,7 @@ const Admin = () => {
         precio: Number(datos.precio),
         stock: Number(datos.stock),
       };
+
       await fetch(`${API}/productos/${modalEditar}`, {
         method: "PUT",
         headers: {
@@ -230,6 +296,7 @@ const Admin = () => {
         credentials: "include",
         body: JSON.stringify(datosFinales),
       });
+
       setProductos((prev) =>
         ordenarPorCodigo(
           prev.map((p) =>
@@ -243,13 +310,32 @@ const Admin = () => {
     }
   };
 
-  // ── Filtros ──
+  // ── Eliminar producto ──
+  const eliminarProducto = async (id) => {
+    if (!id) return setError("No se pudo identificar el producto a eliminar.");
+    if (!window.confirm("¿Seguro que querés eliminar este producto?")) return;
+
+    try {
+      const res = await fetch(`${API}/productos/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${getToken()}` },
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error();
+      setProductos((prev) => prev.filter((p) => p.id !== id));
+      setCarrito((prev) => prev.filter((item) => item.id !== id));
+    } catch {
+      setError("Error al eliminar el producto");
+    }
+  };
+
+  // ── Filtros / cálculos ──
   const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
   const autoresUnicos = [
     ...new Set(ventas.map((v) => v.producto?.autor).filter(Boolean)),
   ].sort();
 
-  // Vendedores solo ven sus propias ventas
   const ventasFiltradas = ventas.filter((v) => {
     if (!isAdmin && v.usuario !== user?.username) return false;
     const fecha = new Date(v.fecha);
@@ -278,6 +364,7 @@ const Admin = () => {
     acc[nombre].total += precio;
     return acc;
   }, {});
+
   const gananciasArray = Object.values(gananciasPorProducto).sort(
     (a, b) => b.total - a.total,
   );
@@ -306,6 +393,7 @@ const Admin = () => {
     const en = cantidadEnCarrito(p.id);
     const stockReal = Number(productos.find((x) => x.id === p.id)?.stock || 0);
     const agotado = sinStock(p) || en >= stockReal;
+
     return (
       <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
         {en > 0 && (
@@ -373,7 +461,7 @@ const Admin = () => {
             onChange={(e) => setFiltroHasta(e.target.value)}
           />
         </div>
-        {/* Filtro vendedor solo para admins */}
+
         {isAdmin && (
           <div className="field" style={{ margin: 0 }}>
             <label>Vendedor</label>
@@ -390,6 +478,7 @@ const Admin = () => {
             </select>
           </div>
         )}
+
         <div className="field" style={{ margin: 0 }}>
           <label>Método de pago</label>
           <select
@@ -401,6 +490,7 @@ const Admin = () => {
             <option value="transferencia">Transferencia</option>
           </select>
         </div>
+
         <div className="field" style={{ margin: 0, gridColumn: "1 / -1" }}>
           <label>Proveedor</label>
           <select
@@ -416,6 +506,7 @@ const Admin = () => {
           </select>
         </div>
       </div>
+
       <div
         style={{
           display: "flex",
@@ -454,7 +545,6 @@ const Admin = () => {
           📦 Productos
         </button>
 
-        {/* Historial visible para todos */}
         <button
           className={`btn ${seccion === "historial" ? "primary" : ""}`}
           onClick={() => setSeccion("historial")}
@@ -462,7 +552,6 @@ const Admin = () => {
           📋 Historial
         </button>
 
-        {/* Ganancias solo para admins */}
         {isAdmin && (
           <button
             className={`btn ${seccion === "ganancias" ? "primary" : ""}`}
@@ -511,7 +600,13 @@ const Admin = () => {
                 {filtrados.length} producto{filtrados.length !== 1 ? "s" : ""}
               </div>
             </div>
+            {isAdmin && (
+              <button className="btn primary" onClick={abrirModalNuevo}>
+                + Nuevo producto
+              </button>
+            )}
           </div>
+
           <div className="ap-search">
             <input
               placeholder="Buscar por nombre o código..."
@@ -551,20 +646,31 @@ const Admin = () => {
                     )}
                   </div>
                 </div>
+
                 <div className="prod-card-body">
                   <span className="prod-card-precio">
                     ${Number(p.precio).toLocaleString("es-AR")}
                   </span>
                   <StockBadge stock={p.stock} />
                 </div>
+
                 <div className="prod-card-actions">
                   {isAdmin && (
-                    <button
-                      className="btn sm"
-                      onClick={() => abrirModalEditar(p)}
-                    >
-                      ✏️ Editar
-                    </button>
+                    <>
+                      <button
+                        className="btn sm"
+                        onClick={() => abrirModalEditar(p)}
+                      >
+                        ✏️ Editar
+                      </button>
+                      <button
+                        className="btn sm"
+                        onClick={() => eliminarProducto(p.id)}
+                        style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
+                      >
+                        🗑️ Eliminar
+                      </button>
+                    </>
                   )}
                   <BtnCarrito p={p} />
                 </div>
@@ -620,12 +726,24 @@ const Admin = () => {
                     <td>
                       <div className="td-actions">
                         {isAdmin && (
-                          <button
-                            className="btn sm"
-                            onClick={() => abrirModalEditar(p)}
-                          >
-                            ✏️ Editar
-                          </button>
+                          <>
+                            <button
+                              className="btn sm"
+                              onClick={() => abrirModalEditar(p)}
+                            >
+                              ✏️ Editar
+                            </button>
+                            <button
+                              className="btn sm"
+                              onClick={() => eliminarProducto(p.id)}
+                              style={{
+                                color: "#e53e3e",
+                                borderColor: "#e53e3e",
+                              }}
+                            >
+                              🗑️
+                            </button>
+                          </>
                         )}
                         <BtnCarrito p={p} />
                       </div>
@@ -638,20 +756,20 @@ const Admin = () => {
         </>
       )}
 
-      {/* ── HISTORIAL (todos los usuarios) ── */}
+      {/* ── HISTORIAL ── */}
       {seccion === "historial" && (
         <>
           <div className="ap-heading" style={{ marginBottom: "1rem" }}>
             {isAdmin ? "Historial de ventas" : "Mis ventas"}
           </div>
           <FiltrosVentas />
+
           <div className="card-list">
             {ventasFiltradas.length === 0 && (
               <p className="empty">No hay ventas registradas</p>
             )}
             {ventasFiltradas.map((v, i) => (
               <div className="prod-card" key={getVentaId(v) || i}>
-                {" "}
                 <div className="prod-card-top">
                   <div className="prod-card-nombre">{v.producto.nombre}</div>
                   <div
@@ -672,11 +790,13 @@ const Admin = () => {
                     </button>
                   </div>
                 </div>
+
                 <div className="prod-card-body">
                   <span className="prod-card-precio">
                     ${Number(v.producto.precio).toLocaleString("es-AR")}
                   </span>
                 </div>
+
                 <div
                   style={{
                     fontSize: "0.8rem",
@@ -695,6 +815,7 @@ const Admin = () => {
               </div>
             ))}
           </div>
+
           <div className="tbl-wrap">
             <table>
               <thead>
@@ -722,9 +843,7 @@ const Admin = () => {
                   <tr key={getVentaId(v) || i}>
                     <td>{v.producto.nombre}</td>
                     <td>{v.producto?.autor || "-"}</td>
-                    <td>
-                      ${Number(v.producto.precio).toLocaleString("es-AR")}
-                    </td>
+                    <td>${Number(v.producto.precio).toLocaleString("es-AR")}</td>
                     <td>
                       <span className="cat">{v.metodoPago}</span>
                     </td>
@@ -750,7 +869,7 @@ const Admin = () => {
         </>
       )}
 
-      {/* ── GANANCIAS (solo admins) ── */}
+      {/* ── GANANCIAS ── */}
       {seccion === "ganancias" && isAdmin && (
         <>
           <div className="ap-heading" style={{ marginBottom: "0.5rem" }}>
@@ -765,6 +884,7 @@ const Admin = () => {
               ${totalGeneral.toLocaleString("es-AR")}
             </strong>
           </div>
+
           <div className="card-list">
             {gananciasArray.length === 0 && (
               <p className="empty">No hay ventas registradas</p>
@@ -783,6 +903,7 @@ const Admin = () => {
               </div>
             ))}
           </div>
+
           <div className="tbl-wrap">
             <table>
               <thead>
@@ -833,6 +954,7 @@ const Admin = () => {
         <div className="overlay">
           <div className="modal" style={{ maxWidth: "480px", width: "100%" }}>
             <h3 style={{ marginBottom: "1rem" }}>🛒 Confirmar venta</h3>
+
             <div
               style={{
                 marginBottom: "1rem",
@@ -864,6 +986,7 @@ const Admin = () => {
                       ${Number(item.precio).toLocaleString("es-AR")} c/u
                     </div>
                   </div>
+
                   <div
                     style={{
                       display: "flex",
@@ -901,6 +1024,7 @@ const Admin = () => {
                       +
                     </button>
                   </div>
+
                   <div
                     style={{
                       minWidth: "80px",
@@ -913,6 +1037,7 @@ const Admin = () => {
                       "es-AR",
                     )}
                   </div>
+
                   <button
                     onClick={() => eliminarDelCarrito(item.id)}
                     style={{
@@ -928,6 +1053,7 @@ const Admin = () => {
                   </button>
                 </div>
               ))}
+
               <div
                 style={{
                   padding: "10px 12px",
@@ -945,6 +1071,7 @@ const Admin = () => {
                 <span>${totalCarrito.toLocaleString("es-AR")}</span>
               </div>
             </div>
+
             <div className="field">
               <label>Método de pago</label>
               <div
@@ -964,6 +1091,7 @@ const Admin = () => {
                 </button>
               </div>
             </div>
+
             {metodoPago === "transferencia" && (
               <div className="field" style={{ marginTop: "1rem" }}>
                 <label>Nombre del comprador</label>
@@ -974,6 +1102,7 @@ const Admin = () => {
                 />
               </div>
             )}
+
             <div className="field" style={{ marginTop: "1rem" }}>
               <label>Comentario (opcional)</label>
               <textarea
@@ -982,7 +1111,9 @@ const Admin = () => {
                 placeholder="Ej: entrega a domicilio, factura..."
               />
             </div>
+
             {error && <p className="err">{error}</p>}
+
             <div className="modal-foot">
               <button
                 className="btn"
@@ -999,6 +1130,110 @@ const Admin = () => {
                 {cargando
                   ? "Registrando..."
                   : `Confirmar ${cantidadTotalCarrito} venta${cantidadTotalCarrito !== 1 ? "s" : ""}`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODAL NUEVO ── */}
+      {modalNuevo && (
+        <div className="overlay">
+          <div className="modal">
+            <h3>Nuevo producto</h3>
+            <div className="field">
+              <label>Código</label>
+              <input
+                value={formNuevo.codigo}
+                onChange={(e) =>
+                  setFormNuevo((f) => ({ ...f, codigo: e.target.value }))
+                }
+                placeholder="Ej: A, B, AC..."
+              />
+            </div>
+            <div className="field">
+              <label>Nombre</label>
+              <input
+                value={formNuevo.nombre}
+                onChange={(e) =>
+                  setFormNuevo((f) => ({ ...f, nombre: e.target.value }))
+                }
+              />
+            </div>
+            <div className="grid2">
+              <div className="field">
+                <label>Precio ($)</label>
+                <input
+                  type="number"
+                  value={formNuevo.precio}
+                  onChange={(e) =>
+                    setFormNuevo((f) => ({ ...f, precio: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="field">
+                <label>Stock</label>
+                <input
+                  type="number"
+                  value={formNuevo.stock}
+                  onChange={(e) =>
+                    setFormNuevo((f) => ({ ...f, stock: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid2">
+              <div className="field">
+                <label>Categoría</label>
+                <select
+                  value={formNuevo.categoria}
+                  onChange={(e) =>
+                    setFormNuevo((f) => ({ ...f, categoria: e.target.value }))
+                  }
+                >
+                  <option value="libros">Libros</option>
+                  <option value="remeras">Remeras</option>
+                  <option value="utiles">Útiles</option>
+                  <option value="cuadernos">Cuadernos</option>
+                  <option value="accesorios">Accesorios</option>
+                </select>
+              </div>
+              <div className="field">
+                <label>Autor</label>
+                <input
+                  value={formNuevo.autor}
+                  onChange={(e) =>
+                    setFormNuevo((f) => ({ ...f, autor: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="field">
+              <label>Descripción</label>
+              <input
+                value={formNuevo.descripcion}
+                onChange={(e) =>
+                  setFormNuevo((f) => ({ ...f, descripcion: e.target.value }))
+                }
+              />
+            </div>
+            <div className="field">
+              <label>URL de imagen</label>
+              <input
+                value={formNuevo.imagen}
+                onChange={(e) =>
+                  setFormNuevo((f) => ({ ...f, imagen: e.target.value }))
+                }
+                placeholder="https://..."
+              />
+            </div>
+            {error && <p className="err">{error}</p>}
+            <div className="modal-foot">
+              <button className="btn" onClick={cerrarModalNuevo}>
+                Cancelar
+              </button>
+              <button className="btn primary" onClick={guardarNuevoProducto}>
+                Guardar
               </button>
             </div>
           </div>
