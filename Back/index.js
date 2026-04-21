@@ -97,7 +97,17 @@ app.get("/productos", async (req, res) => {
   const lista = await productos.find().toArray();
   res.send(lista);
 });
+app.get("/productos/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
 
+  const producto = await productos.findOne({ id });
+
+  if (!producto) {
+    return res.status(404).send({ error: "Producto no encontrado" });
+  }
+
+  res.send(producto);
+});
 app.post("/productos", authenticateToken, async (req, res) => {
   const nuevo = { ...req.body, id: Date.now() };
   await productos.insertOne(nuevo);

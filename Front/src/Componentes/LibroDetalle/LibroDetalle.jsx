@@ -2,16 +2,20 @@ import { useParams } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import "./LibroDetalle.css";
 //import BotonPago from "../BotonPago";
-import data from "../Libros.json";
 
 const LibroDetalle = () => {
   const { id } = useParams();
 
-  const libro = data.producto.find((l) => l.id === parseInt(id));
-
+useEffect(() => {
+  fetch(`http://localhost:3000/libros/${id}`)
+    .then((res) => res.json())
+    .then((data) => setLibro(data))
+    .catch((err) => console.error(err));
+}, [id]);
   const [imagenGrande, setImagenGrande] = useState(null);
   const [zoom, setZoom] = useState(1);
   const modalRef = useRef(null);
+  const [libro, setLibro] = useState(null);
 
   useEffect(() => {
     if (imagenGrande && modalRef.current) {

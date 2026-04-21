@@ -1,23 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import imagen from "../../assets/fondo-blanco.png";
 import "./Producto.css";
-import data from "../Libros.json"; 
 
 const Items = () => {
   const [busqueda, setBusqueda] = useState("");
+  const [productos, setProductos] = useState([]);
   const { categoria } = useParams();
+
   const categoriaSeleccionada = categoria?.toLowerCase() || null;
 
-  const resultados = data.producto.filter((item) => {
+  // 🔥 Traer productos del backend
+  useEffect(() => {
+    fetch("http://localhost:3000/productos")
+      .then((res) => res.json())
+      .then((data) => setProductos(data))
+      .catch((err) => console.error("Error al traer productos:", err));
+  }, []);
+
+  // 🔍 Filtrar productos
+  const resultados = productos.filter((item) => {
     const coincideCategoria =
       !categoriaSeleccionada ||
-      item.categoria.toLowerCase() === categoriaSeleccionada;
+      item.categoria?.toLowerCase() === categoriaSeleccionada;
+
     const coincideBusqueda =
-      item.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      item.id.toString().includes(busqueda);
+      item.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      item.id?.toString().includes(busqueda);
+
     return coincideCategoria && coincideBusqueda;
   });
+
+  // ⏳ Loading
+  if (!productos.length) return <h2>Cargando productos...</h2>;
 
   return (
     <>
@@ -66,10 +81,15 @@ const Items = () => {
                 ) : (
                   <img src={producto.imagen} alt={producto.nombre} />
                 ))}
-              <h3 className="titulo-libro">{producto.nombre.trim()}</h3>
+
+              <h3 className="titulo-libro">
+                {producto.nombre?.trim()}
+              </h3>
+
               <p className="precio">
-                ${producto.precio.toLocaleString("es-AR")}
+                ${producto.precio?.toLocaleString("es-AR")}
               </p>
+
               {producto.stock === 0 && (
                 <p className="sin-stock">Sin stock</p>
               )}
