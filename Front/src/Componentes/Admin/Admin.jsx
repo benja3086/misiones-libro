@@ -843,14 +843,20 @@ const Admin = () => {
                   <tr key={getVentaId(v) || i}>
                     <td>{v.producto.nombre}</td>
                     <td>{v.producto?.autor || "-"}</td>
-                    <td>${Number(v.producto.precio).toLocaleString("es-AR")}</td>
+                    <td>
+                      ${Number(v.producto.precio).toLocaleString("es-AR")}
+                    </td>
                     <td>
                       <span className="cat">{v.metodoPago}</span>
                     </td>
                     <td>{v.nombreComprador || "-"}</td>
                     <td>{v.usuario}</td>
                     <td>{v.comentario || "-"}</td>
-                    <td>{new Date(v.fecha).toLocaleString("es-AR")}</td>
+                    <td>
+                      {new Date(v.fecha).toLocaleString("es-AR", {
+                        hour12: false,
+                      })}
+                    </td>
                     <td>
                       <button
                         className="btn sm"

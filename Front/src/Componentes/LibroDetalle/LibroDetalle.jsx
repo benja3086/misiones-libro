@@ -6,24 +6,40 @@ import "./LibroDetalle.css";
 const LibroDetalle = () => {
   const { id } = useParams();
 
-useEffect(() => {
-  fetch(`http://localhost:3000/libros/${id}`)
-    .then((res) => res.json())
-    .then((data) => setLibro(data))
-    .catch((err) => console.error(err));
-}, [id]);
+  const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const [imagenGrande, setImagenGrande] = useState(null);
   const [zoom, setZoom] = useState(1);
   const modalRef = useRef(null);
   const [libro, setLibro] = useState(null);
+ const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setCargando(true);
+    setError("");
+    fetch(`${API}/productos/${id}`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error("No se pudo cargar el libro");
+        return res.json();
+      })
+      .then((data) => setLibro(data))
+      .catch((err) => {
+        console.error(err);
+        setLibro(null);
+        setError("No se pudo cargar el detalle del libro");
+      })
+      .finally(() => setCargando(false));
+  }, [API, id]);
 
   useEffect(() => {
     if (imagenGrande && modalRef.current) {
       modalRef.current.scrollTop = 0;
       modalRef.current.scrollLeft = 0;
     }
-  }, [imagenGrande]);
+}, [imagenGrande]);
 
+if (cargando) return <h2>Cargando libro...</h2>;
+  if (error) return <h2>{error}</h2>;
   if (!libro) return <h2>Libro no encontrado</h2>;
 
   const imagenes = Array.isArray(libro.imagen)
@@ -62,7 +78,6 @@ useEffect(() => {
 
       <div className="detalle-libro-contenido">
         <h2>{libro.nombre}</h2>
-        <p className="autor">Autor: {libro.autor || "Desconocido"}</p>
         <p className="precio">${libro.precio}</p>
         <p>{libro.descripcion}</p>
        { /*<BotonPago
