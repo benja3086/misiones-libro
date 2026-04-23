@@ -11,12 +11,12 @@ const Items = () => {
   const categoriaSeleccionada = categoria?.toLowerCase() || null;
 
   // 🔥 Traer productos del backend
-  useEffect(() => {
-    fetch("http://localhost:3000/productos")
-      .then((res) => res.json())
-      .then((data) => setProductos(data))
-      .catch((err) => console.error("Error al traer productos:", err));
-  }, []);
+ useEffect(() => {
+  fetch(`${import.meta.env.VITE_API_URL}/productos`)
+    .then((res) => res.json())
+    .then((data) => setProductos(data))
+    .catch((err) => console.error("Error al traer productos:", err));
+}, []);
 
   // 🔍 Filtrar productos
   const resultados = productos.filter((item) => {

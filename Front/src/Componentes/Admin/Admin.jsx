@@ -41,7 +41,7 @@ const Admin = () => {
     categoria: "libros",
     precio: "",
     stock: "",
-    autor: "",
+    provedor: "",
     descripcion: "",
     imagen: "",
   });
@@ -57,7 +57,7 @@ const Admin = () => {
   const [filtroHasta, setFiltroHasta] = useState("");
   const [filtroVendedor, setFiltroVendedor] = useState("");
   const [filtroMetodo, setFiltroMetodo] = useState("");
-  const [filtroAutor, setFiltroAutor] = useState("");
+  const [filtroProvedor, setFiltroProvedor] = useState("");
 
   useEffect(() => {
     fetch(`${API}/productos`, {
@@ -219,7 +219,7 @@ const Admin = () => {
       categoria: "libros",
       precio: "",
       stock: "",
-      autor: "",
+      provedor: "",
       descripcion: "",
       imagen: "",
     });
@@ -332,8 +332,8 @@ const Admin = () => {
 
   // ── Filtros / cálculos ──
   const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
-  const autoresUnicos = [
-    ...new Set(ventas.map((v) => v.producto?.autor).filter(Boolean)),
+  const provedoresUnicos = [
+    ...new Set(ventas.map((v) => v.producto?.provedor).filter(Boolean)),
   ].sort();
 
   const ventasFiltradas = ventas.filter((v) => {
@@ -344,7 +344,7 @@ const Admin = () => {
       return false;
     if (filtroVendedor && v.usuario !== filtroVendedor) return false;
     if (filtroMetodo && v.metodoPago !== filtroMetodo) return false;
-    if (filtroAutor && v.producto?.autor !== filtroAutor) return false;
+    if (filtroProvedor && v.producto?.provedor !== filtroProvedor) return false;
     return true;
   });
 
@@ -353,7 +353,7 @@ const Admin = () => {
     setFiltroHasta("");
     setFiltroVendedor("");
     setFiltroMetodo("");
-    setFiltroAutor("");
+    setFiltroProvedor("");
   };
 
   const gananciasPorProducto = ventasFiltradas.reduce((acc, v) => {
@@ -494,11 +494,11 @@ const Admin = () => {
         <div className="field" style={{ margin: 0, gridColumn: "1 / -1" }}>
           <label>Proveedor</label>
           <select
-            value={filtroAutor}
-            onChange={(e) => setFiltroAutor(e.target.value)}
+            value={filtroProvedor}
+            onChange={(e) => setFiltroProvedor(e.target.value)}
           >
             <option value="">Todos</option>
-            {autoresUnicos.map((a) => (
+            {provedoresUnicos.map((a) => (
               <option key={a} value={a}>
                 {a}
               </option>
@@ -625,7 +625,7 @@ const Admin = () => {
                 <div className="prod-card-top">
                   <div>
                     <div className="prod-card-nombre">{p.nombre}</div>
-                    <div className="prod-card-autor">{p.autor}</div>
+                    <div className="prod-card-provedor">{p.provedor}</div>
                   </div>
                   <div
                     style={{
@@ -688,7 +688,7 @@ const Admin = () => {
                   <th>Categoría</th>
                   <th>Precio</th>
                   <th>Stock</th>
-                  <th>Autor</th>
+                  <th>Provedor</th>
                   <th>Acción</th>
                 </tr>
               </thead>
@@ -722,7 +722,7 @@ const Admin = () => {
                     <td>
                       <StockBadge stock={p.stock} />
                     </td>
-                    <td>{p.autor}</td>
+                    <td>{p.provedor}</td>
                     <td>
                       <div className="td-actions">
                         {isAdmin && (
@@ -804,7 +804,9 @@ const Admin = () => {
                     marginTop: "0.4rem",
                   }}
                 >
-                  {v.producto?.autor && <span>📦 {v.producto.autor} · </span>}
+                  {v.producto?.provedor && (
+                    <span>📦 {v.producto.provedor} · </span>
+                  )}
                   {v.nombreComprador && <span>👤 {v.nombreComprador} · </span>}
                   <span>🧑‍💼 {v.usuario} · </span>
                   <span>🕐 {new Date(v.fecha).toLocaleString("es-AR")}</span>
@@ -842,21 +844,15 @@ const Admin = () => {
                 {ventasFiltradas.map((v, i) => (
                   <tr key={getVentaId(v) || i}>
                     <td>{v.producto.nombre}</td>
-                    <td>{v.producto?.autor || "-"}</td>
-                    <td>
-                      ${Number(v.producto.precio).toLocaleString("es-AR")}
-                    </td>
+                    <td>{v.producto?.provedor || "-"}</td>
+                    <td>${Number(v.producto.precio).toLocaleString("es-AR")}</td>
                     <td>
                       <span className="cat">{v.metodoPago}</span>
                     </td>
                     <td>{v.nombreComprador || "-"}</td>
                     <td>{v.usuario}</td>
                     <td>{v.comentario || "-"}</td>
-                    <td>
-                      {new Date(v.fecha).toLocaleString("es-AR", {
-                        hour12: false,
-                      })}
-                    </td>
+                    <td>{new Date(v.fecha).toLocaleString("es-AR")}</td>
                     <td>
                       <button
                         className="btn sm"
@@ -1205,11 +1201,11 @@ const Admin = () => {
                 </select>
               </div>
               <div className="field">
-                <label>Autor</label>
+                <label>Provedor</label>
                 <input
-                  value={formNuevo.autor}
+                  value={formNuevo.provedor}
                   onChange={(e) =>
-                    setFormNuevo((f) => ({ ...f, autor: e.target.value }))
+                    setFormNuevo((f) => ({ ...f, provedor: e.target.value }))
                   }
                 />
               </div>
@@ -1309,11 +1305,11 @@ const Admin = () => {
                 </select>
               </div>
               <div className="field">
-                <label>Autor</label>
+                <label>Provedor</label>
                 <input
-                  value={formEditar.autor || ""}
+                  value={formEditar.provedor || ""}
                   onChange={(e) =>
-                    setFormEditar((f) => ({ ...f, autor: e.target.value }))
+                    setFormEditar((f) => ({ ...f, provedor: e.target.value }))
                   }
                 />
               </div>

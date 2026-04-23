@@ -6,12 +6,12 @@ import "./LibroDetalle.css";
 const LibroDetalle = () => {
   const { id } = useParams();
 
-  const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const API = import.meta.env.VITE_API_URL;
   const [imagenGrande, setImagenGrande] = useState(null);
   const [zoom, setZoom] = useState(1);
   const modalRef = useRef(null);
   const [libro, setLibro] = useState(null);
- const [cargando, setCargando] = useState(true);
+  const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -36,17 +36,17 @@ const LibroDetalle = () => {
       modalRef.current.scrollTop = 0;
       modalRef.current.scrollLeft = 0;
     }
-}, [imagenGrande]);
+  }, [imagenGrande]);
 
-if (cargando) return <h2>Cargando libro...</h2>;
+  if (cargando) return <h2>Cargando libro...</h2>;
   if (error) return <h2>{error}</h2>;
   if (!libro) return <h2>Libro no encontrado</h2>;
 
   const imagenes = Array.isArray(libro.imagen)
     ? libro.imagen
     : libro.imagen
-    ? [libro.imagen]
-    : [];
+      ? [libro.imagen]
+      : [];
 
   const handleWheel = (e) => {
     e.preventDefault();
@@ -80,7 +80,7 @@ if (cargando) return <h2>Cargando libro...</h2>;
         <h2>{libro.nombre}</h2>
         <p className="precio">${libro.precio}</p>
         <p>{libro.descripcion}</p>
-       { /*<BotonPago
+        {/*<BotonPago
           className="boton-pago-personalizado"
           titulo={libro.nombre}
           precio={libro.precio}
