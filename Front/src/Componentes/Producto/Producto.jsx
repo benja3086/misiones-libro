@@ -3,6 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import imagen from "../../assets/fondo-blanco.png";
 import "./Producto.css";
 
+const API =
+  import.meta.env.VITE_API_URL ||
+  (window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://misiones-libro-production.up.railway.app");
+
 const Items = () => {
   const [busqueda, setBusqueda] = useState("");
   const [productos, setProductos] = useState([]);
@@ -11,12 +17,12 @@ const Items = () => {
   const categoriaSeleccionada = categoria?.toLowerCase() || null;
 
   // 🔥 Traer productos del backend
- useEffect(() => {
-  fetch(`${import.meta.env.VITE_API_URL}/productos`)
-    .then((res) => res.json())
-    .then((data) => setProductos(data))
-    .catch((err) => console.error("Error al traer productos:", err));
-}, []);
+  useEffect(() => {
+    fetch(`${API}/productos`)
+      .then((res) => res.json())
+      .then((data) => setProductos(data))
+      .catch((err) => console.error("Error al traer productos:", err));
+  }, []);
 
   // 🔍 Filtrar productos
   const resultados = productos.filter((item) => {

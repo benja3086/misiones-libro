@@ -5,8 +5,11 @@ import "./LibroDetalle.css";
 
 const LibroDetalle = () => {
   const { id } = useParams();
-
-  const API = import.meta.env.VITE_API_URL;
+  const API =
+    import.meta.env.VITE_API_URL ||
+    (window.location.hostname === "localhost"
+      ? "http://localhost:3000"
+      : "https://misiones-libro-production.up.railway.app");
   const [imagenGrande, setImagenGrande] = useState(null);
   const [zoom, setZoom] = useState(1);
   const modalRef = useRef(null);
@@ -45,8 +48,8 @@ const LibroDetalle = () => {
   const imagenes = Array.isArray(libro.imagen)
     ? libro.imagen
     : libro.imagen
-      ? [libro.imagen]
-      : [];
+    ? [libro.imagen]
+    : [];
 
   const handleWheel = (e) => {
     e.preventDefault();
@@ -78,9 +81,10 @@ const LibroDetalle = () => {
 
       <div className="detalle-libro-contenido">
         <h2>{libro.nombre}</h2>
+        <p className="autor">Autor: {libro.autor || "Desconocido"}</p>
         <p className="precio">${libro.precio}</p>
         <p>{libro.descripcion}</p>
-        {/*<BotonPago
+       { /*<BotonPago
           className="boton-pago-personalizado"
           titulo={libro.nombre}
           precio={libro.precio}

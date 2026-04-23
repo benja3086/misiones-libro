@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import "./Admin.css";
 
-const API = import.meta.env.VITE_API_URL;
+const API =
+  import.meta.env.VITE_API_URL ||
+  (window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://misiones-libro-production.up.railway.app");
 
 const getToken = () => localStorage.getItem("token");
 
