@@ -10,6 +10,15 @@ const API =
 
 const getToken = () => localStorage.getItem("token");
 
+const normalizarTexto = (texto = "") =>
+  texto
+    .toString()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .trim();
+
 const ordenarPorCodigo = (arr) =>
   [...arr].sort((a, b) => {
     const ca = (a.codigo || "").toLowerCase();
@@ -375,12 +384,22 @@ const Admin = () => {
   const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
   const getVentaId = (venta) => venta?._id || venta?.id || null;
 
-  const filtrados = productos.filter(
-    (p) =>
-      p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      (p.codigo && p.codigo.toLowerCase().includes(busqueda.toLowerCase())),
-  );
+    const filtrados = productos.filter((p) => {
+    const termino = normalizarTexto(busqueda);
+    if (!termino) return true;
 
+    const tokens = termino.split(/\s+/).filter(Boolean);
+    const precioNumero = Number(p.precio);
+    const precioRaw = Number.isNaN(precioNumero) ? "" : `${precioNumero}`;
+    const precioAR = Number.isNaN(precioNumero)
+      ? ""
+      : precioNumero.toLocaleString("es-AR");
+    const searchable = normalizarTexto(
+      `${p.nombre || ""} ${p.codigo || ""} ${p.provedor || ""} ${precioRaw} ${precioAR}`,
+    );
+
+    return tokens.every((token) => searchable.includes(token));
+  });
   const sinStock = (p) => !p.stock || Number(p.stock) <= 0;
   const cantidadEnCarrito = (id) =>
     carrito.find((i) => i.id === id)?.cantidad || 0;
@@ -811,7 +830,7 @@ const Admin = () => {
                   {v.producto?.provedor && (
                     <span>📦 {v.producto.provedor} · </span>
                   )}
-                  {v.nombreComprador && <span>👤 {v.nombreComprador} · </span>}
+                  {v.nombreComprador && <span>📲{v.nombreComprador} · </span>}
                   <span>🧑‍💼 {v.usuario} · </span>
                   <span>🕐 {new Date(v.fecha).toLocaleString("es-AR")}</span>
                   {v.comentario && (
