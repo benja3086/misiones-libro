@@ -155,6 +155,7 @@ const Admin = () => {
     setError("");
 
     try {
+      const grupoVentaId = `carrito-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       const llamadas = carrito.flatMap((item) =>
         Array.from({ length: item.cantidad }, () =>
           fetch(`${API}/ventas`, {
@@ -169,11 +170,16 @@ const Admin = () => {
                 id: item.id,
                 nombre: item.nombre,
                 precio: item.precio,
+                codigo: item.codigo || "",
+                provedor: item.provedor || "",
+                proveedor: item.provedor || "",
+                autor: item.provedor || "",
               },
               metodoPago,
               nombreComprador:
                 metodoPago === "transferencia" ? nombreComprador : null,
               comentario: comentario.trim() || null,
+              grupoVentaId,
             }),
           }).then((r) => r.json()),
         ),
@@ -208,9 +214,10 @@ const Admin = () => {
   };
 
   // ── Eliminar venta ──
-  const eliminarVenta = async (id) => {
+  const eliminarVenta = async (id, { skipConfirm = false } = {}) => {
     if (!id) return setError("No se pudo identificar la venta a eliminar.");
-    if (!window.confirm("¿Seguro que querés eliminar esta venta?")) return;
+    if (!skipConfirm && !window.confirm("¿Seguro que querés eliminar esta venta?"))
+      return;
     try {
       const res = await fetch(`${API}/ventas/${id}`, {
         method: "DELETE",
@@ -344,10 +351,13 @@ const Admin = () => {
   };
 
   // ── Filtros / cálculos ──
+  const getProveedorVenta = (venta) =>
+    venta?.producto?.provedor ||
+    venta?.producto?.proveedor ||
+    venta?.producto?.autor ||
+    "";
   const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
-  const provedoresUnicos = [
-    ...new Set(ventas.map((v) => v.producto?.provedor).filter(Boolean)),
-  ].sort();
+  const provedoresUnicos = [...new Set(ventas.map(getProveedorVenta).filter(Boolean))].sort();
 
   const ventasFiltradas = ventas.filter((v) => {
     if (!isAdmin && v.usuario !== user?.username) return false;
@@ -357,7 +367,7 @@ const Admin = () => {
       return false;
     if (filtroVendedor && v.usuario !== filtroVendedor) return false;
     if (filtroMetodo && v.metodoPago !== filtroMetodo) return false;
-    if (filtroProvedor && v.producto?.provedor !== filtroProvedor) return false;
+    if (filtroProvedor && getProveedorVenta(v) !== filtroProvedor) return false;
     return true;
   });
 
@@ -383,8 +393,39 @@ const Admin = () => {
   );
   const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
   const getVentaId = (venta) => venta?._id || venta?.id || null;
+  const ventasAgrupadas = Object.values(
+    ventasFiltradas.reduce((acc, venta) => {
+      const fechaMs = new Date(venta.fecha).getTime();
+      const fallbackMinuto = Number.isNaN(fechaMs)
+        ? "sin-fecha"
+        : Math.floor(fechaMs / 60000);
+      const key =
+        venta.grupoVentaId ||
+        `${venta.usuario || "sin-usuario"}-${venta.metodoPago || "sin-metodo"}-${venta.nombreComprador || "sin-comprador"}-${venta.comentario || "sin-comentario"}-${fallbackMinuto}`;
+      if (!acc[key]) {
+        acc[key] = {
+          key,
+          metodoPago: venta.metodoPago,
+          nombreComprador: venta.nombreComprador,
+          usuario: venta.usuario,
+          comentario: venta.comentario,
+          fecha: venta.fecha,
+          items: [],
+          total: 0,
+        };
+      }
+      acc[key].items.push(venta);
+      acc[key].total += Number(venta.producto?.precio) || 0;
+      if (
+        new Date(venta.fecha).getTime() > new Date(acc[key].fecha).getTime()
+      ) {
+        acc[key].fecha = venta.fecha;
+      }
+      return acc;
+    }, {}),
+  ).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
-    const filtrados = productos.filter((p) => {
+  const filtrados = productos.filter((p) => {
     const termino = normalizarTexto(busqueda);
     if (!termino) return true;
 
@@ -788,13 +829,16 @@ const Admin = () => {
           <FiltrosVentas />
 
           <div className="card-list">
-            {ventasFiltradas.length === 0 && (
+            {ventasAgrupadas.length === 0 && (
               <p className="empty">No hay ventas registradas</p>
             )}
-            {ventasFiltradas.map((v, i) => (
-              <div className="prod-card" key={getVentaId(v) || i}>
+            {ventasAgrupadas.map((grupo) => (
+              <div className="prod-card" key={grupo.key}>
                 <div className="prod-card-top">
-                  <div className="prod-card-nombre">{v.producto.nombre}</div>
+                  <div className="prod-card-nombre">
+                    Venta ({grupo.items.length} producto
+                    {grupo.items.length !== 1 ? "s" : ""})
+                  </div>
                   <div
                     style={{
                       display: "flex",
@@ -802,22 +846,45 @@ const Admin = () => {
                       alignItems: "center",
                     }}
                   >
-                    <span className="cat">{v.metodoPago}</span>
-                    <button
-                      className="btn sm"
-                      onClick={() => eliminarVenta(getVentaId(v))}
-                      disabled={!getVentaId(v)}
-                      style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
-                    >
-                      🗑️
-                    </button>
+                    <span className="cat">{grupo.metodoPago}</span>
                   </div>
                 </div>
 
                 <div className="prod-card-body">
                   <span className="prod-card-precio">
-                    ${Number(v.producto.precio).toLocaleString("es-AR")}
+                    Total: ${grupo.total.toLocaleString("es-AR")}
                   </span>
+                </div>
+
+                <div style={{ marginTop: "0.4rem" }}>
+                  {grupo.items.map((item, i) => (
+                    <div
+                      key={getVentaId(item) || `${grupo.key}-${i}`}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: "0.5rem",
+                        fontSize: "0.88rem",
+                        marginBottom: "0.2rem",
+                      }}
+                    >
+                      <span>
+                        • {item.producto?.nombre}{" "}
+                        {item.producto?.codigo ? (
+                          <span
+                            className="cat"
+                            style={{ background: "#e0f0ff", color: "#0066cc" }}
+                          >
+                            #{item.producto.codigo}
+                          </span>
+                        ) : null}{" "}
+                        {getProveedorVenta(item) ? `(${getProveedorVenta(item)})` : ""}
+                      </span>
+                      <span>
+                        ${Number(item.producto?.precio || 0).toLocaleString("es-AR")}
+                      </span>
+                    </div>
+                  ))}
                 </div>
 
                 <div
@@ -827,14 +894,11 @@ const Admin = () => {
                     marginTop: "0.4rem",
                   }}
                 >
-                  {v.producto?.provedor && (
-                    <span>📦 {v.producto.provedor} · </span>
-                  )}
-                  {v.nombreComprador && <span>📲{v.nombreComprador} · </span>}
-                  <span>🧑‍💼 {v.usuario} · </span>
-                  <span>🕐 {new Date(v.fecha).toLocaleString("es-AR")}</span>
-                  {v.comentario && (
-                    <div style={{ marginTop: "4px" }}>💬 {v.comentario}</div>
+                  {grupo.nombreComprador && <span>📲{grupo.nombreComprador} · </span>}
+                  <span>🧑‍💼 {grupo.usuario} · </span>
+                  <span>🕐 {new Date(grupo.fecha).toLocaleString("es-AR")}</span>
+                  {grupo.comentario && (
+                    <div style={{ marginTop: "4px" }}>💬 {grupo.comentario}</div>
                   )}
                 </div>
               </div>
@@ -845,9 +909,9 @@ const Admin = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Producto</th>
-                  <th>Proveedor</th>
-                  <th>Precio</th>
+                  <th>Productos</th>
+                  <th>Detalle</th>
+                  <th>Total</th>
                   <th>Método</th>
                   <th>Comprador</th>
                   <th>Vendedor</th>
@@ -857,34 +921,69 @@ const Admin = () => {
                 </tr>
               </thead>
               <tbody>
-                {ventasFiltradas.length === 0 && (
+                {ventasAgrupadas.length === 0 && (
                   <tr>
                     <td colSpan="9" className="empty">
                       No hay ventas
                     </td>
                   </tr>
                 )}
-                {ventasFiltradas.map((v, i) => (
-                  <tr key={getVentaId(v) || i}>
-                    <td>{v.producto.nombre}</td>
-                    <td>{v.producto?.provedor || "-"}</td>
-                    <td>${Number(v.producto.precio).toLocaleString("es-AR")}</td>
+                {ventasAgrupadas.map((grupo) => (
+                  <tr key={grupo.key}>
+                    <td>{grupo.items.length}</td>
                     <td>
-                      <span className="cat">{v.metodoPago}</span>
+                      {grupo.items.map((item, i) => (
+                        <div key={getVentaId(item) || `${grupo.key}-${i}`}>
+                          {item.producto?.codigo ? (
+                            <span
+                              className="cat"
+                              style={{ background: "#e0f0ff", color: "#0066cc" }}
+                            >
+                              #{item.producto.codigo}
+                            </span>
+                          ) : null}{" "}
+                          {item.producto?.nombre || "-"} · $
+                          {Number(item.producto?.precio || 0).toLocaleString("es-AR")}
+                          {getProveedorVenta(item)
+                            ? ` · ${getProveedorVenta(item)}`
+                            : ""}
+                        </div>
+                      ))}
                     </td>
-                    <td>{v.nombreComprador || "-"}</td>
-                    <td>{v.usuario}</td>
-                    <td>{v.comentario || "-"}</td>
-                    <td>{new Date(v.fecha).toLocaleString("es-AR")}</td>
+                    <td>${grupo.total.toLocaleString("es-AR")}</td>
                     <td>
-                      <button
-                        className="btn sm"
-                        onClick={() => eliminarVenta(getVentaId(v))}
-                        disabled={!getVentaId(v)}
-                        style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
-                      >
-                        🗑️
-                      </button>
+                      <span className="cat">{grupo.metodoPago}</span>
+                    </td>
+                    <td>{grupo.nombreComprador || "-"}</td>
+                    <td>{grupo.usuario}</td>
+                    <td>{grupo.comentario || "-"}</td>
+                    <td>{new Date(grupo.fecha).toLocaleString("es-AR")}</td>
+                    <td>
+                      {grupo.items.every((item) => getVentaId(item)) ? (
+                        <button
+                          className="btn sm"
+                          onClick={async () => {
+                            if (
+                              !window.confirm(
+                                "¿Seguro que querés eliminar esta venta completa?",
+                              )
+                            )
+                              return;
+                            await Promise.all(
+                              grupo.items.map((item) =>
+                                eliminarVenta(getVentaId(item), {
+                                  skipConfirm: true,
+                                }),
+                              ),
+                            );
+                          }}
+                          style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
+                        >
+                          🗑️
+                        </button>
+                      ) : (
+                        "-"
+                      )}
                     </td>
                   </tr>
                 ))}
