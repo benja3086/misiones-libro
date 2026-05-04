@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import "./Admin.css";
+import FiltrosVentas from "./FiltrosVentas";
 
 const API =
   import.meta.env.VITE_API_URL ||
@@ -216,7 +217,10 @@ const Admin = () => {
   // ── Eliminar venta ──
   const eliminarVenta = async (id, { skipConfirm = false } = {}) => {
     if (!id) return setError("No se pudo identificar la venta a eliminar.");
-    if (!skipConfirm && !window.confirm("¿Seguro que querés eliminar esta venta?"))
+    if (
+      !skipConfirm &&
+      !window.confirm("¿Seguro que querés eliminar esta venta?")
+    )
       return;
     try {
       const res = await fetch(`${API}/ventas/${id}`, {
@@ -357,7 +361,9 @@ const Admin = () => {
     venta?.producto?.autor ||
     "";
   const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
-  const provedoresUnicos = [...new Set(ventas.map(getProveedorVenta).filter(Boolean))].sort();
+  const provedoresUnicos = [
+    ...new Set(ventas.map(getProveedorVenta).filter(Boolean)),
+  ].sort();
 
   const ventasFiltradas = ventas.filter((v) => {
     if (!isAdmin && v.usuario !== user?.username) return false;
@@ -491,104 +497,6 @@ const Admin = () => {
       </div>
     );
   };
-
-  const FiltrosVentas = () => (
-    <div
-      style={{
-        background: "var(--ap-filter-bg, #f8f8f8)",
-        border: "1px solid var(--ap-filter-border, #e8e8e8)",
-        borderRadius: "12px",
-        padding: "0.75rem 1rem",
-        marginBottom: "1.25rem",
-      }}
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "0.6rem",
-        }}
-      >
-        <div className="field" style={{ margin: 0 }}>
-          <label>Desde</label>
-          <input
-            type="date"
-            value={filtroDesde}
-            onChange={(e) => setFiltroDesde(e.target.value)}
-          />
-        </div>
-        <div className="field" style={{ margin: 0 }}>
-          <label>Hasta</label>
-          <input
-            type="date"
-            value={filtroHasta}
-            onChange={(e) => setFiltroHasta(e.target.value)}
-          />
-        </div>
-
-        {isAdmin && (
-          <div className="field" style={{ margin: 0 }}>
-            <label>Vendedor</label>
-            <select
-              value={filtroVendedor}
-              onChange={(e) => setFiltroVendedor(e.target.value)}
-            >
-              <option value="">Todos</option>
-              {vendedoresUnicos.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        <div className="field" style={{ margin: 0 }}>
-          <label>Método de pago</label>
-          <select
-            value={filtroMetodo}
-            onChange={(e) => setFiltroMetodo(e.target.value)}
-          >
-            <option value="">Todos</option>
-            <option value="efectivo">Efectivo</option>
-            <option value="transferencia">Transferencia</option>
-          </select>
-        </div>
-
-        <div className="field" style={{ margin: 0, gridColumn: "1 / -1" }}>
-          <label>Proveedor</label>
-          <select
-            value={filtroProvedor}
-            onChange={(e) => setFiltroProvedor(e.target.value)}
-          >
-            <option value="">Todos</option>
-            {provedoresUnicos.map((a) => (
-              <option key={a} value={a}>
-                {a}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: "0.6rem",
-        }}
-      >
-        <button className="btn" onClick={limpiarFiltros}>
-          ✕ Limpiar
-        </button>
-        <span style={{ fontSize: "12px", color: "#999" }}>
-          {ventasFiltradas.length} resultado
-          {ventasFiltradas.length !== 1 ? "s" : ""}
-        </span>
-      </div>
-    </div>
-  );
 
   return (
     <div className="ap">
@@ -826,7 +734,23 @@ const Admin = () => {
           <div className="ap-heading" style={{ marginBottom: "1rem" }}>
             {isAdmin ? "Historial de ventas" : "Mis ventas"}
           </div>
-          <FiltrosVentas />
+          <FiltrosVentas
+            filtroDesde={filtroDesde}
+            setFiltroDesde={setFiltroDesde}
+            filtroHasta={filtroHasta}
+            setFiltroHasta={setFiltroHasta}
+            isAdmin={isAdmin}
+            filtroVendedor={filtroVendedor}
+            setFiltroVendedor={setFiltroVendedor}
+            vendedoresUnicos={vendedoresUnicos}
+            filtroMetodo={filtroMetodo}
+            setFiltroMetodo={setFiltroMetodo}
+            filtroProvedor={filtroProvedor}
+            setFiltroProvedor={setFiltroProvedor}
+            provedoresUnicos={provedoresUnicos}
+            limpiarFiltros={limpiarFiltros}
+            ventasFiltradas={ventasFiltradas}
+          />
 
           <div className="card-list">
             {ventasAgrupadas.length === 0 && (
@@ -878,10 +802,15 @@ const Admin = () => {
                             #{item.producto.codigo}
                           </span>
                         ) : null}{" "}
-                        {getProveedorVenta(item) ? `(${getProveedorVenta(item)})` : ""}
+                        {getProveedorVenta(item)
+                          ? `(${getProveedorVenta(item)})`
+                          : ""}
                       </span>
                       <span>
-                        ${Number(item.producto?.precio || 0).toLocaleString("es-AR")}
+                        $
+                        {Number(item.producto?.precio || 0).toLocaleString(
+                          "es-AR",
+                        )}
                       </span>
                     </div>
                   ))}
@@ -894,11 +823,17 @@ const Admin = () => {
                     marginTop: "0.4rem",
                   }}
                 >
-                  {grupo.nombreComprador && <span>📲{grupo.nombreComprador} · </span>}
+                  {grupo.nombreComprador && (
+                    <span>📲{grupo.nombreComprador} · </span>
+                  )}
                   <span>🧑‍💼 {grupo.usuario} · </span>
-                  <span>🕐 {new Date(grupo.fecha).toLocaleString("es-AR")}</span>
+                  <span>
+                    🕐 {new Date(grupo.fecha).toLocaleString("es-AR")}
+                  </span>
                   {grupo.comentario && (
-                    <div style={{ marginTop: "4px" }}>💬 {grupo.comentario}</div>
+                    <div style={{ marginTop: "4px" }}>
+                      💬 {grupo.comentario}
+                    </div>
                   )}
                 </div>
               </div>
@@ -937,13 +872,18 @@ const Admin = () => {
                           {item.producto?.codigo ? (
                             <span
                               className="cat"
-                              style={{ background: "#e0f0ff", color: "#0066cc" }}
+                              style={{
+                                background: "#e0f0ff",
+                                color: "#0066cc",
+                              }}
                             >
                               #{item.producto.codigo}
                             </span>
                           ) : null}{" "}
                           {item.producto?.nombre || "-"} · $
-                          {Number(item.producto?.precio || 0).toLocaleString("es-AR")}
+                          {Number(item.producto?.precio || 0).toLocaleString(
+                            "es-AR",
+                          )}
                           {getProveedorVenta(item)
                             ? ` · ${getProveedorVenta(item)}`
                             : ""}
@@ -999,7 +939,23 @@ const Admin = () => {
           <div className="ap-heading" style={{ marginBottom: "0.5rem" }}>
             Ganancias por producto
           </div>
-          <FiltrosVentas />
+          <FiltrosVentas
+            filtroDesde={filtroDesde}
+            setFiltroDesde={setFiltroDesde}
+            filtroHasta={filtroHasta}
+            setFiltroHasta={setFiltroHasta}
+            isAdmin={isAdmin}
+            filtroVendedor={filtroVendedor}
+            setFiltroVendedor={setFiltroVendedor}
+            vendedoresUnicos={vendedoresUnicos}
+            filtroMetodo={filtroMetodo}
+            setFiltroMetodo={setFiltroMetodo}
+            filtroProvedor={filtroProvedor}
+            setFiltroProvedor={setFiltroProvedor}
+            provedoresUnicos={provedoresUnicos}
+            limpiarFiltros={limpiarFiltros}
+            ventasFiltradas={ventasFiltradas}
+          />{" "}
           <div
             style={{ marginBottom: "1.5rem", fontSize: "14px", color: "#666" }}
           >
@@ -1008,7 +964,6 @@ const Admin = () => {
               ${totalGeneral.toLocaleString("es-AR")}
             </strong>
           </div>
-
           <div className="card-list">
             {gananciasArray.length === 0 && (
               <p className="empty">No hay ventas registradas</p>
@@ -1027,7 +982,6 @@ const Admin = () => {
               </div>
             ))}
           </div>
-
           <div className="tbl-wrap">
             <table>
               <thead>
