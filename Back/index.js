@@ -3,15 +3,14 @@ import jwt from "jsonwebtoken";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { ObjectId } from "mongodb";
-import { PORT, SECRET_JWT_KEY } from "./config.js";
+import { PORT } from "./config.js";
 import { UserRepository, initUserRepository } from "./user-repository.js";
 import { MongoClient } from "mongodb";
 
-if (!SECRET_JWT_KEY) {
-  console.error(
-    "❌ Falta configurar SECRET_JWT_KEY (o JWT_SECRET) en las variables de entorno.",
-  );
-}
+const getJwtSecret = () => {
+  const secret = process.env.SECRET_JWT_KEY || process.env.JWT_SECRET;
+  return typeof secret === "string" ? secret.trim() : "";
+};
 
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGO_LOCAL;
 const DB_NAME = "misiones-libro";
@@ -44,9 +43,16 @@ const authenticateToken = (req, res, next) => {
   const token =
     req.cookies.access_token ||
     req.headers.authorization?.replace("Bearer ", "");
+  const jwtSecret = getJwtSecret();
+
+  if (!jwtSecret) {
+    return res
+      .status(500)
+      .send({ error: "Error de configuración del servidor (JWT)." });
+  }
   if (!token) return res.status(401).send({ error: "No autorizado" });
   try {
-    req.user = jwt.verify(token, SECRET_JWT_KEY);
+    req.user = jwt.verify(token, jwtSecret);
     next();
   } catch {
     res.status(403).send({ error: "Token inválido" });
@@ -55,8 +61,9 @@ const authenticateToken = (req, res, next) => {
 
 // Auth
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-   if (!SECRET_JWT_KEY) {
+   const jwtSecret = getJwtSecret();
+
+  if (!jwtSecret) {
     return res
       .status(500)
       .send({ error: "Error de configuración del servidor (JWT)." });
@@ -65,7 +72,7 @@ app.post("/login", async (req, res) => {
     const user = await UserRepository.login({ username, password });
     const token = jwt.sign(
       { id: user._id, username: user.username, role: user.role },
-      SECRET_JWT_KEY,
+      jwtSecret,
       { expiresIn: "1h" },
     );
     res
