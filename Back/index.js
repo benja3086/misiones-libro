@@ -7,6 +7,12 @@ import { PORT, SECRET_JWT_KEY } from "./config.js";
 import { UserRepository, initUserRepository } from "./user-repository.js";
 import { MongoClient } from "mongodb";
 
+if (!SECRET_JWT_KEY) {
+  console.error(
+    "❌ Falta configurar SECRET_JWT_KEY (o JWT_SECRET) en las variables de entorno.",
+  );
+}
+
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGO_LOCAL;
 const DB_NAME = "misiones-libro";
 
@@ -50,6 +56,11 @@ const authenticateToken = (req, res, next) => {
 // Auth
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
+   if (!SECRET_JWT_KEY) {
+    return res
+      .status(500)
+      .send({ error: "Error de configuración del servidor (JWT)." });
+  }
   try {
     const user = await UserRepository.login({ username, password });
     const token = jwt.sign(

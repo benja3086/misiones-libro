@@ -32,36 +32,25 @@ export class UserRepository {
     return id;
   }
 
-static async login({ username, password }) {
-  Validation.username(username);
-  Validation.password(password);
+  static async login({ username, password }) {
+    Validation.username(username);
+    Validation.password(password);
 
-  console.log("Login username:", username);
+    const user = await usersCollection.findOne({ username });
+    if (!user) throw new Error("El nombre de usuario no existe.");
 
-  const user = await usersCollection.findOne({ username });
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) throw new Error("Contraseña incorrecta.");
 
-  console.log("Usuario encontrado:", user);
+    // Guardar último login
+    await usersCollection.updateOne(
+      { _id: user._id },
+      { $set: { ultimoLogin: new Date() } }
+    );
 
-  if (user) {
-    console.log("Hash guardado:", user.password);
+    const { password: _, ...publicUser } = user;
+    return publicUser;
   }
-
-  if (!user) throw new Error("El nombre de usuario no existe.");
-
-  const isValid = await bcrypt.compare(password, user.password);
-
-  console.log("Password válida:", isValid);
-
-  if (!isValid) throw new Error("Contraseña incorrecta.");
-
-  await usersCollection.updateOne(
-    { _id: user._id },
-    { $set: { ultimoLogin: new Date() } }
-  );
-
-  const { password: _, ...publicUser } = user;
-  return publicUser;
-}
 
   static async findAll() {
     const users = await usersCollection.find().toArray();
