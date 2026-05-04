@@ -36,7 +36,7 @@ export class UserRepository {
     Validation.username(username);
     Validation.password(password);
 
-    const user = await usersCollection.findOne({ username });
+    const user = await usersCollection.findOne({ username: username });
     if (!user) throw new Error("El nombre de usuario no existe.");
 
     const isValid = await bcrypt.compare(password, user.password);
