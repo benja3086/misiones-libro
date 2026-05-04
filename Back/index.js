@@ -48,7 +48,7 @@ const authenticateToken = (req, res, next) => {
   if (!jwtSecret) {
     return res
       .status(500)
-      .send({ error: "Error de configuración del servidor (JWT)."+jwtSecret });
+      .send({ error: "Error de configuración del servidor (JWT)."});
   }
   if (!token) return res.status(401).send({ error: "No autorizado" });
   try {
@@ -66,7 +66,7 @@ app.post("/login", async (req, res) => {
   if (!jwtSecret) {
     return res
       .status(500)
-      .send({ error: "Error de configuración del servidor (JWT)."});
+      .send({ error: "Error de configuración del servidor (JWT)."+jwtSecret  });
   }
   try {
     const user = await UserRepository.login({ username, password });
