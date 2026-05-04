@@ -94,7 +94,7 @@
     flex-wrap: nowrap;    /* <-- esto es lo que necesitás */
   }
  .menu a {
-    font-size: 19px;
+    font-size: 18px;
     padding: 4px 6px;
   }
   .mega-menu {
