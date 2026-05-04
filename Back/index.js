@@ -48,7 +48,7 @@ const authenticateToken = (req, res, next) => {
   if (!jwtSecret) {
     return res
       .status(500)
-      .send({ error: "Error de configuración del servidor (JWT).",jwtSecret });
+      .send({ error: "Error de configuración del servidor (JWT)."+jwtSecret });
   }
   if (!token) return res.status(401).send({ error: "No autorizado" });
   try {
