@@ -69,6 +69,7 @@ app.post("/login", async (req, res) => {
       .send({ error: "Error de configuración del servidor (JWT)."+jwtSecret  });
   }
   try {
+    console.log("point 0");
     const user = await UserRepository.login({ username, password });
     console.log("point 1");
     const token = jwt.sign(
