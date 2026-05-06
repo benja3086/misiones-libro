@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import "./Admin.css";
-import FiltrosVentas from "./FiltrosVentas";
+import FiltrosVentas from "./Componentes/FiltrosVentas";
+import StockBadge from "./Componentes/StockBadge";
+import BotonCarrito from "./Componentes/BotonCarrito";
+import ModalCarrito from "./Componentes/ModalCarrito";
+import ProductoModal from "./Componentes/ProductoModal";
 
+import FiltrosVentas from "./FiltrosVentas";
+import AdminTabs from "./AdminTabs";
+import ModalCarrito from "./ModalCarrito";
+import ProductoModal from "./ProductoModal";
+import ProductosSection from "./ProductosSection";
+import ModalVentaExitosa from "./ModalVentaExitosa";
 const API =
   import.meta.env.VITE_API_URL ||
   (window.location.hostname === "localhost"
     ? "http://localhost:3000"
-    : "https://misiones-libro-production.up.railway.app");
+    : "https://misiones-back-production.up.railway.app");
 
 const getToken = () => localStorage.getItem("token");
 
@@ -451,53 +461,6 @@ const Admin = () => {
   const cantidadEnCarrito = (id) =>
     carrito.find((i) => i.id === id)?.cantidad || 0;
 
-  // ── Subcomponentes ──
-  const StockBadge = ({ stock }) => {
-    const s = Number(stock);
-    if (isNaN(s) || s <= 0) return <span className="badge out">Sin stock</span>;
-    if (s <= 5) return <span className="badge low">{s} unid.</span>;
-    return <span className="badge ok">{s} unid.</span>;
-  };
-
-  const BtnCarrito = ({ p }) => {
-    const en = cantidadEnCarrito(p.id);
-    const stockReal = Number(productos.find((x) => x.id === p.id)?.stock || 0);
-    const agotado = sinStock(p) || en >= stockReal;
-
-    return (
-      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-        {en > 0 && (
-          <>
-            <button
-              className="btn sm"
-              onClick={() => quitarDelCarrito(p.id)}
-              style={{ padding: "0 9px", fontWeight: "bold" }}
-            >
-              −
-            </button>
-            <span
-              style={{
-                minWidth: "18px",
-                textAlign: "center",
-                fontSize: "13px",
-                fontWeight: "600",
-              }}
-            >
-              {en}
-            </span>
-          </>
-        )}
-        <button
-          className="btn sm primary"
-          onClick={() => agregarAlCarrito(p)}
-          disabled={agotado}
-        >
-          {sinStock(p) ? "Sin stock" : en > 0 ? "+" : "Agregar"}
-        </button>
-      </div>
-    );
-  };
-
   return (
     <div className="ap">
       {/* ── TABS + BOTÓN CARRITO ── */}
@@ -644,7 +607,16 @@ const Admin = () => {
                       </button>
                     </>
                   )}
-                  <BtnCarrito p={p} />
+                  <BotonCarrito
+                    producto={p}
+                    cantidadEnCarrito={cantidadEnCarrito(p.id)}
+                    stockReal={Number(
+                      productos.find((x) => x.id === p.id)?.stock || 0,
+                    )}
+                    sinStock={sinStock(p)}
+                    agregarAlCarrito={agregarAlCarrito}
+                    quitarDelCarrito={quitarDelCarrito}
+                  />{" "}
                 </div>
               </div>
             ))}
@@ -717,7 +689,16 @@ const Admin = () => {
                             </button>
                           </>
                         )}
-                        <BtnCarrito p={p} />
+                        <BotonCarrito
+                          producto={p}
+                          cantidadEnCarrito={cantidadEnCarrito(p.id)}
+                          stockReal={Number(
+                            productos.find((x) => x.id === p.id)?.stock || 0,
+                          )}
+                          sinStock={sinStock(p)}
+                          agregarAlCarrito={agregarAlCarrito}
+                          quitarDelCarrito={quitarDelCarrito}
+                        />{" "}
                       </div>
                     </td>
                   </tr>
@@ -807,7 +788,7 @@ const Admin = () => {
                           : ""}
                       </span>
                       <span>
-                        $
+                         $
                         {Number(item.producto?.precio || 0).toLocaleString(
                           "es-AR",
                         )}
@@ -823,12 +804,21 @@ const Admin = () => {
                     marginTop: "0.4rem",
                   }}
                 >
-                  {grupo.nombreComprador && (
+                   {grupo.nombreComprador && (
                     <span>📲{grupo.nombreComprador} · </span>
                   )}
                   <span>🧑‍💼 {grupo.usuario} · </span>
                   <span>
-                    🕐 {new Date(grupo.fecha).toLocaleString("es-AR")}
+                    🕐{" "}
+                    {new Date(grupo.fecha).toLocaleString("es-AR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      hour12: false,
+                    })}
                   </span>
                   {grupo.comentario && (
                     <div style={{ marginTop: "4px" }}>
@@ -897,7 +887,17 @@ const Admin = () => {
                     <td>{grupo.nombreComprador || "-"}</td>
                     <td>{grupo.usuario}</td>
                     <td>{grupo.comentario || "-"}</td>
-                    <td>{new Date(grupo.fecha).toLocaleString("es-AR")}</td>
+                    <td>
+                      {new Date(grupo.fecha).toLocaleString("es-AR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false,
+                      })}
+                    </td>{" "}
                     <td>
                       {grupo.items.every((item) => getVentaId(item)) ? (
                         <button
@@ -1029,399 +1029,50 @@ const Admin = () => {
 
       {/* ── MODAL CARRITO ── */}
       {modalCarrito && (
-        <div className="overlay">
-          <div className="modal" style={{ maxWidth: "480px", width: "100%" }}>
-            <h3 style={{ marginBottom: "1rem" }}>🛒 Confirmar venta</h3>
-
-            <div
-              style={{
-                marginBottom: "1rem",
-                borderRadius: "8px",
-                overflow: "hidden",
-                border: "1px solid #eee",
-              }}
-            >
-              {carrito.map((item) => (
-                <div
-                  key={item.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "8px 12px",
-                    borderBottom: "1px solid #f0f0f0",
-                    fontSize: "14px",
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: "500" }}>{item.nombre}</div>
-                    {item.codigo && (
-                      <div style={{ fontSize: "12px", color: "#0066cc" }}>
-                        #{item.codigo}
-                      </div>
-                    )}
-                    <div style={{ fontSize: "12px", color: "#888" }}>
-                      ${Number(item.precio).toLocaleString("es-AR")} c/u
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                    }}
-                  >
-                    <button
-                      className="btn sm"
-                      onClick={() => quitarDelCarrito(item.id)}
-                      style={{ padding: "0 8px" }}
-                    >
-                      −
-                    </button>
-                    <span
-                      style={{
-                        minWidth: "20px",
-                        textAlign: "center",
-                        fontWeight: "600",
-                      }}
-                    >
-                      {item.cantidad}
-                    </span>
-                    <button
-                      className="btn sm"
-                      onClick={() => agregarAlCarrito(item)}
-                      disabled={
-                        item.cantidad >=
-                        Number(
-                          productos.find((p) => p.id === item.id)?.stock || 0,
-                        )
-                      }
-                      style={{ padding: "0 8px" }}
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  <div
-                    style={{
-                      minWidth: "80px",
-                      textAlign: "right",
-                      fontWeight: "600",
-                    }}
-                  >
-                    $
-                    {(Number(item.precio) * item.cantidad).toLocaleString(
-                      "es-AR",
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() => eliminarDelCarrito(item.id)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      color: "#bbb",
-                      fontSize: "16px",
-                      padding: "0 4px",
-                    }}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-
-              <div
-                style={{
-                  padding: "10px 12px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontWeight: "700",
-                  fontSize: "15px",
-                  background: "#fafafa",
-                }}
-              >
-                <span>
-                  Total ({cantidadTotalCarrito} producto
-                  {cantidadTotalCarrito !== 1 ? "s" : ""})
-                </span>
-                <span>${totalCarrito.toLocaleString("es-AR")}</span>
-              </div>
-            </div>
-
-            <div className="field">
-              <label>Método de pago</label>
-              <div
-                style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}
-              >
-                <button
-                  className={`btn ${metodoPago === "efectivo" ? "primary" : ""}`}
-                  onClick={() => setMetodoPago("efectivo")}
-                >
-                  💵 Efectivo
-                </button>
-                <button
-                  className={`btn ${metodoPago === "transferencia" ? "primary" : ""}`}
-                  onClick={() => setMetodoPago("transferencia")}
-                >
-                  🏦 Transferencia
-                </button>
-              </div>
-            </div>
-
-            {metodoPago === "transferencia" && (
-              <div className="field" style={{ marginTop: "1rem" }}>
-                <label>Nombre del comprador</label>
-                <input
-                  value={nombreComprador}
-                  onChange={(e) => setNombreComprador(e.target.value)}
-                  placeholder="Ej: Juan Pérez"
-                />
-              </div>
-            )}
-
-            <div className="field" style={{ marginTop: "1rem" }}>
-              <label>Comentario (opcional)</label>
-              <textarea
-                value={comentario}
-                onChange={(e) => setComentario(e.target.value)}
-                placeholder="Ej: entrega a domicilio, factura..."
-              />
-            </div>
-
-            {error && <p className="err">{error}</p>}
-
-            <div className="modal-foot">
-              <button
-                className="btn"
-                onClick={cerrarModalCarrito}
-                disabled={cargando}
-              >
-                Cancelar
-              </button>
-              <button
-                className="btn primary"
-                onClick={confirmarVenta}
-                disabled={cargando}
-              >
-                {cargando
-                  ? "Registrando..."
-                  : `Confirmar ${cantidadTotalCarrito} venta${cantidadTotalCarrito !== 1 ? "s" : ""}`}
-              </button>
-            </div>
-          </div>
-        </div>
+         <ModalCarrito
+          carrito={carrito}
+          productos={productos}
+          totalCarrito={totalCarrito}
+          cantidadTotalCarrito={cantidadTotalCarrito}
+          metodoPago={metodoPago}
+          setMetodoPago={setMetodoPago}
+          nombreComprador={nombreComprador}
+          setNombreComprador={setNombreComprador}
+          comentario={comentario}
+          setComentario={setComentario}
+          error={error}
+          cargando={cargando}
+          agregarAlCarrito={agregarAlCarrito}
+          quitarDelCarrito={quitarDelCarrito}
+          eliminarDelCarrito={eliminarDelCarrito}
+          cerrarModalCarrito={cerrarModalCarrito}
+          confirmarVenta={confirmarVenta}
+        />
       )}
 
       {/* ── MODAL NUEVO ── */}
       {modalNuevo && (
-        <div className="overlay">
-          <div className="modal">
-            <h3>Nuevo producto</h3>
-            <div className="field">
-              <label>Código</label>
-              <input
-                value={formNuevo.codigo}
-                onChange={(e) =>
-                  setFormNuevo((f) => ({ ...f, codigo: e.target.value }))
-                }
-                placeholder="Ej: A, B, AC..."
-              />
-            </div>
-            <div className="field">
-              <label>Nombre</label>
-              <input
-                value={formNuevo.nombre}
-                onChange={(e) =>
-                  setFormNuevo((f) => ({ ...f, nombre: e.target.value }))
-                }
-              />
-            </div>
-            <div className="grid2">
-              <div className="field">
-                <label>Precio ($)</label>
-                <input
-                  type="number"
-                  value={formNuevo.precio}
-                  onChange={(e) =>
-                    setFormNuevo((f) => ({ ...f, precio: e.target.value }))
-                  }
-                />
-              </div>
-              <div className="field">
-                <label>Stock</label>
-                <input
-                  type="number"
-                  value={formNuevo.stock}
-                  onChange={(e) =>
-                    setFormNuevo((f) => ({ ...f, stock: e.target.value }))
-                  }
-                />
-              </div>
-            </div>
-            <div className="grid2">
-              <div className="field">
-                <label>Categoría</label>
-                <select
-                  value={formNuevo.categoria}
-                  onChange={(e) =>
-                    setFormNuevo((f) => ({ ...f, categoria: e.target.value }))
-                  }
-                >
-                  <option value="libros">Libros</option>
-                  <option value="remeras">Remeras</option>
-                  <option value="utiles">Útiles</option>
-                  <option value="cuadernos">Cuadernos</option>
-                  <option value="accesorios">Accesorios</option>
-                </select>
-              </div>
-              <div className="field">
-                <label>Provedor</label>
-                <input
-                  value={formNuevo.provedor}
-                  onChange={(e) =>
-                    setFormNuevo((f) => ({ ...f, provedor: e.target.value }))
-                  }
-                />
-              </div>
-            </div>
-            <div className="field">
-              <label>Descripción</label>
-              <input
-                value={formNuevo.descripcion}
-                onChange={(e) =>
-                  setFormNuevo((f) => ({ ...f, descripcion: e.target.value }))
-                }
-              />
-            </div>
-            <div className="field">
-              <label>URL de imagen</label>
-              <input
-                value={formNuevo.imagen}
-                onChange={(e) =>
-                  setFormNuevo((f) => ({ ...f, imagen: e.target.value }))
-                }
-                placeholder="https://..."
-              />
-            </div>
-            {error && <p className="err">{error}</p>}
-            <div className="modal-foot">
-              <button className="btn" onClick={cerrarModalNuevo}>
-                Cancelar
-              </button>
-              <button className="btn primary" onClick={guardarNuevoProducto}>
-                Guardar
-              </button>
-            </div>
-          </div>
-        </div>
+         <ProductoModal
+          titulo="Nuevo producto"
+          form={formNuevo}
+          setForm={setFormNuevo}
+          error={error}
+          onCancel={cerrarModalNuevo}
+          onGuardar={guardarNuevoProducto}
+        />
       )}
 
       {/* ── MODAL EDITAR ── */}
       {modalEditar && (
-        <div className="overlay">
-          <div className="modal">
-            <h3>Editar producto</h3>
-            <div className="field">
-              <label>Código</label>
-              <input
-                value={formEditar.codigo || ""}
-                onChange={(e) =>
-                  setFormEditar((f) => ({ ...f, codigo: e.target.value }))
-                }
-                placeholder="Ej: A, B, AC..."
-              />
-            </div>
-            <div className="field">
-              <label>Nombre</label>
-              <input
-                value={formEditar.nombre || ""}
-                onChange={(e) =>
-                  setFormEditar((f) => ({ ...f, nombre: e.target.value }))
-                }
-              />
-            </div>
-            <div className="grid2">
-              <div className="field">
-                <label>Precio ($)</label>
-                <input
-                  type="number"
-                  value={formEditar.precio || ""}
-                  onChange={(e) =>
-                    setFormEditar((f) => ({ ...f, precio: e.target.value }))
-                  }
-                />
-              </div>
-              <div className="field">
-                <label>Stock</label>
-                <input
-                  type="number"
-                  value={formEditar.stock || ""}
-                  onChange={(e) =>
-                    setFormEditar((f) => ({ ...f, stock: e.target.value }))
-                  }
-                />
-              </div>
-            </div>
-            <div className="grid2">
-              <div className="field">
-                <label>Categoría</label>
-                <select
-                  value={formEditar.categoria || "libros"}
-                  onChange={(e) =>
-                    setFormEditar((f) => ({ ...f, categoria: e.target.value }))
-                  }
-                >
-                  <option value="libros">Libros</option>
-                  <option value="remeras">Remeras</option>
-                  <option value="utiles">Útiles</option>
-                  <option value="cuadernos">Cuadernos</option>
-                  <option value="accesorios">Accesorios</option>
-                </select>
-              </div>
-              <div className="field">
-                <label>Provedor</label>
-                <input
-                  value={formEditar.provedor || ""}
-                  onChange={(e) =>
-                    setFormEditar((f) => ({ ...f, provedor: e.target.value }))
-                  }
-                />
-              </div>
-            </div>
-            <div className="field">
-              <label>Descripción</label>
-              <input
-                value={formEditar.descripcion || ""}
-                onChange={(e) =>
-                  setFormEditar((f) => ({ ...f, descripcion: e.target.value }))
-                }
-              />
-            </div>
-            <div className="field">
-              <label>URL de imagen</label>
-              <input
-                value={
-                  typeof formEditar.imagen === "string" ? formEditar.imagen : ""
-                }
-                onChange={(e) =>
-                  setFormEditar((f) => ({ ...f, imagen: e.target.value }))
-                }
-                placeholder="https://..."
-              />
-            </div>
-            {error && <p className="err">{error}</p>}
-            <div className="modal-foot">
-              <button className="btn" onClick={cerrarModalEditar}>
-                Cancelar
-              </button>
-              <button className="btn primary" onClick={guardarEdicion}>
-                Guardar
-              </button>
-            </div>
-          </div>
-        </div>
+          <ProductoModal
+          titulo="Editar producto"
+          form={formEditar}
+          setForm={setFormEditar}
+          error={error}
+          onCancel={cerrarModalEditar}
+          onGuardar={guardarEdicion}
+          esEdicion
+        />
       )}
 
       {/* ── MODAL VENTA EXITOSA ── */}

@@ -1,5 +1,3 @@
-import React from "react";
-
 const FiltrosVentas = ({
   filtroDesde,
   setFiltroDesde,
@@ -69,7 +67,10 @@ const FiltrosVentas = ({
 
       <div className="field" style={{ margin: 0 }}>
         <label>Método de pago</label>
-        <select value={filtroMetodo} onChange={(e) => setFiltroMetodo(e.target.value)}>
+        <select
+          value={filtroMetodo}
+          onChange={(e) => setFiltroMetodo(e.target.value)}
+        >
           <option value="">Todos</option>
           <option value="efectivo">Efectivo</option>
           <option value="transferencia">Transferencia</option>
