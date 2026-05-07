@@ -7,12 +7,6 @@ import BotonCarrito from "./Componentes/BotonCarrito";
 import ModalCarrito from "./Componentes/ModalCarrito";
 import ProductoModal from "./Componentes/ProductoModal";
 
-import FiltrosVentas from "./FiltrosVentas";
-import AdminTabs from "./AdminTabs";
-import ModalCarrito from "./ModalCarrito";
-import ProductoModal from "./ProductoModal";
-import ProductosSection from "./ProductosSection";
-import ModalVentaExitosa from "./ModalVentaExitosa";
 const API =
   import.meta.env.VITE_API_URL ||
   (window.location.hostname === "localhost"
