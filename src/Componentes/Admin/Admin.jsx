@@ -233,7 +233,7 @@ const Admin = () => {
         credentials: "include",
       });
       if (!res.ok) throw new Error();
-      setVentas((prev) => prev.filter((v) => v._id !== id));
+      setVentas((prev) => prev.filter((v) => getVentaId(v) !== id));
     } catch {
       setError("Error al eliminar la venta");
     }
@@ -403,6 +403,20 @@ const Admin = () => {
   );
   const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
   const getVentaId = (venta) => venta?._id || venta?.id || null;
+    const eliminarGrupoVenta = async (grupo) => {
+    if (!grupo.items.every((item) => getVentaId(item))) return;
+    if (!window.confirm("¿Seguro que querés eliminar esta venta completa?")) {
+      return;
+    }
+    await Promise.all(
+      grupo.items.map((item) =>
+        eliminarVenta(getVentaId(item), {
+          skipConfirm: true,
+        }),
+      ),
+    );
+  };
+
   const ventasAgrupadas = Object.values(
     ventasFiltradas.reduce((acc, venta) => {
       const fechaMs = new Date(venta.fecha).getTime();
@@ -782,7 +796,7 @@ const Admin = () => {
                           : ""}
                       </span>
                       <span>
-                         $
+                        $
                         {Number(item.producto?.precio || 0).toLocaleString(
                           "es-AR",
                         )}
@@ -798,7 +812,7 @@ const Admin = () => {
                     marginTop: "0.4rem",
                   }}
                 >
-                   {grupo.nombreComprador && (
+                  {grupo.nombreComprador && (
                     <span>📲{grupo.nombreComprador} · </span>
                   )}
                   <span>🧑‍💼 {grupo.usuario} · </span>
@@ -820,6 +834,17 @@ const Admin = () => {
                     </div>
                   )}
                 </div>
+
+                {grupo.items.every((item) => getVentaId(item)) && (
+                  <div className="prod-card-actions venta-card-actions">
+                    <button
+                      className="btn sm danger"
+                      onClick={() => eliminarGrupoVenta(grupo)}
+                    >
+                      🗑️ Eliminar venta
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -895,23 +920,8 @@ const Admin = () => {
                     <td>
                       {grupo.items.every((item) => getVentaId(item)) ? (
                         <button
-                          className="btn sm"
-                          onClick={async () => {
-                            if (
-                              !window.confirm(
-                                "¿Seguro que querés eliminar esta venta completa?",
-                              )
-                            )
-                              return;
-                            await Promise.all(
-                              grupo.items.map((item) =>
-                                eliminarVenta(getVentaId(item), {
-                                  skipConfirm: true,
-                                }),
-                              ),
-                            );
-                          }}
-                          style={{ color: "#e53e3e", borderColor: "#e53e3e" }}
+                          className="btn sm danger"
+                          onClick={() => eliminarGrupoVenta(grupo)}
                         >
                           🗑️
                         </button>
@@ -1023,7 +1033,7 @@ const Admin = () => {
 
       {/* ── MODAL CARRITO ── */}
       {modalCarrito && (
-         <ModalCarrito
+        <ModalCarrito
           carrito={carrito}
           productos={productos}
           totalCarrito={totalCarrito}
@@ -1046,7 +1056,7 @@ const Admin = () => {
 
       {/* ── MODAL NUEVO ── */}
       {modalNuevo && (
-         <ProductoModal
+        <ProductoModal
           titulo="Nuevo producto"
           form={formNuevo}
           setForm={setFormNuevo}
@@ -1058,7 +1068,7 @@ const Admin = () => {
 
       {/* ── MODAL EDITAR ── */}
       {modalEditar && (
-          <ProductoModal
+        <ProductoModal
           titulo="Editar producto"
           form={formEditar}
           setForm={setFormEditar}
