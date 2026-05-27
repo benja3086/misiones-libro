@@ -1,3 +1,4 @@
+import { useState } from "react";
 import FiltrosVentas from "./FiltrosVentas";
 
 const HistorialVentas = ({
@@ -5,6 +6,7 @@ const HistorialVentas = ({
   getVentaId,
   getProveedorVenta,
   eliminarGrupoVenta,
+  marcarGrupoVenta,
   filtroDesde,
   setFiltroDesde,
   filtroHasta,
@@ -21,6 +23,61 @@ const HistorialVentas = ({
   limpiarFiltros,
   ventasFiltradas,
 }) => {
+  const [menuMarcaAbierto, setMenuMarcaAbierto] = useState(null);
+
+  const getMarcaVentaClass = (grupo) =>
+    grupo.marcaColor ? `venta-marcada venta-marcada-${grupo.marcaColor}` : "";
+
+  const elegirMarcaVenta = (grupo, marcaColor) => {
+    marcarGrupoVenta(grupo, marcaColor);
+    setMenuMarcaAbierto(null);
+  };
+
+  const renderBotonMarca = (grupo, ubicacion) => {
+    if (!isAdmin) return null;
+
+    const menuKey = `${ubicacion}-${grupo.key}`;
+
+    return (
+      <div className="marca-menu">
+        <button
+          className="btn sm marca-toggle"
+          onClick={() =>
+            setMenuMarcaAbierto((actual) =>
+              actual === menuKey ? null : menuKey,
+            )
+          }
+          type="button"
+        >
+          Marcar
+        </button>
+
+        {menuMarcaAbierto === menuKey && (
+          <div className="marca-menu-opciones">
+            <button
+              className={`btn sm marca-btn marca-verde ${
+                grupo.marcaColor === "verde" ? "active" : ""
+              }`}
+              onClick={() => elegirMarcaVenta(grupo, "verde")}
+              type="button"
+            >
+              Verde
+            </button>
+            <button
+              className={`btn sm marca-btn marca-amarillo ${
+                grupo.marcaColor === "amarillo" ? "active" : ""
+              }`}
+              onClick={() => elegirMarcaVenta(grupo, "amarillo")}
+              type="button"
+            >
+              Amarillo
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="ap-heading" style={{ marginBottom: "1rem" }}>
@@ -51,7 +108,10 @@ const HistorialVentas = ({
         )}
 
         {ventasAgrupadas.map((grupo) => (
-          <div className="prod-card" key={grupo.key}>
+          <div
+            className={`prod-card ${getMarcaVentaClass(grupo)}`}
+            key={grupo.key}
+          >
             <div className="prod-card-top">
               <div className="prod-card-nombre">
                 Venta ({grupo.items.length} producto
@@ -153,6 +213,7 @@ const HistorialVentas = ({
 
             {grupo.items.every((item) => getVentaId(item)) && (
               <div className="prod-card-actions venta-card-actions">
+                {renderBotonMarca(grupo, "card")}
                 <button
                   className="btn sm danger"
                   onClick={() => eliminarGrupoVenta(grupo)}
@@ -191,7 +252,7 @@ const HistorialVentas = ({
             )}
 
             {ventasAgrupadas.map((grupo) => (
-              <tr key={grupo.key}>
+              <tr className={getMarcaVentaClass(grupo)} key={grupo.key}>
                 <td>{grupo.items.length}</td>
 
                 <td>
@@ -245,12 +306,15 @@ const HistorialVentas = ({
 
                 <td>
                   {grupo.items.every((item) => getVentaId(item)) ? (
-                    <button
-                      className="btn sm danger"
-                      onClick={() => eliminarGrupoVenta(grupo)}
-                    >
-                      🗑️
-                    </button>
+                    <div className="venta-row-actions">
+                      {renderBotonMarca(grupo, "row")}
+                      <button
+                        className="btn sm danger"
+                        onClick={() => eliminarGrupoVenta(grupo)}
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   ) : (
                     "-"
                   )}

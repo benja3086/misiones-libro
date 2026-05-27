@@ -16,6 +16,27 @@ const API =
     : "https://misiones-back-production.up.railway.app");
 
 const getToken = () => localStorage.getItem("token");
+const MARCAS_VENTAS_KEY = "misiones_marcas_ventas";
+
+const leerMarcasVentas = () => {
+  try {
+    return JSON.parse(localStorage.getItem(MARCAS_VENTAS_KEY) || "{}");
+  } catch {
+    return {};
+  }
+};
+
+const guardarMarcasVentas = (marcas) => {
+  localStorage.setItem(MARCAS_VENTAS_KEY, JSON.stringify(marcas));
+};
+
+const aplicarMarcasLocales = (ventas) => {
+  const marcas = leerMarcasVentas();
+  return ventas.map((venta) => {
+    const id = venta?._id || venta?.id;
+    return id && marcas[id] ? { ...venta, marcaColor: marcas[id] } : venta;
+  });
+};
 
 const normalizarTexto = (texto = "") =>
   texto
@@ -98,7 +119,11 @@ const Admin = () => {
         headers: { Authorization: `Bearer ${getToken()}` },
       })
         .then((res) => res.json())
-        .then((data) => (Array.isArray(data) ? setVentas(data) : setVentas([])))
+        .then((data) =>
+          Array.isArray(data)
+            ? setVentas(aplicarMarcasLocales(data))
+            : setVentas([]),
+        )
         .catch(() => setVentas([]));
     }
   }, [seccion]);
@@ -419,6 +444,49 @@ const Admin = () => {
     );
   };
 
+  const marcarGrupoVenta = async (grupo, marcaColor) => {
+    if (!isAdmin || !grupo.items.every((item) => getVentaId(item))) return;
+
+    const colorFinal = grupo.marcaColor === marcaColor ? null : marcaColor;
+    const ids = grupo.items.map(getVentaId);
+
+    setVentas((prev) =>
+      prev.map((venta) =>
+        ids.includes(getVentaId(venta))
+          ? { ...venta, marcaColor: colorFinal }
+          : venta,
+      ),
+    );
+
+    const marcas = leerMarcasVentas();
+    ids.forEach((id) => {
+      if (colorFinal) marcas[id] = colorFinal;
+      else delete marcas[id];
+    });
+    guardarMarcasVentas(marcas);
+
+    try {
+      await Promise.all(
+        ids.map(async (id) => {
+          const res = await fetch(`${API}/ventas/${id}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+            credentials: "include",
+            body: JSON.stringify({ marcaColor: colorFinal }),
+          });
+          if (!res.ok) throw new Error();
+        }),
+      );
+    } catch {
+      setError(
+        "El color quedó guardado en este navegador, pero la API no permitió guardarlo en el servidor.",
+      );
+    }
+  };
+
   const ventasAgrupadas = Object.values(
     ventasFiltradas.reduce((acc, venta) => {
       const fechaMs = new Date(venta.fecha).getTime();
@@ -436,11 +504,15 @@ const Admin = () => {
           usuario: venta.usuario,
           comentario: venta.comentario,
           fecha: venta.fecha,
+          marcaColor: venta.marcaColor || null,
           items: [],
           total: 0,
         };
       }
       acc[key].items.push(venta);
+      if (!acc[key].marcaColor && venta.marcaColor) {
+        acc[key].marcaColor = venta.marcaColor;
+      }
       acc[key].total += Number(venta.producto?.precio) || 0;
       if (
         new Date(venta.fecha).getTime() > new Date(acc[key].fecha).getTime()
@@ -557,6 +629,7 @@ const Admin = () => {
           getVentaId={getVentaId}
           getProveedorVenta={getProveedorVenta}
           eliminarGrupoVenta={eliminarGrupoVenta}
+          marcarGrupoVenta={marcarGrupoVenta}
           filtroDesde={filtroDesde}
           setFiltroDesde={setFiltroDesde}
           filtroHasta={filtroHasta}
