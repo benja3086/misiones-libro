@@ -269,45 +269,53 @@ table {
 .td-actions {
   display: flex;
   gap: 8px;
-}
-.overlay {
+}.overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
   background: rgba(0, 0, 0, 0.45);
   z-index: 1000;
-  padding: 12px;
-  display: grid;
-  place-items: center;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
 .modal {
   background: var(--card);
   border-radius: var(--radius);
-  width: min(92vw, 360px);
-  max-height: calc(100dvh - 24px);
+  width: min(320px, calc(100dvw - 20px));
+  max-height: calc(100dvh - 20px);
   overflow-y: auto;
-  padding: 14px;
-  margin: 0 auto;
+  overflow-x: hidden;
+  padding: 12px;
+  margin: 0;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   animation: fadeIn 0.2s ease;
 }
 
 .modal h3 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   text-align: center;
 }
 
 .field {
-  gap: 4px;
-  margin-bottom: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 7px;
   min-width: 0;
 }
 
 .field label {
-  font-size: 11px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--muted);
 }
 
 .field input,
@@ -315,11 +323,11 @@ table {
 .field textarea {
   width: 100%;
   min-width: 0;
-  height: 36px;
-  padding: 7px 10px;
+  height: 32px;
+  padding: 6px 9px;
   border: 1.5px solid var(--border);
-  border-radius: 9px;
-  font-size: 13px;
+  border-radius: 8px;
+  font-size: 12px;
   font-family: inherit;
   background: var(--card);
   color: var(--text);
@@ -334,24 +342,35 @@ table {
 .modal-foot {
   display: flex;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .modal-foot .btn {
   flex: 1;
   justify-content: center;
-  padding: 9px 10px;
-  font-size: 13px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @media (min-width: 768px) {
   .overlay {
     padding: 20px;
-    overflow: auto;
   }
 
   .modal {
-    width: min(90vw, 500px);
+    width: min(500px, calc(100dvw - 40px));
     max-height: calc(100dvh - 40px);
     padding: 20px;
   }
@@ -373,8 +392,7 @@ table {
   .field input,
   .field select,
   .field textarea {
-    height: auto;
-    min-height: 43px;
+    height: 43px;
     padding: 11px 13px;
     font-size: 15px;
   }
