@@ -1,11 +1,3 @@
-const categorias = [
-  { value: "libros", label: "Libros" },
-  { value: "remeras", label: "Remeras" },
-  { value: "utiles", label: "Útiles" },
-  { value: "cuadernos", label: "Cuadernos" },
-  { value: "accesorios", label: "Accesorios" },
-];
-
 const getValue = (form, campo, esEdicion = false) => {
   if (campo === "imagen") {
     return typeof form.imagen === "string" ? form.imagen : "";
@@ -36,7 +28,7 @@ const ProductoModal = ({
       <div className="modal">
         <h3>{titulo}</h3>
         <div className="field">
-          <label>Código</label>
+          <label>Codigo</label>
           <input
             value={getValue(form, "codigo", esEdicion)}
             onChange={updateField("codigo")}
@@ -52,7 +44,7 @@ const ProductoModal = ({
         </div>
         <div className="grid2">
           <div className="field">
-            <label>Precio ($)</label>
+            <label>Precio venta ($)</label>
             <input
               type="number"
               value={getValue(form, "precio", esEdicion)}
@@ -60,27 +52,22 @@ const ProductoModal = ({
             />
           </div>
           <div className="field">
+            <label>Precio costo ($)</label>
+            <input
+              type="number"
+              value={getValue(form, "precioCosto", esEdicion)}
+              onChange={updateField("precioCosto")}
+            />
+          </div>
+        </div>
+        <div className="grid2">
+          <div className="field">
             <label>Stock</label>
             <input
               type="number"
               value={getValue(form, "stock", esEdicion)}
               onChange={updateField("stock")}
             />
-          </div>
-        </div>
-        <div className="grid2">
-          <div className="field">
-            <label>Categoría</label>
-            <select
-              value={form.categoria || "libros"}
-              onChange={updateField("categoria")}
-            >
-              {categorias.map((categoria) => (
-                <option key={categoria.value} value={categoria.value}>
-                  {categoria.label}
-                </option>
-              ))}
-            </select>
           </div>
           <div className="field">
             <label>Provedor</label>
@@ -91,7 +78,7 @@ const ProductoModal = ({
           </div>
         </div>
         <div className="field">
-          <label>Descripción</label>
+          <label>Descripcion</label>
           <input
             value={getValue(form, "descripcion", esEdicion)}
             onChange={updateField("descripcion")}

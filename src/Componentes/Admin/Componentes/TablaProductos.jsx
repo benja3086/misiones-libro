@@ -62,7 +62,10 @@ const TablaProducto = ({
                   gap: "4px",
                 }}
               >
-                <span className="cat">{p.categoria}</span>
+                <span className="cat">
+                  Costo: $
+                  {Number(p.precioCosto || 0).toLocaleString("es-AR")}
+                </span>
 
                 {p.codigo && (
                   <span
@@ -131,8 +134,8 @@ const TablaProducto = ({
             <tr>
               <th>Código</th>
               <th>Nombre</th>
-              <th>Categoría</th>
-              <th>Precio</th>
+              <th>Precio costo</th>
+              <th>Precio venta</th>
               <th>Stock</th>
               <th>Provedor</th>
               <th>Acción</th>
@@ -169,7 +172,7 @@ const TablaProducto = ({
                 <td>{p.nombre}</td>
 
                 <td>
-                  <span className="cat">{p.categoria}</span>
+                  ${Number(p.precioCosto || 0).toLocaleString("es-AR")}
                 </td>
 
                 <td>${Number(p.precio).toLocaleString("es-AR")}</td>

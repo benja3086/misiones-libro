@@ -79,8 +79,8 @@ const Admin = () => {
   const [formNuevo, setFormNuevo] = useState({
     codigo: "",
     nombre: "",
-    categoria: "libros",
     precio: "",
+    precioCosto: "",
     stock: "",
     provedor: "",
     descripcion: "",
@@ -271,8 +271,8 @@ const Admin = () => {
     setFormNuevo({
       codigo: "",
       nombre: "",
-      categoria: "libros",
       precio: "",
+      precioCosto: "",
       stock: "",
       provedor: "",
       descripcion: "",
@@ -295,6 +295,7 @@ const Admin = () => {
       const datos = {
         ...formNuevo,
         precio: Number(formNuevo.precio),
+        precioCosto: Number(formNuevo.precioCosto || 0),
         stock: Number(formNuevo.stock || 0),
       };
 
@@ -339,6 +340,7 @@ const Admin = () => {
       const datosFinales = {
         ...datos,
         precio: Number(datos.precio),
+        precioCosto: Number(datos.precioCosto || 0),
         stock: Number(datos.stock),
       };
 
