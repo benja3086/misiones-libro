@@ -415,13 +415,15 @@ table {
 }
 
 .venta-marcada-verde {
-  background: #dcfce7;
-  border-color: #86efac;
+  background: #22c55e;
+  border-color: #15803d;
+  color: #052e16;
 }
 
 .venta-marcada-amarillo {
-  background: #fef9c3;
-  border-color: #fde047;
+  background: #ffeb3b;
+  border-color: #fdd835;
+  color: #3b3000;
 }
 
 .marca-btn {
@@ -437,23 +439,25 @@ table {
 }
 
 .marca-verde {
-  border-color: #21f800;
+  border-color: #15803d;
   color: #166534;
 }
 
 .marca-verde:hover,
 .marca-verde.active {
-  background: #bbf7d0;
+  background: #22c55e;
+  color: #052e16;
 }
 
 .marca-amarillo {
-  border-color: #fde047;
-  color: #854d0e;
+  border-color: #fdd835;
+  color: #5f4b00;
 }
 
 .marca-amarillo:hover,
 .marca-amarillo.active {
-  background: #fef08a;
+  background: #ffeb3b;
+  color: #3b3000;
 }
 
 .venta-row-actions {
@@ -491,18 +495,20 @@ table {
 
 @media (min-width: 640px) {
   tr.venta-marcada-verde td {
-    background: #dcfce7;
+    background: #22c55e;
+    color: #052e16;
   }
 
   tr.venta-marcada-amarillo td {
-    background: #fef9c3;
+    background: #ffeb3b;
+    color: #3b3000;
   }
 
   tr.venta-marcada-verde:hover td {
-    background: #bbf7d0;
+    background: #16a34a;
   }
 
   tr.venta-marcada-amarillo:hover td {
-    background: #fef08a;
+    background: #fdd835;
   }
 }
