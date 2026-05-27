@@ -534,21 +534,22 @@ const Admin = () => {
           </button>
         )}
       </div>
-
-      <TablaProducto
-        filtrados={filtrados}
-        busqueda={busqueda}
-        setBusqueda={setBusqueda}
-        abrirModalNuevo={abrirModalNuevo}
-        abrirModalEditar={abrirModalEditar}
-        eliminarProducto={eliminarProducto}
-        cantidadEnCarrito={cantidadEnCarrito}
-        productos={productos}
-        sinStock={sinStock}
-        agregarAlCarrito={agregarAlCarrito}
-        quitarDelCarrito={quitarDelCarrito}
-        isAdmin={isAdmin}
-      />
+{seccion === "productos" && (
+  <TablaProducto
+    filtrados={filtrados}
+    busqueda={busqueda}
+    setBusqueda={setBusqueda}
+    abrirModalNuevo={abrirModalNuevo}
+    abrirModalEditar={abrirModalEditar}
+    eliminarProducto={eliminarProducto}
+    cantidadEnCarrito={cantidadEnCarrito}
+    productos={productos}
+    sinStock={sinStock}
+    agregarAlCarrito={agregarAlCarrito}
+    quitarDelCarrito={quitarDelCarrito}
+    isAdmin={isAdmin}
+  />
+)}
       {/* ── HISTORIAL ── */}
       {seccion === "historial" && (
         <HistorialVentas
