@@ -70,7 +70,7 @@ const ProductoModal = ({
             />
           </div>
           <div className="field">
-            <label>Provedor</label>
+            <label>Proveedor</label>
             <input
               value={getValue(form, "provedor", esEdicion)}
               onChange={updateField("provedor")}

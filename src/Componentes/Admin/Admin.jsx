@@ -58,6 +58,9 @@ const ordenarPorCodigo = (arr) =>
     return ca.localeCompare(cb, "es");
   });
 
+const getProveedorProducto = (producto) =>
+  producto?.provedor || producto?.proveedor || producto?.autor || "";
+
 const Admin = () => {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
@@ -202,10 +205,11 @@ const Admin = () => {
                 id: item.id,
                 nombre: item.nombre,
                 precio: item.precio,
+                precioCosto: item.precioCosto || 0,
                 codigo: item.codigo || "",
-                provedor: item.provedor || "",
-                proveedor: item.provedor || "",
-                autor: item.provedor || "",
+                provedor: getProveedorProducto(item),
+                proveedor: getProveedorProducto(item),
+                autor: getProveedorProducto(item),
               },
               metodoPago,
               nombreComprador:
@@ -297,6 +301,8 @@ const Admin = () => {
         precio: Number(formNuevo.precio),
         precioCosto: Number(formNuevo.precioCosto || 0),
         stock: Number(formNuevo.stock || 0),
+        proveedor: formNuevo.provedor || "",
+        autor: formNuevo.provedor || "",
       };
 
       const res = await fetch(`${API}/productos`, {
@@ -320,7 +326,11 @@ const Admin = () => {
 
   // ── Editar producto ──
   const abrirModalEditar = (p) => {
-    setFormEditar({ ...p, codigo: p.codigo || "" });
+    setFormEditar({
+      ...p,
+      codigo: p.codigo || "",
+      provedor: getProveedorProducto(p),
+    });
     setModalEditar(p.id);
     setError("");
   };
@@ -342,6 +352,8 @@ const Admin = () => {
         precio: Number(datos.precio),
         precioCosto: Number(datos.precioCosto || 0),
         stock: Number(datos.stock),
+        proveedor: datos.provedor || "",
+        autor: datos.provedor || "",
       };
 
       await fetch(`${API}/productos/${modalEditar}`, {
@@ -388,11 +400,19 @@ const Admin = () => {
   };
 
   // ── Filtros / cálculos ──
-  const getProveedorVenta = (venta) =>
-    venta?.producto?.provedor ||
-    venta?.producto?.proveedor ||
-    venta?.producto?.autor ||
-    "";
+  const getProveedorVenta = (venta) => {
+    const producto = productos.find(
+      (item) => item.id === venta?.producto?.id,
+    );
+
+    return (
+      venta?.producto?.provedor ||
+      venta?.producto?.proveedor ||
+      venta?.producto?.autor ||
+      getProveedorProducto(producto) ||
+      ""
+    );
+  };
   const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
   const provedoresUnicos = [
     ...new Set(ventas.map(getProveedorVenta).filter(Boolean)),
@@ -418,19 +438,53 @@ const Admin = () => {
     setFiltroProvedor("");
   };
 
+  const formatPesos = (valor) => `$${Number(valor || 0).toLocaleString("es-AR")}`;
+  const getProductoVenta = (venta) =>
+    productos.find((producto) => producto.id === venta?.producto?.id);
+  const getPrecioCostoVenta = (venta) => {
+    const costoVenta = Number(venta?.producto?.precioCosto);
+    if (!Number.isNaN(costoVenta) && costoVenta > 0) return costoVenta;
+
+    const producto = getProductoVenta(venta);
+    const costoProducto = Number(producto?.precioCosto);
+    return Number.isNaN(costoProducto) ? 0 : costoProducto;
+  };
+
   const gananciasPorProducto = ventasFiltradas.reduce((acc, v) => {
-    const nombre = v.producto.nombre;
-    const precio = Number(v.producto.precio) || 0;
-    if (!acc[nombre]) acc[nombre] = { nombre, cantidad: 0, total: 0 };
-    acc[nombre].cantidad += 1;
-    acc[nombre].total += precio;
+    const nombre = v.producto?.nombre || "Sin producto";
+    const proveedor = getProveedorVenta(v) || "Sin proveedor";
+    const precioVenta = Number(v.producto?.precio) || 0;
+    const precioCosto = getPrecioCostoVenta(v);
+    const key = `${nombre}-${proveedor}`;
+
+    if (!acc[key]) {
+      acc[key] = {
+        nombre,
+        proveedor,
+        precioCosto,
+        cantidad: 0,
+        totalVenta: 0,
+        pagarProveedor: 0,
+        ganancia: 0,
+      };
+    }
+
+    acc[key].cantidad += 1;
+    acc[key].totalVenta += precioVenta;
+    acc[key].pagarProveedor += precioCosto;
+    acc[key].ganancia = acc[key].totalVenta - acc[key].pagarProveedor;
     return acc;
   }, {});
 
   const gananciasArray = Object.values(gananciasPorProducto).sort(
-    (a, b) => b.total - a.total,
+    (a, b) => b.ganancia - a.ganancia,
   );
-  const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.total, 0);
+  const totalGeneral = gananciasArray.reduce((acc, g) => acc + g.totalVenta, 0);
+  const totalPagarProveedor = gananciasArray.reduce(
+    (acc, g) => acc + g.pagarProveedor,
+    0,
+  );
+  const gananciaGeneral = totalGeneral - totalPagarProveedor;
   const getVentaId = (venta) => venta?._id || venta?.id || null;
   const eliminarGrupoVenta = async (grupo) => {
     if (!grupo.items.every((item) => getVentaId(item))) return;
@@ -536,7 +590,7 @@ const Admin = () => {
       ? ""
       : precioNumero.toLocaleString("es-AR");
     const searchable = normalizarTexto(
-      `${p.nombre || ""} ${p.codigo || ""} ${p.provedor || ""} ${precioRaw} ${precioAR}`,
+      `${p.nombre || ""} ${p.codigo || ""} ${getProveedorProducto(p)} ${precioRaw} ${precioAR}`,
     );
 
     return tokens.every((token) => searchable.includes(token));
@@ -674,12 +728,33 @@ const Admin = () => {
             ventasFiltradas={ventasFiltradas}
           />{" "}
           <div
-            style={{ marginBottom: "1.5rem", fontSize: "14px", color: "#666" }}
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "0.75rem",
+              marginBottom: "1.5rem",
+              fontSize: "14px",
+              color: "#666",
+            }}
           >
-            Total general:{" "}
-            <strong style={{ color: "#111", fontSize: "18px" }}>
-              ${totalGeneral.toLocaleString("es-AR")}
-            </strong>
+            <span>
+              Total vendido:{" "}
+              <strong style={{ color: "#111", fontSize: "18px" }}>
+                {formatPesos(totalGeneral)}
+              </strong>
+            </span>
+            <span>
+              A pagar proveedor:{" "}
+              <strong style={{ color: "#111", fontSize: "18px" }}>
+                {formatPesos(totalPagarProveedor)}
+              </strong>
+            </span>
+            <span>
+              Ganancia:{" "}
+              <strong style={{ color: "#16a34a", fontSize: "18px" }}>
+                {formatPesos(gananciaGeneral)}
+              </strong>
+            </span>
           </div>
           <div className="card-list">
             {gananciasArray.length === 0 && (
@@ -693,8 +768,15 @@ const Admin = () => {
                     {g.cantidad} venta{g.cantidad !== 1 ? "s" : ""}
                   </span>
                 </div>
+                <div className="prod-card-autor">{g.proveedor}</div>
                 <div className="prod-card-precio">
-                  ${g.total.toLocaleString("es-AR")}
+                  Venta: {formatPesos(g.totalVenta)}
+                </div>
+                <div style={{ fontSize: "13px", color: "#666" }}>
+                  A pagar proveedor: {formatPesos(g.pagarProveedor)}
+                </div>
+                <div style={{ fontSize: "13px", fontWeight: 700 }}>
+                  Ganancia: {formatPesos(g.ganancia)}
                 </div>
               </div>
             ))}
@@ -704,14 +786,18 @@ const Admin = () => {
               <thead>
                 <tr>
                   <th>Producto</th>
+                  <th>Proveedor</th>
+                  <th>Precio costo</th>
                   <th>Ventas</th>
-                  <th>Total recaudado</th>
+                  <th>Total venta</th>
+                  <th>A pagar proveedor</th>
+                  <th>Ganancia</th>
                 </tr>
               </thead>
               <tbody>
                 {gananciasArray.length === 0 && (
                   <tr>
-                    <td colSpan="3" className="empty">
+                    <td colSpan="7" className="empty">
                       No hay ventas
                     </td>
                   </tr>
@@ -719,9 +805,19 @@ const Admin = () => {
                 {gananciasArray.map((g, i) => (
                   <tr key={i}>
                     <td>{g.nombre}</td>
+                    <td>{g.proveedor}</td>
+                    <td>{formatPesos(g.precioCosto)}</td>
                     <td>{g.cantidad}</td>
                     <td>
-                      <strong>${g.total.toLocaleString("es-AR")}</strong>
+                      <strong>{formatPesos(g.totalVenta)}</strong>
+                    </td>
+                    <td>
+                      <strong>{formatPesos(g.pagarProveedor)}</strong>
+                    </td>
+                    <td>
+                      <strong style={{ color: "#16a34a" }}>
+                        {formatPesos(g.ganancia)}
+                      </strong>
                     </td>
                   </tr>
                 ))}
@@ -730,11 +826,21 @@ const Admin = () => {
                     <td>
                       <strong>TOTAL</strong>
                     </td>
+                    <td>-</td>
+                    <td>-</td>
                     <td>
                       <strong>{ventasFiltradas.length}</strong>
                     </td>
                     <td>
-                      <strong>${totalGeneral.toLocaleString("es-AR")}</strong>
+                      <strong>{formatPesos(totalGeneral)}</strong>
+                    </td>
+                    <td>
+                      <strong>{formatPesos(totalPagarProveedor)}</strong>
+                    </td>
+                    <td>
+                      <strong style={{ color: "#16a34a" }}>
+                        {formatPesos(gananciaGeneral)}
+                      </strong>
                     </td>
                   </tr>
                 )}

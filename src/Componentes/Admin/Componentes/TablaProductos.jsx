@@ -15,6 +15,9 @@ const TablaProducto = ({
   quitarDelCarrito,
   isAdmin,
 }) => {
+  const getProveedorProducto = (producto) =>
+    producto?.provedor || producto?.proveedor || producto?.autor || "";
+
   return (
     <>
       <div className="ap-top">
@@ -51,7 +54,9 @@ const TablaProducto = ({
             <div className="prod-card-top">
               <div>
                 <div className="prod-card-nombre">{p.nombre}</div>
-                <div className="prod-card-provedor">{p.provedor}</div>
+                <div className="prod-card-provedor">
+                  {getProveedorProducto(p)}
+                </div>
               </div>
 
               <div
@@ -137,7 +142,7 @@ const TablaProducto = ({
               <th>Precio costo</th>
               <th>Precio venta</th>
               <th>Stock</th>
-              <th>Provedor</th>
+              <th>Proveedor</th>
               <th>Acción</th>
             </tr>
           </thead>
@@ -181,7 +186,7 @@ const TablaProducto = ({
                   <StockBadge stock={p.stock} />
                 </td>
 
-                <td>{p.provedor}</td>
+                <td>{getProveedorProducto(p) || "-"}</td>
 
                 <td>
                   <div className="td-actions">
