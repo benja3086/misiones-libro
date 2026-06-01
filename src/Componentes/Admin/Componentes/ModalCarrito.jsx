@@ -45,7 +45,7 @@ const ModalCarrito = ({
               <div style={{ fontWeight: "500" }}>{item.nombre}</div>
               {item.codigo && (
                 <div style={{ fontSize: "12px", color: "#0066cc" }}>
-                  #{item.codigo}
+                  {item.codigo}
                 </div>
               )}
               <div style={{ fontSize: "12px", color: "#888" }}>

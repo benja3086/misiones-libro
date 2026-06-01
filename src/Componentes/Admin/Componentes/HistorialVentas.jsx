@@ -163,7 +163,7 @@ const HistorialVentas = ({
                             color: "#0066cc",
                           }}
                         >
-                          #{obtenerCodigoVenta(item)}
+                          {obtenerCodigoVenta(item)}
                         </span>
                       </>
                     ) : null}
@@ -270,7 +270,7 @@ const HistorialVentas = ({
                             color: "#0066cc",
                           }}
                         >
-                          #{obtenerCodigoVenta(item)}
+                          {obtenerCodigoVenta(item)}
                         </span>
                       ) : null}{" "}
                       {item.producto?.nombre || "-"} · $

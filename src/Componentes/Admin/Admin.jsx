@@ -850,7 +850,7 @@ const Admin = () => {
                           color: "#0066cc",
                         }}
                       >
-                        #{g.codigo}
+                        {g.codigo}
                       </span>
                     )}
                   </div>
@@ -909,7 +909,7 @@ const Admin = () => {
                             color: "#0066cc",
                           }}
                         >
-                          #{g.codigo}
+                          {g.codigo}
                         </span>
                       ) : (
                         "-"

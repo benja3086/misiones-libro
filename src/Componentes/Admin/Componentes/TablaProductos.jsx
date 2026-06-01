@@ -80,7 +80,7 @@ const TablaProducto = ({
                       color: "#0066cc",
                     }}
                   >
-                    #{p.codigo}
+                    {p.codigo}
                   </span>
                 )}
               </div>
@@ -167,7 +167,7 @@ const TablaProducto = ({
                         color: "#0066cc",
                       }}
                     >
-                      #{p.codigo}
+                      {p.codigo}
                     </span>
                   ) : (
                     "-"
