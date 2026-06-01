@@ -22,6 +22,7 @@ const HistorialVentas = ({
   provedoresUnicos,
   limpiarFiltros,
   ventasFiltradas,
+  getCodigoVenta,
 }) => {
   const [menuMarcaAbierto, setMenuMarcaAbierto] = useState(null);
 
@@ -32,6 +33,9 @@ const HistorialVentas = ({
     marcarGrupoVenta(grupo, marcaColor);
     setMenuMarcaAbierto(null);
   };
+
+  const obtenerCodigoVenta = (venta) =>
+    (getCodigoVenta ? getCodigoVenta(venta) : venta?.producto?.codigo) || "";
 
   const renderBotonMarca = (grupo, ubicacion) => {
     if (!isAdmin) return null;
@@ -149,7 +153,7 @@ const HistorialVentas = ({
                 >
                   <span>
                     • {item.producto?.nombre}
-                    {item.producto?.codigo ? (
+                    {obtenerCodigoVenta(item) ? (
                       <>
                         {" "}
                         <span
@@ -159,7 +163,7 @@ const HistorialVentas = ({
                             color: "#0066cc",
                           }}
                         >
-                          #{item.producto.codigo}
+                          #{obtenerCodigoVenta(item)}
                         </span>
                       </>
                     ) : null}
@@ -258,7 +262,7 @@ const HistorialVentas = ({
                 <td>
                   {grupo.items.map((item, i) => (
                     <div key={getVentaId(item) || `${grupo.key}-${i}`}>
-                      {item.producto?.codigo ? (
+                      {obtenerCodigoVenta(item) ? (
                         <span
                           className="cat"
                           style={{
@@ -266,7 +270,7 @@ const HistorialVentas = ({
                             color: "#0066cc",
                           }}
                         >
-                          #{item.producto.codigo}
+                          #{obtenerCodigoVenta(item)}
                         </span>
                       ) : null}{" "}
                       {item.producto?.nombre || "-"} · $

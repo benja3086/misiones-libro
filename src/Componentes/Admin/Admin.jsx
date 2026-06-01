@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import "./Admin.css";
 import FiltrosVentas from "./Componentes/FiltrosVentas";
@@ -17,6 +17,7 @@ const API =
 
 const getToken = () => localStorage.getItem("token");
 const MARCAS_VENTAS_KEY = "misiones_marcas_ventas";
+const GANANCIA_COLOR = "#2563eb";
 
 const leerMarcasVentas = () => {
   try {
@@ -95,6 +96,9 @@ const Admin = () => {
   const [error, setError] = useState("");
   const [ventaExitosa, setVentaExitosa] = useState(false);
   const [cargando, setCargando] = useState(false);
+  const [menuMarcaGananciasAbierto, setMenuMarcaGananciasAbierto] =
+    useState(null);
+  const botonCarritoRef = useRef(null);
 
   // ── Filtros ──
   const [filtroDesde, setFiltroDesde] = useState("");
@@ -144,6 +148,13 @@ const Admin = () => {
       }
       return [...prev, { ...p, cantidad: 1 }];
     });
+    setTimeout(() => {
+      botonCarritoRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      botonCarritoRef.current?.focus({ preventScroll: true });
+    }, 0);
   };
 
   const quitarDelCarrito = (id) => {
@@ -441,6 +452,8 @@ const Admin = () => {
   const formatPesos = (valor) => `$${Number(valor || 0).toLocaleString("es-AR")}`;
   const getProductoVenta = (venta) =>
     productos.find((producto) => producto.id === venta?.producto?.id);
+  const getCodigoVenta = (venta) =>
+    venta?.producto?.codigo || getProductoVenta(venta)?.codigo || "";
   const getPrecioCostoVenta = (venta) => {
     const costoVenta = Number(venta?.producto?.precioCosto);
     if (!Number.isNaN(costoVenta) && costoVenta > 0) return costoVenta;
@@ -453,15 +466,20 @@ const Admin = () => {
   const gananciasPorProducto = ventasFiltradas.reduce((acc, v) => {
     const nombre = v.producto?.nombre || "Sin producto";
     const proveedor = getProveedorVenta(v) || "Sin proveedor";
+    const codigo = getCodigoVenta(v);
     const precioVenta = Number(v.producto?.precio) || 0;
     const precioCosto = getPrecioCostoVenta(v);
-    const key = `${nombre}-${proveedor}`;
+    const key = `${codigo}-${nombre}-${proveedor}`;
 
     if (!acc[key]) {
       acc[key] = {
+        key,
+        codigo,
         nombre,
         proveedor,
         precioCosto,
+        marcaColor: v.marcaColor || null,
+        items: [],
         cantidad: 0,
         totalVenta: 0,
         pagarProveedor: 0,
@@ -469,6 +487,10 @@ const Admin = () => {
       };
     }
 
+    acc[key].items.push(v);
+    if (!acc[key].marcaColor && v.marcaColor) {
+      acc[key].marcaColor = v.marcaColor;
+    }
     acc[key].cantidad += 1;
     acc[key].totalVenta += precioVenta;
     acc[key].pagarProveedor += precioCosto;
@@ -486,6 +508,8 @@ const Admin = () => {
   );
   const gananciaGeneral = totalGeneral - totalPagarProveedor;
   const getVentaId = (venta) => venta?._id || venta?.id || null;
+  const getMarcaVentaClass = (grupo) =>
+    grupo.marcaColor ? `venta-marcada venta-marcada-${grupo.marcaColor}` : "";
   const eliminarGrupoVenta = async (grupo) => {
     if (!grupo.items.every((item) => getVentaId(item))) return;
     if (!window.confirm("¿Seguro que querés eliminar esta venta completa?")) {
@@ -541,6 +565,57 @@ const Admin = () => {
         "El color quedó guardado en este navegador, pero la API no permitió guardarlo en el servidor.",
       );
     }
+  };
+
+  const renderBotonMarcaGanancia = (grupo, ubicacion) => {
+    if (!isAdmin || !grupo.items.every((item) => getVentaId(item))) return null;
+
+    const menuKey = `${ubicacion}-${grupo.key}`;
+
+    return (
+      <div className="marca-menu">
+        <button
+          className="btn sm marca-toggle"
+          onClick={() =>
+            setMenuMarcaGananciasAbierto((actual) =>
+              actual === menuKey ? null : menuKey,
+            )
+          }
+          type="button"
+        >
+          Marcar
+        </button>
+
+        {menuMarcaGananciasAbierto === menuKey && (
+          <div className="marca-menu-opciones">
+            <button
+              className={`btn sm marca-btn marca-verde ${
+                grupo.marcaColor === "verde" ? "active" : ""
+              }`}
+              onClick={() => {
+                marcarGrupoVenta(grupo, "verde");
+                setMenuMarcaGananciasAbierto(null);
+              }}
+              type="button"
+            >
+              Verde
+            </button>
+            <button
+              className={`btn sm marca-btn marca-amarillo ${
+                grupo.marcaColor === "amarillo" ? "active" : ""
+              }`}
+              onClick={() => {
+                marcarGrupoVenta(grupo, "amarillo");
+                setMenuMarcaGananciasAbierto(null);
+              }}
+              type="button"
+            >
+              Amarillo
+            </button>
+          </div>
+        )}
+      </div>
+    );
   };
 
   const ventasAgrupadas = Object.values(
@@ -636,6 +711,7 @@ const Admin = () => {
 
         {carrito.length > 0 && (
           <button
+            ref={botonCarritoRef}
             className="btn primary"
             onClick={abrirModalCarrito}
             style={{
@@ -701,6 +777,7 @@ const Admin = () => {
           provedoresUnicos={provedoresUnicos}
           limpiarFiltros={limpiarFiltros}
           ventasFiltradas={ventasFiltradas}
+          getCodigoVenta={getCodigoVenta}
         />
       )}
 
@@ -751,7 +828,7 @@ const Admin = () => {
             </span>
             <span>
               Ganancia:{" "}
-              <strong style={{ color: "#16a34a", fontSize: "18px" }}>
+              <strong style={{ color: GANANCIA_COLOR, fontSize: "18px" }}>
                 {formatPesos(gananciaGeneral)}
               </strong>
             </span>
@@ -760,10 +837,23 @@ const Admin = () => {
             {gananciasArray.length === 0 && (
               <p className="empty">No hay ventas registradas</p>
             )}
-            {gananciasArray.map((g, i) => (
-              <div className="prod-card" key={i}>
+            {gananciasArray.map((g) => (
+              <div className={`prod-card ${getMarcaVentaClass(g)}`} key={g.key}>
                 <div className="prod-card-top">
-                  <div className="prod-card-nombre">{g.nombre}</div>
+                  <div>
+                    <div className="prod-card-nombre">{g.nombre}</div>
+                    {g.codigo && (
+                      <span
+                        className="cat"
+                        style={{
+                          background: "#e0f0ff",
+                          color: "#0066cc",
+                        }}
+                      >
+                        #{g.codigo}
+                      </span>
+                    )}
+                  </div>
                   <span className="cat">
                     {g.cantidad} venta{g.cantidad !== 1 ? "s" : ""}
                   </span>
@@ -778,6 +868,9 @@ const Admin = () => {
                 <div style={{ fontSize: "13px", fontWeight: 700 }}>
                   Ganancia: {formatPesos(g.ganancia)}
                 </div>
+                <div className="prod-card-actions venta-card-actions">
+                  {renderBotonMarcaGanancia(g, "card")}
+                </div>
               </div>
             ))}
           </div>
@@ -786,25 +879,42 @@ const Admin = () => {
               <thead>
                 <tr>
                   <th>Producto</th>
+                  <th>Codigo</th>
                   <th>Proveedor</th>
                   <th>Precio costo</th>
                   <th>Ventas</th>
                   <th>Total venta</th>
                   <th>A pagar proveedor</th>
                   <th>Ganancia</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {gananciasArray.length === 0 && (
                   <tr>
-                    <td colSpan="7" className="empty">
+                    <td colSpan="9" className="empty">
                       No hay ventas
                     </td>
                   </tr>
                 )}
-                {gananciasArray.map((g, i) => (
-                  <tr key={i}>
+                {gananciasArray.map((g) => (
+                  <tr className={getMarcaVentaClass(g)} key={g.key}>
                     <td>{g.nombre}</td>
+                    <td>
+                      {g.codigo ? (
+                        <span
+                          className="cat"
+                          style={{
+                            background: "#e0f0ff",
+                            color: "#0066cc",
+                          }}
+                        >
+                          #{g.codigo}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
                     <td>{g.proveedor}</td>
                     <td>{formatPesos(g.precioCosto)}</td>
                     <td>{g.cantidad}</td>
@@ -815,9 +925,14 @@ const Admin = () => {
                       <strong>{formatPesos(g.pagarProveedor)}</strong>
                     </td>
                     <td>
-                      <strong style={{ color: "#16a34a" }}>
+                      <strong style={{ color: GANANCIA_COLOR }}>
                         {formatPesos(g.ganancia)}
                       </strong>
+                    </td>
+                    <td>
+                      <div className="venta-row-actions">
+                        {renderBotonMarcaGanancia(g, "row")}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -826,6 +941,7 @@ const Admin = () => {
                     <td>
                       <strong>TOTAL</strong>
                     </td>
+                    <td>-</td>
                     <td>-</td>
                     <td>-</td>
                     <td>
@@ -838,10 +954,11 @@ const Admin = () => {
                       <strong>{formatPesos(totalPagarProveedor)}</strong>
                     </td>
                     <td>
-                      <strong style={{ color: "#16a34a" }}>
+                      <strong style={{ color: GANANCIA_COLOR }}>
                         {formatPesos(gananciaGeneral)}
                       </strong>
                     </td>
+                    <td>-</td>
                   </tr>
                 )}
               </tbody>

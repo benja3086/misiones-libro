@@ -4,6 +4,16 @@ const AuthContext = createContext(null);
 
 const API = import.meta.env.VITE_API_URL;
 
+const formatearFechaHoraLogin = (fecha = new Date()) =>
+  fecha.toLocaleString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -58,6 +68,7 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({
         username,
         password,
+        fechaLogin: formatearFechaHoraLogin(),
       }),
     });
 
