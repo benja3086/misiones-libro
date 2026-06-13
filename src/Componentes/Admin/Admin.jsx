@@ -654,22 +654,33 @@ const Admin = () => {
     }, {}),
   ).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
+  // ── Filtrado de productos con búsqueda por código exacta ──
   const filtrados = productos.filter((p) => {
     const termino = normalizarTexto(busqueda);
     if (!termino) return true;
 
     const tokens = termino.split(/\s+/).filter(Boolean);
+    const codigoNorm = normalizarTexto(p.codigo || "");
+
+    // Si hay un solo token, primero verificar contra el código
+    if (tokens.length === 1) {
+      if (codigoNorm === tokens[0]) return true;         // coincidencia exacta
+      if (codigoNorm.startsWith(tokens[0])) return true; // coincidencia por inicio
+    }
+
+    // Búsqueda general: nombre, proveedor y precio (el código NO está aquí)
     const precioNumero = Number(p.precio);
     const precioRaw = Number.isNaN(precioNumero) ? "" : `${precioNumero}`;
     const precioAR = Number.isNaN(precioNumero)
       ? ""
       : precioNumero.toLocaleString("es-AR");
     const searchable = normalizarTexto(
-      `${p.nombre || ""} ${p.codigo || ""} ${getProveedorProducto(p)} ${precioRaw} ${precioAR}`,
+      `${p.nombre || ""} ${getProveedorProducto(p)} ${precioRaw} ${precioAR}`,
     );
 
     return tokens.every((token) => searchable.includes(token));
   });
+
   const sinStock = (p) => !p.stock || Number(p.stock) <= 0;
   const cantidadEnCarrito = (id) =>
     carrito.find((i) => i.id === id)?.cantidad || 0;
@@ -738,22 +749,24 @@ const Admin = () => {
           </button>
         )}
       </div>
-{seccion === "productos" && (
-  <TablaProducto
-    filtrados={filtrados}
-    busqueda={busqueda}
-    setBusqueda={setBusqueda}
-    abrirModalNuevo={abrirModalNuevo}
-    abrirModalEditar={abrirModalEditar}
-    eliminarProducto={eliminarProducto}
-    cantidadEnCarrito={cantidadEnCarrito}
-    productos={productos}
-    sinStock={sinStock}
-    agregarAlCarrito={agregarAlCarrito}
-    quitarDelCarrito={quitarDelCarrito}
-    isAdmin={isAdmin}
-  />
-)}
+
+      {seccion === "productos" && (
+        <TablaProducto
+          filtrados={filtrados}
+          busqueda={busqueda}
+          setBusqueda={setBusqueda}
+          abrirModalNuevo={abrirModalNuevo}
+          abrirModalEditar={abrirModalEditar}
+          eliminarProducto={eliminarProducto}
+          cantidadEnCarrito={cantidadEnCarrito}
+          productos={productos}
+          sinStock={sinStock}
+          agregarAlCarrito={agregarAlCarrito}
+          quitarDelCarrito={quitarDelCarrito}
+          isAdmin={isAdmin}
+        />
+      )}
+
       {/* ── HISTORIAL ── */}
       {seccion === "historial" && (
         <HistorialVentas
@@ -803,7 +816,7 @@ const Admin = () => {
             provedoresUnicos={provedoresUnicos}
             limpiarFiltros={limpiarFiltros}
             ventasFiltradas={ventasFiltradas}
-          />{" "}
+          />
           <div
             style={{
               display: "flex",
