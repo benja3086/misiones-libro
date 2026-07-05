@@ -24,6 +24,7 @@
   --low-fg: #d97706;
   --radius: 12px;
   --shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --admin-sticky-top: 65px;
 }
 
 body {
@@ -147,18 +148,24 @@ table {
   }
   table {
     display: table;
+    border-collapse: separate;
+    border-spacing: 0;
   }
   .tbl-wrap {
     background: var(--card);
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    overflow: hidden;
+    overflow: visible;
   }
   thead {
     background: #fafafa;
   }
   th {
+    position: sticky;
+    top: var(--admin-sticky-top);
+    z-index: 5;
+    background: #fafafa;
     padding: 13px 16px;
     text-align: left;
     font-size: 12px;
