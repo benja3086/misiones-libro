@@ -654,32 +654,58 @@ const Admin = () => {
     }, {}),
   ).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
-  // ── Filtrado de productos con búsqueda por código exacta ──
-  const filtrados = productos.filter((p) => {
+  // ── Filtrado de productos con priorización de código por score ──
+  // Reglas de score (mayor = más prioridad):
+  //   4 = código coincide exacto
+  //   3 = código empieza con el término buscado
+  //   2 = código contiene el término buscado
+  //   1 = matchea por nombre / proveedor / precio
+  // Se filtra lo que tenga score > 0 y se ordena de mayor a menor score,
+  // así el código SIEMPRE queda arriba, tenga la búsqueda una o varias palabras.
+  const filtrados = (() => {
     const termino = normalizarTexto(busqueda);
-    if (!termino) return true;
+    if (!termino) return productos;
 
     const tokens = termino.split(/\s+/).filter(Boolean);
-    const codigoNorm = normalizarTexto(p.codigo || "");
+    const terminoJunto = tokens.join(""); // ej: "ca 001" -> "ca001", por si el código no lleva espacios
 
-    // Si hay un solo token, primero verificar contra el código
-    if (tokens.length === 1) {
-      if (codigoNorm === tokens[0]) return true;         // coincidencia exacta
-      if (codigoNorm.startsWith(tokens[0])) return true; // coincidencia por inicio
-    }
+    const items = productos.map((p) => {
+      const codigoNorm = normalizarTexto(p.codigo || "");
 
-    // Búsqueda general: nombre, proveedor y precio (el código NO está aquí)
-    const precioNumero = Number(p.precio);
-    const precioRaw = Number.isNaN(precioNumero) ? "" : `${precioNumero}`;
-    const precioAR = Number.isNaN(precioNumero)
-      ? ""
-      : precioNumero.toLocaleString("es-AR");
-    const searchable = normalizarTexto(
-      `${p.nombre || ""} ${getProveedorProducto(p)} ${precioRaw} ${precioAR}`,
-    );
+      const precioNumero = Number(p.precio);
+      const precioRaw = Number.isNaN(precioNumero) ? "" : `${precioNumero}`;
+      const precioAR = Number.isNaN(precioNumero)
+        ? ""
+        : precioNumero.toLocaleString("es-AR");
+      const searchable = normalizarTexto(
+        `${p.nombre || ""} ${getProveedorProducto(p)} ${precioRaw} ${precioAR}`,
+      );
 
-    return tokens.every((token) => searchable.includes(token));
-  });
+      const codigoExacto =
+        codigoNorm !== "" &&
+        (codigoNorm === termino || codigoNorm === terminoJunto);
+      const codigoEmpieza =
+        codigoNorm !== "" &&
+        (codigoNorm.startsWith(termino) || codigoNorm.startsWith(terminoJunto));
+      const codigoContiene =
+        codigoNorm !== "" &&
+        (codigoNorm.includes(termino) || codigoNorm.includes(terminoJunto));
+      const nombreMatch = tokens.every((token) => searchable.includes(token));
+
+      let score = 0;
+      if (codigoExacto) score = 4;
+      else if (codigoEmpieza) score = 3;
+      else if (codigoContiene) score = 2;
+      else if (nombreMatch) score = 1;
+
+      return { p, score };
+    });
+
+    return items
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((item) => item.p);
+  })();
 
   const sinStock = (p) => !p.stock || Number(p.stock) <= 0;
   const cantidadEnCarrito = (id) =>
