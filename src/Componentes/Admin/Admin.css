@@ -499,7 +499,17 @@ table {
   width: 100%;
   justify-content: center;
 }
-
+.err {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fee2e2;      /* Fondo rojo claro */
+  border: 1px solid #ef4444;
+  color: #b91c1c;           /* Texto rojo */
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
 @media (min-width: 640px) {
   tr.venta-marcada-verde td {
     background: #22c55e;
