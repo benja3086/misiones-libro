@@ -61,8 +61,11 @@ body {
 
 .ap-search {
   margin-bottom: 16px;
+  display: grid;
+  gap: 8px;
 }
-.ap-search input {
+.ap-search input,
+.ap-search select {
   width: 100%;
   padding: 11px 14px;
   border: 1.5px solid var(--border);
@@ -73,12 +76,23 @@ body {
   color: var(--text);
   transition: border-color 0.2s;
 }
-.ap-search input:focus {
+.ap-search input:focus,
+.ap-search select:focus {
   outline: none;
   border-color: var(--accent);
 }
 .ap-search input::placeholder {
   color: var(--muted);
+}
+
+.field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  background: var(--card);
+  color: var(--text);
 }
 
 .tbl-wrap {

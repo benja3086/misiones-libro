@@ -8,6 +8,7 @@ import ModalCarrito from "./Componentes/ModalCarrito";
 import ProductoModal from "./Componentes/ProductoModal";
 import HistorialVentas from "./Componentes/HistorialVentas";
 import TablaProducto from "./Componentes/TablaProductos";
+import { obtenerCategoriaProducto } from "./normalizarCategoria";
 
 const API =
   import.meta.env.VITE_API_URL ||
@@ -69,6 +70,8 @@ const Admin = () => {
   const [productos, setProductos] = useState([]);
   const [ventas, setVentas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [filtroCategoriaVentas, setFiltroCategoriaVentas] = useState("");
   const [seccion, setSeccion] = useState("productos");
 
   // ── Carrito ──
@@ -82,6 +85,8 @@ const Admin = () => {
   const [modalNuevo, setModalNuevo] = useState(false);
   const [formNuevo, setFormNuevo] = useState({
     codigo: "",
+    codigoBiblia: "",
+    categoria: "Otros",
     nombre: "",
     precio: "",
     precioCosto: "",
@@ -218,6 +223,8 @@ const Admin = () => {
                 precio: item.precio,
                 precioCosto: item.precioCosto || 0,
                 codigo: item.codigo || "",
+                codigoBiblia: item.codigoBiblia || "",
+                categoria: obtenerCategoriaProducto(item),
                 provedor: getProveedorProducto(item),
                 proveedor: getProveedorProducto(item),
                 autor: getProveedorProducto(item),
@@ -285,6 +292,8 @@ const Admin = () => {
   const abrirModalNuevo = () => {
     setFormNuevo({
       codigo: "",
+      codigoBiblia: "",
+      categoria: "Otros",
       nombre: "",
       precio: "",
       precioCosto: "",
@@ -340,6 +349,8 @@ const Admin = () => {
     setFormEditar({
       ...p,
       codigo: p.codigo || "",
+      codigoBiblia: p.codigoBiblia || "",
+      categoria: obtenerCategoriaProducto(p),
       provedor: getProveedorProducto(p),
     });
     setModalEditar(p.id);
@@ -424,6 +435,17 @@ const Admin = () => {
       ""
     );
   };
+  const getCategoriaVenta = (venta) => {
+    const productoActual = productos.find(
+      (producto) => producto.id === venta?.producto?.id,
+    );
+    return obtenerCategoriaProducto({
+      ...productoActual,
+      ...venta?.producto,
+      categoria:
+        venta?.producto?.categoria || productoActual?.categoria || "Otros",
+    });
+  };
   const vendedoresUnicos = [...new Set(ventas.map((v) => v.usuario))].sort();
   const provedoresUnicos = [
     ...new Set(ventas.map(getProveedorVenta).filter(Boolean)),
@@ -431,6 +453,11 @@ const Admin = () => {
 
   const ventasFiltradas = ventas.filter((v) => {
     if (!isAdmin && v.usuario !== user?.username) return false;
+    if (
+      isAdmin &&
+      filtroCategoriaVentas &&
+      getCategoriaVenta(v) !== filtroCategoriaVentas
+    ) return false;
     const fecha = new Date(v.fecha);
     if (filtroDesde && fecha < new Date(filtroDesde)) return false;
     if (filtroHasta && fecha > new Date(filtroHasta + "T23:59:59"))
@@ -447,6 +474,7 @@ const Admin = () => {
     setFiltroVendedor("");
     setFiltroMetodo("");
     setFiltroProvedor("");
+    setFiltroCategoriaVentas("");
   };
 
   const formatPesos = (valor) => `$${Number(valor || 0).toLocaleString("es-AR")}`;
@@ -662,14 +690,19 @@ const Admin = () => {
   //   1 = matchea por nombre / proveedor / precio
   // Se filtra lo que tenga score > 0 y se ordena de mayor a menor score,
   // así el código SIEMPRE queda arriba, tenga la búsqueda una o varias palabras.
+  const productosPorCategoria = productos.filter((producto) =>
+    !filtroCategoria ||
+    obtenerCategoriaProducto(producto) === filtroCategoria,
+  );
   const filtrados = (() => {
     const termino = normalizarTexto(busqueda);
-    if (!termino) return productos;
+    const productosBase = productosPorCategoria;
+    if (!termino) return productosBase;
 
     const tokens = termino.split(/\s+/).filter(Boolean);
     const terminoJunto = tokens.join(""); // ej: "ca 001" -> "ca001", por si el código no lleva espacios
 
-    const items = productos.map((p) => {
+    const items = productosBase.map((p) => {
       const codigoNorm = normalizarTexto(p.codigo || "");
 
       const precioNumero = Number(p.precio);
@@ -781,6 +814,8 @@ const Admin = () => {
           filtrados={filtrados}
           busqueda={busqueda}
           setBusqueda={setBusqueda}
+          filtroCategoria={filtroCategoria}
+          setFiltroCategoria={setFiltroCategoria}
           abrirModalNuevo={abrirModalNuevo}
           abrirModalEditar={abrirModalEditar}
           eliminarProducto={eliminarProducto}
@@ -805,6 +840,8 @@ const Admin = () => {
           setFiltroDesde={setFiltroDesde}
           filtroHasta={filtroHasta}
           setFiltroHasta={setFiltroHasta}
+          filtroCategoriaVentas={filtroCategoriaVentas}
+          setFiltroCategoriaVentas={setFiltroCategoriaVentas}
           isAdmin={isAdmin}
           filtroVendedor={filtroVendedor}
           setFiltroVendedor={setFiltroVendedor}

@@ -11,6 +11,8 @@ const HistorialVentas = ({
   setFiltroDesde,
   filtroHasta,
   setFiltroHasta,
+  filtroCategoriaVentas,
+  setFiltroCategoriaVentas,
   isAdmin,
   filtroVendedor,
   setFiltroVendedor,
@@ -93,6 +95,9 @@ const HistorialVentas = ({
         setFiltroDesde={setFiltroDesde}
         filtroHasta={filtroHasta}
         setFiltroHasta={setFiltroHasta}
+        filtroCategoriaVentas={filtroCategoriaVentas}
+        setFiltroCategoriaVentas={setFiltroCategoriaVentas}
+        mostrarFiltroCategoria
         isAdmin={isAdmin}
         filtroVendedor={filtroVendedor}
         setFiltroVendedor={setFiltroVendedor}

@@ -1,10 +1,13 @@
 import StockBadge from "./StockBadge";
 import BotonCarrito from "./BotonCarrito";
+import { obtenerCategoriaProducto } from "../normalizarCategoria";
 
 const TablaProducto = ({
   filtrados,
   busqueda,
   setBusqueda,
+  filtroCategoria,
+  setFiltroCategoria,
   abrirModalNuevo,
   abrirModalEditar,
   eliminarProducto,
@@ -41,6 +44,18 @@ const TablaProducto = ({
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
+        <select
+          value={filtroCategoria}
+          onChange={(e) => setFiltroCategoria(e.target.value)}
+          aria-label="Filtrar productos por categoría"
+        >
+          <option value="">Todas las categorías</option>
+          <option value="Biblias">Biblias</option>
+          <option value="Útiles">Útiles</option>
+          <option value="Libros">Libros</option>
+          <option value="Remeras">Remeras</option>
+          <option value="Otros">Otros</option>
+        </select>
       </div>
 
       {/* Cards mobile */}
@@ -53,6 +68,33 @@ const TablaProducto = ({
           <div className="prod-card" key={p.id}>
             <div className="prod-card-top">
               <div>
+                {p.codigo && (
+                  <span
+                    className="cat"
+                    style={{
+                      background: "#e0f0ff",
+                      color: "#0066cc",
+                      display: "inline-block",
+                      marginBottom: "4px",
+                    }}
+                  >
+                    {p.codigo}
+                  </span>
+                )}
+                {obtenerCategoriaProducto(p) === "Biblias" && p.codigoBiblia && (
+                  <span
+                    className="cat"
+                    style={{
+                      background: "#f3e8ff",
+                      color: "#7e22ce",
+                      display: "inline-block",
+                      marginBottom: "4px",
+                      marginLeft: p.codigo ? "4px" : 0,
+                    }}
+                  >
+                    Biblia: {p.codigoBiblia}
+                  </span>
+                )}
                 <div className="prod-card-nombre">{p.nombre}</div>
                 <div className="prod-card-provedor">
                   {getProveedorProducto(p)}
@@ -72,17 +114,6 @@ const TablaProducto = ({
                   {Number(p.precioCosto || 0).toLocaleString("es-AR")}
                 </span>
 
-                {p.codigo && (
-                  <span
-                    className="cat"
-                    style={{
-                      background: "#e0f0ff",
-                      color: "#0066cc",
-                    }}
-                  >
-                    {p.codigo}
-                  </span>
-                )}
               </div>
             </div>
 
@@ -171,6 +202,16 @@ const TablaProducto = ({
                     </span>
                   ) : (
                     "-"
+                  )}
+                  {obtenerCategoriaProducto(p) === "Biblias" && p.codigoBiblia && (
+                    <div style={{ marginTop: "4px" }}>
+                      <span
+                        className="cat"
+                        style={{ background: "#f3e8ff", color: "#7e22ce" }}
+                      >
+                        Biblia: {p.codigoBiblia}
+                      </span>
+                    </div>
                   )}
                 </td>
 

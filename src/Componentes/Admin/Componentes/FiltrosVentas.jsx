@@ -3,6 +3,9 @@ const FiltrosVentas = ({
   setFiltroDesde,
   filtroHasta,
   setFiltroHasta,
+  filtroCategoriaVentas,
+  setFiltroCategoriaVentas,
+  mostrarFiltroCategoria = false,
   isAdmin,
   filtroVendedor,
   setFiltroVendedor,
@@ -61,6 +64,23 @@ const FiltrosVentas = ({
                 {v}
               </option>
             ))}
+          </select>
+        </div>
+      )}
+
+      {isAdmin && mostrarFiltroCategoria && (
+        <div className="field" style={{ margin: 0 }}>
+          <label>Categoría</label>
+          <select
+            value={filtroCategoriaVentas}
+            onChange={(e) => setFiltroCategoriaVentas(e.target.value)}
+          >
+            <option value="">Todas</option>
+            <option value="Biblias">Biblias</option>
+            <option value="Útiles">Útiles</option>
+            <option value="Libros">Libros</option>
+            <option value="Remeras">Remeras</option>
+            <option value="Otros">Otros</option>
           </select>
         </div>
       )}

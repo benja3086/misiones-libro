@@ -1,3 +1,5 @@
+import { normalizarCategoria } from "../normalizarCategoria";
+
 const getValue = (form, campo, esEdicion = false) => {
   if (campo === "imagen") {
     return typeof form.imagen === "string" ? form.imagen : "";
@@ -20,13 +22,33 @@ const ProductoModal = ({
   esEdicion = false,
 }) => {
   const updateField = (campo) => (e) => {
-    setForm((actual) => ({ ...actual, [campo]: e.target.value }));
+    const valor = e.target.value;
+    setForm((actual) => ({
+      ...actual,
+      [campo]: valor,
+      ...(campo === "categoria" && valor !== "Biblias"
+        ? { codigoBiblia: "" }
+        : {}),
+    }));
   };
 
   return (
     <div className="overlay">
       <div className="modal">
         <h3>{titulo}</h3>
+        <div className="field">
+          <label>Categoría</label>
+          <select
+            value={normalizarCategoria(getValue(form, "categoria", esEdicion))}
+            onChange={updateField("categoria")}
+          >
+            <option value="Biblias">Biblias</option>
+            <option value="Útiles">Útiles</option>
+            <option value="Libros">Libros</option>
+            <option value="Remeras">Remeras</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
         <div className="field">
           <label>Codigo</label>
           <input
@@ -35,6 +57,17 @@ const ProductoModal = ({
             placeholder="Ej: A, B, AC..."
           />
         </div>
+        {normalizarCategoria(getValue(form, "categoria", esEdicion)) ===
+          "Biblias" && (
+          <div className="field">
+            <label>Código de Biblia</label>
+            <input
+              value={getValue(form, "codigoBiblia", esEdicion) || ""}
+              onChange={updateField("codigoBiblia")}
+              placeholder="Código exclusivo para Biblias"
+            />
+          </div>
+        )}
         <div className="field">
           <label>Nombre</label>
           <input
