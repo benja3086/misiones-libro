@@ -9,6 +9,8 @@ const ModalCarrito = ({
   setNombreComprador,
   comentario,
   setComentario,
+  fechaCompra,
+  setFechaCompra,
   error,
   cargando,
   agregarAlCarrito,
@@ -131,6 +133,17 @@ const ModalCarrito = ({
           </span>
           <span>${totalCarrito.toLocaleString("es-AR")}</span>
         </div>
+      </div>
+
+      <div className="field" style={{ marginTop: "1rem" }}>
+        <label htmlFor="fecha-compra">Fecha de la compra</label>
+        <input
+          id="fecha-compra"
+          type="date"
+          value={fechaCompra}
+          onChange={(e) => setFechaCompra(e.target.value)}
+          required
+        />
       </div>
 
       <div className="field">

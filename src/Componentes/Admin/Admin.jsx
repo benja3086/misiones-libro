@@ -63,6 +63,12 @@ const ordenarPorCodigo = (arr) =>
 const getProveedorProducto = (producto) =>
   producto?.provedor || producto?.proveedor || producto?.autor || "";
 
+const obtenerFechaLocal = () => {
+  const ahora = new Date();
+  const offset = ahora.getTimezoneOffset() * 60000;
+  return new Date(ahora.getTime() - offset).toISOString().slice(0, 10);
+};
+
 const Admin = () => {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
@@ -80,6 +86,7 @@ const Admin = () => {
   const [metodoPago, setMetodoPago] = useState(null);
   const [nombreComprador, setNombreComprador] = useState("");
   const [comentario, setComentario] = useState("");
+  const [fechaCompra, setFechaCompra] = useState(obtenerFechaLocal);
 
   // ── Modal editar / nuevo ──
   const [modalNuevo, setModalNuevo] = useState(false);
@@ -187,6 +194,7 @@ const Admin = () => {
     setMetodoPago(null);
     setNombreComprador("");
     setComentario("");
+    setFechaCompra(obtenerFechaLocal());
     setError("");
     setModalCarrito(true);
   };
@@ -199,6 +207,7 @@ const Admin = () => {
   // ── Confirmar venta ──
   const confirmarVenta = async () => {
     if (!metodoPago) return setError("Seleccioná un método de pago.");
+    if (!fechaCompra) return setError("Seleccioná la fecha de la compra.");
     if (metodoPago === "transferencia" && !nombreComprador.trim())
       return setError("Ingresá el nombre del comprador.");
 
@@ -207,6 +216,7 @@ const Admin = () => {
 
     try {
       const grupoVentaId = `carrito-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const fecha = new Date(`${fechaCompra}T12:00:00`).toISOString();
       const llamadas = carrito.flatMap((item) =>
         Array.from({ length: item.cantidad }, () =>
           fetch(`${API}/ventas`, {
@@ -234,6 +244,7 @@ const Admin = () => {
                 metodoPago === "transferencia" ? nombreComprador : null,
               comentario: comentario.trim() || null,
               grupoVentaId,
+              fecha,
             }),
           }).then((r) => r.json()),
         ),
@@ -1056,6 +1067,8 @@ const Admin = () => {
           setNombreComprador={setNombreComprador}
           comentario={comentario}
           setComentario={setComentario}
+          fechaCompra={fechaCompra}
+          setFechaCompra={setFechaCompra}
           error={error}
           cargando={cargando}
           agregarAlCarrito={agregarAlCarrito}
