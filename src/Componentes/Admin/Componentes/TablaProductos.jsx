@@ -1,3 +1,4 @@
+import { useState } from "react";
 import StockBadge from "./StockBadge";
 import BotonCarrito from "./BotonCarrito";
 import { obtenerCategoriaProducto } from "../normalizarCategoria";
@@ -8,6 +9,9 @@ const TablaProducto = ({
   setBusqueda,
   filtroCategoria,
   setFiltroCategoria,
+  filtroProveedor,
+  setFiltroProveedor,
+  proveedoresUnicos,
   abrirModalNuevo,
   abrirModalEditar,
   eliminarProducto,
@@ -18,8 +22,15 @@ const TablaProducto = ({
   quitarDelCarrito,
   isAdmin,
 }) => {
+  const [ordenStock, setOrdenStock] = useState("");
   const getProveedorProducto = (producto) =>
     producto?.provedor || producto?.proveedor || producto?.autor || "";
+  const productosVisibles = isAdmin && ordenStock
+    ? [...filtrados].sort((a, b) => {
+        const diferencia = Number(a.stock || 0) - Number(b.stock || 0);
+        return ordenStock === "menor" ? diferencia : -diferencia;
+      })
+    : filtrados;
 
   return (
     <>
@@ -27,7 +38,7 @@ const TablaProducto = ({
         <div>
           <div className="ap-heading">Productos</div>
           <div className="ap-sub">
-            {filtrados.length} producto{filtrados.length !== 1 ? "s" : ""}
+            {productosVisibles.length} producto{productosVisibles.length !== 1 ? "s" : ""}
           </div>
         </div>
 
@@ -56,15 +67,29 @@ const TablaProducto = ({
           <option value="Remeras">Remeras</option>
           <option value="Otros">Otros</option>
         </select>
+        {isAdmin && (
+          <select
+            value={filtroProveedor}
+            onChange={(e) => setFiltroProveedor(e.target.value)}
+            aria-label="Filtrar productos por proveedor"
+          >
+            <option value="">Todos los proveedores</option>
+            {proveedoresUnicos.map((proveedor) => (
+              <option key={proveedor} value={proveedor}>
+                {proveedor}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       {/* Cards mobile */}
       <div className="card-list">
-        {filtrados.length === 0 && (
+        {productosVisibles.length === 0 && (
           <p className="empty">No hay productos</p>
         )}
 
-        {filtrados.map((p) => (
+        {productosVisibles.map((p) => (
           <div className="prod-card" key={p.id}>
             <div className="prod-card-top">
               <div>
@@ -172,14 +197,50 @@ const TablaProducto = ({
               <th>Nombre</th>
               <th>Precio costo</th>
               <th>Precio venta</th>
-              <th>Stock</th>
+              <th>
+                {isAdmin ? (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOrdenStock((actual) =>
+                        actual === "menor" ? "mayor" : "menor",
+                      )
+                    }
+                    aria-label={
+                      ordenStock === "menor"
+                        ? "Stock ordenado de menor a mayor; cambiar a mayor a menor"
+                        : ordenStock === "mayor"
+                          ? "Stock ordenado de mayor a menor; cambiar a menor a mayor"
+                          : "Ordenar stock de menor a mayor"
+                    }
+                    title={
+                      ordenStock === "menor"
+                        ? "Ordenar de mayor a menor"
+                        : "Ordenar de menor a mayor"
+                    }
+                    style={{
+                      border: 0,
+                      background: "transparent",
+                      color: "inherit",
+                      font: "inherit",
+                      fontWeight: "inherit",
+                      padding: 0,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Stock {ordenStock === "menor" ? "↑" : ordenStock === "mayor" ? "↓" : "↕"}
+                  </button>
+                ) : (
+                  "Stock"
+                )}
+              </th>
               <th>Proveedor</th>
               <th>Acción</th>
             </tr>
           </thead>
 
           <tbody>
-            {filtrados.length === 0 && (
+            {productosVisibles.length === 0 && (
               <tr>
                 <td colSpan="7" className="empty">
                   No hay productos
@@ -187,7 +248,7 @@ const TablaProducto = ({
               </tr>
             )}
 
-            {filtrados.map((p) => (
+            {productosVisibles.map((p) => (
               <tr key={p.id}>
                 <td>
                   {p.codigo ? (

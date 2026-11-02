@@ -89,24 +89,27 @@
 @media screen and (max-width: 768px) {
    .menu {
     flex-direction: row;
-    justify-content: center;
-    gap: 8px;             /* menos gap */
-    flex-wrap: nowrap;    /* <-- esto es lo que necesitás */
+    justify-content: space-evenly;
+    gap: 4px;
+    flex-wrap: wrap;
+    padding-inline: 8px;
   }
  .menu a {
-    font-size: 18px;
-    padding: 4px 6px;
+    font-size: clamp(14px, 3.8vw, 17px);
+    padding: 8px 7px;
+    white-space: normal;
+    text-align: center;
   }
   .mega-menu {
   position: absolute;
   top: 100%;
-  left: -60px;
+  left: 0;
   background-color: #ffffff;
   padding: 20px;
   display: flex;
   flex-direction: column;
   width: max-content;
-  max-width: 90vw;
+  max-width: min(90vw, 340px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 999;
 }

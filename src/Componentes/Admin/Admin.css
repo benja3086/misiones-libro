@@ -36,6 +36,8 @@ body {
 .ap {
   padding: 16px;
   max-width: 1100px;
+  width: 100%;
+  min-width: 0;
   margin: 0 auto;
 }
 
@@ -63,6 +65,7 @@ body {
   margin-bottom: 16px;
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 .ap-search input,
 .ap-search select {
@@ -97,6 +100,7 @@ body {
 
 .tbl-wrap {
   overflow-x: auto;
+  max-width: 100%;
 }
 table {
   width: 100%;
@@ -156,7 +160,7 @@ table {
   justify-content: center;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 900px) {
   .card-list {
     display: none;
   }
@@ -170,7 +174,8 @@ table {
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    overflow: visible;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   thead {
     background: #fafafa;
@@ -310,8 +315,8 @@ table {
 .modal {
   background: var(--card);
   border-radius: var(--radius);
-  width: min(320px, calc(100dvw - 20px));
-  max-height: calc(100dvh - 20px);
+  width: min(480px, calc(100dvw - 24px));
+  max-height: calc(100dvh - 24px);
   overflow-y: auto;
   overflow-x: hidden;
   padding: 12px;
@@ -432,6 +437,106 @@ table {
   .modal-foot .btn {
     padding: 12px;
     font-size: 15px;
+  }
+}
+
+@media (max-width: 899px) {
+  .ap {
+    padding: clamp(10px, 3.5vw, 16px);
+  }
+
+  .ap-top {
+    align-items: center;
+  }
+
+  .ap-top > button {
+    max-width: 100%;
+  }
+
+  .tbl-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 767px) {
+  .ap-heading {
+    font-size: clamp(20px, 6vw, 22px);
+  }
+
+  .ap-search input,
+  .ap-search select,
+  .field input,
+  .field select,
+  .field textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .modal {
+    padding: 16px;
+    max-height: calc(100dvh - 24px);
+    border-radius: 14px;
+  }
+
+  .modal h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .field {
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+
+  .field label {
+    font-size: 13px;
+  }
+
+  .modal-foot .btn {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .prod-card {
+    padding: clamp(12px, 4vw, 16px);
+    min-width: 0;
+  }
+
+  .prod-card-top > div,
+  .prod-card-nombre {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .prod-card-actions .btn {
+    min-height: 42px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ap-top {
+    align-items: stretch;
+  }
+
+  .ap-top > button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .prod-card-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .prod-card-actions .btn {
+    min-width: 0;
+    white-space: normal;
+    padding-inline: 8px;
+  }
+
+  .modal-foot {
+    flex-direction: column-reverse;
   }
 }
 

@@ -77,6 +77,7 @@ const Admin = () => {
   const [ventas, setVentas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [filtroProveedorProductos, setFiltroProveedorProductos] = useState("");
   const [filtroCategoriaVentas, setFiltroCategoriaVentas] = useState("");
   const [seccion, setSeccion] = useState("productos");
 
@@ -702,8 +703,9 @@ const Admin = () => {
   // Se filtra lo que tenga score > 0 y se ordena de mayor a menor score,
   // así el código SIEMPRE queda arriba, tenga la búsqueda una o varias palabras.
   const productosPorCategoria = productos.filter((producto) =>
-    !filtroCategoria ||
-    obtenerCategoriaProducto(producto) === filtroCategoria,
+    (!filtroCategoria || obtenerCategoriaProducto(producto) === filtroCategoria) &&
+    (!isAdmin || !filtroProveedorProductos ||
+      getProveedorProducto(producto) === filtroProveedorProductos),
   );
   const filtrados = (() => {
     const termino = normalizarTexto(busqueda);
@@ -827,6 +829,11 @@ const Admin = () => {
           setBusqueda={setBusqueda}
           filtroCategoria={filtroCategoria}
           setFiltroCategoria={setFiltroCategoria}
+          filtroProveedor={filtroProveedorProductos}
+          setFiltroProveedor={setFiltroProveedorProductos}
+          proveedoresUnicos={[
+            ...new Set(productos.map(getProveedorProducto).filter(Boolean)),
+          ].sort((a, b) => a.localeCompare(b, "es"))}
           abrirModalNuevo={abrirModalNuevo}
           abrirModalEditar={abrirModalEditar}
           eliminarProducto={eliminarProducto}

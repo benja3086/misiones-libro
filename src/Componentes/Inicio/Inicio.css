@@ -4,7 +4,7 @@ body {
   background-color: #ffffff;
   color: #333;
   line-height: 1.5;
-  width: 100vw;
+  width: 100%;
   overflow-x: hidden;
 }
 
@@ -106,30 +106,7 @@ h3 {
   .menu {
     justify-content: space-around;
     padding: 10px 5px;
-  }
-
-  .menu a {
-    padding: 6px 8px;
-    font-size: 0.9rem;
-  }
-
-  .logo3 {
-    max-width: 90%;
-    margin: 10px auto 20px;
-  }
-
-  .productos-texto p {
-    font-size: 1rem;
-    padding: 0 10px;
-  }
-
-  .productos-texto h2 {
-    font-size: 1.1rem;
-  }
-  @media (max-width: 600px) {
-  .menu {
-    justify-content: space-around;
-    padding: 10px 5px;
+    gap: 4px;
   }
 
   .menu a {
@@ -155,6 +132,4 @@ h3 {
     max-width: 95%;
     margin: 20px auto;
   }
-}
-
 }
